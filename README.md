@@ -1,6 +1,6 @@
-# Oi! Eu sou o Victor :wave:
+# Oi! Eu sou o Victor Hugo :wave:
 
-Desenvolvedor brasileiro apaixonado por web. Curto organização, código limpo e projetos que saem do papel.
+Desenvolvedor brasileiro apaixonado por web e cybersegurança. Curto organização, código limpo e projetos que saem do papel.
 
 ## :rocket: Em destaque
 
