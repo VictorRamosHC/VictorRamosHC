@@ -23,16 +23,12 @@ Engenheiro de software focado em sistemas distribuídos, arquitetura resiliente 
 
 ---
 
-## ⚡ [ 02 // EVOLUTION LINE & TOPOLOGY ]
+## ⚡ [ 02 // EVOLUTION LINE ]
 
 ```text
 ProjetoViagem ────► GlassTask ────► Prisma House Painter ────► Aether Vault
 [ Foundations ]      [ Ergonomics ]      [ Design System ]          [ Sovereign Audio ]
 ```
-
-<div align="center">
-  <img src="assets/network_map.svg" alt="Systems Topology & Routing Map" width="100%" />
-</div>
 
 ---
 
@@ -48,20 +44,29 @@ ProjetoViagem ────► GlassTask ────► Prisma House Painter ─
 
 ---
 
-## ◼ [ 04 // INTERACTIVE SYSTEMS ]
+## 🌐 [ 04 // TOPOLOGY & ROUTING ]
 
-> Cada minigame é uma simulação interativa vinculada a um projeto real. Nenhum framework, nenhuma dependência externa — código soberano rodando offline e executável diretamente no seu navegador.
-
-| Sistema | Descrição | Acessar |
-| :--- | :--- | :---: |
-| **Signal Route** | Mapeie o caminho correto entre nós de rede sem cruzar rotas. Vinculado a **ProjetoViagem**. | [![PLAY](https://img.shields.io/badge/PLAY_SIMULATION-030305?style=for-the-badge&logo=target&logoColor=D4AF37)](https://victorramoshc.github.io/VictorRamosHC/minigame/signal-route/) |
-| **Task Triage** | Priorize o backlog antes do colapso operacional. Vinculado a **GlassTask**. | [![OPEN](https://img.shields.io/badge/OPEN_CONTROL_ROOM-030305?style=for-the-badge&logo=target&logoColor=D4AF37)](https://victorramoshc.github.io/VictorRamosHC/minigame/task-triage/) |
-| **Color Protocol** | Reconstrua a composição visual da fachada por RGB. Vinculado a **Prisma House Painter**. | [![ENTER](https://img.shields.io/badge/ENTER_PRISMA_GRID-030305?style=for-the-badge&logo=target&logoColor=D4AF37)](https://victorramoshc.github.io/VictorRamosHC/minigame/color-protocol/) |
-| **Audio Breach** | Sincronize frequência, ritmo e sinal via Web Audio API. Vinculado a **Aether Vault**. | [![ACCESS](https://img.shields.io/badge/ACCESS_AETHER_VAULT-030305?style=for-the-badge&logo=target&logoColor=D4AF37)](https://victorramoshc.github.io/VictorRamosHC/minigame/audio-breach/) |
+<div align="center">
+  <img src="assets/network_map.svg" alt="Systems Topology & Routing Map" width="100%" />
+</div>
 
 ---
 
-## 🛠️ [ 05 // TECHNICAL ARSENAL ]
+## ◼ [ 05 // INTERACTIVE SYSTEMS ]
+
+> Cada minigame é uma simulação interativa vinculada a um projeto real. Nenhum framework, nenhuma dependência externa — código soberano rodando offline e executável diretamente no seu navegador.
+> ⚠️ **Cuidado:** Se falhar, você será **hackeado por Hugo**. Se vencer, o prêmio contém um **honeypot** corporativo que redireciona para o projeto!
+
+| Sistema | Descrição | Acessar (Play Online) |
+| :--- | :--- | :---: |
+| **Signal Route** | Mapeie o caminho correto entre nós de rede sem cruzar rotas. Vinculado a **ProjetoViagem**. | [![PLAY](https://img.shields.io/badge/PLAY_ONLINE-030305?style=for-the-badge&logo=target&logoColor=D4AF37)](https://victorramoshc.github.io/VictorRamosHC/minigame/signal-route/)<br>[<sub style="color:#64748B;">código fonte</sub>](./minigame/signal-route/index.html) |
+| **Task Triage** | Priorize o backlog antes do colapso operacional. Vinculado a **GlassTask**. | [![OPEN](https://img.shields.io/badge/OPEN_CONTROL_ROOM-030305?style=for-the-badge&logo=target&logoColor=D4AF37)](https://victorramoshc.github.io/VictorRamosHC/minigame/task-triage/)<br>[<sub style="color:#64748B;">código fonte</sub>](./minigame/task-triage/index.html) |
+| **Color Protocol** | Reconstrua a composição visual da fachada por RGB. Vinculado a **Prisma House Painter**. | [![ENTER](https://img.shields.io/badge/ENTER_PRISMA_GRID-030305?style=for-the-badge&logo=target&logoColor=D4AF37)](https://victorramoshc.github.io/VictorRamosHC/minigame/color-protocol/)<br>[<sub style="color:#64748B;">código fonte</sub>](./minigame/color-protocol/index.html) |
+| **Audio Breach** | Sincronize frequência, ritmo e sinal via Web Audio API. Vinculado a **Aether Vault**. | [![ACCESS](https://img.shields.io/badge/ACCESS_AETHER_VAULT-030305?style=for-the-badge&logo=target&logoColor=D4AF37)](https://victorramoshc.github.io/VictorRamosHC/minigame/audio-breach/)<br>[<sub style="color:#64748B;">código fonte</sub>](./minigame/audio-breach/index.html) |
+
+---
+
+## 🛠️ [ 06 // TECHNICAL ARSENAL ]
 
 <p align="center">
   <img src="https://img.shields.io/badge/Kotlin-030305?style=for-the-badge&logo=kotlin&logoColor=D4AF37" alt="Kotlin">
@@ -75,7 +80,7 @@ ProjetoViagem ────► GlassTask ────► Prisma House Painter ─
 
 ---
 
-## 📊 [ 06 // SYSTEM TELEMETRY ]
+## 📊 [ 07 // SYSTEM TELEMETRY ]
 
 <div align="center">
   <img height="165" src="https://github-readme-stats.vercel.app/api?username=VictorRamosHC&show_icons=true&hide_border=false&bg_color=030305&title_color=D4AF37&icon_color=8C1D18&text_color=E0E7FF&border_color=D4AF37" alt="GitHub Stats" />
