@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signal Route // Network Path Simulation</title>
+  <style>
+    :root {
+      --bg: #030305; --panel: #0A0B10; --amber: #D4AF37;
+      --ivory: #F5F0E8; --crimson: #8C1D18; --muted: #64748B;
+      --text: #E0E7FF; --border: #1E293B;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Consolas','Space Mono',monospace; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+    h1 { color: var(--amber); font-size: 1.4rem; letter-spacing: 4px; text-align: center; margin-bottom: 4px; }
+    .subtitle { color: var(--muted); font-size: 0.75rem; letter-spacing: 3px; text-align: center; margin-bottom: 24px; }
+    .game-box { border: 1px solid var(--amber); background: var(--panel); padding: 24px; max-width: 700px; width: 100%; }
+    .hud { display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 0.8rem; }
+    .hud span { color: var(--muted); }
+    .hud strong { color: var(--amber); }
+    #grid { display: grid; gap: 4px; margin: 0 auto 20px; width: fit-content; }
+    .cell {
+      width: 60px; height: 60px; border: 1px solid var(--border); background: #060710;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 1.2rem; font-weight: bold; transition: background 0.1s;
+      position: relative;
+    }
+    .cell:hover { background: #111422; }
+    .cell.path { background: #12181a; }
+    .cell.node { border: 2px solid; font-size: 1.1rem; }
+    .cell.selected { box-shadow: inset 0 0 0 2px var(--ivory); }
+    .cell.correct { background: rgba(212,175,55,0.15); }
+    .msg { text-align: center; margin: 12px 0; font-size: 0.9rem; min-height: 24px; color: var(--amber); }
+    .btn { background: transparent; border: 1px solid var(--amber); color: var(--amber); padding: 8px 20px; cursor: pointer; font-family: inherit; font-size: 0.85rem; letter-spacing: 2px; transition: all 0.2s; margin: 4px; }
+    .btn:hover { background: var(--amber); color: var(--bg); }
+    .btn-crimson { border-color: var(--crimson); color: var(--crimson); }
+    .btn-crimson:hover { background: var(--crimson); color: var(--ivory); }
+    .screen { text-align: center; padding: 40px 20px; }
+    .screen h2 { color: var(--amber); font-size: 1.6rem; letter-spacing: 3px; margin-bottom: 12px; }
+    .screen p { color: var(--muted); font-size: 0.85rem; line-height: 1.7; margin-bottom: 20px; }
+    .score-big { font-size: 3rem; color: var(--amber); margin: 16px 0; }
+    .instructions { background: #06070e; border: 1px solid var(--border); padding: 12px 16px; margin-bottom: 20px; font-size: 0.8rem; color: var(--muted); line-height: 1.7; }
+    .instructions strong { color: var(--ivory); }
+  </style>
+</head>
+<body>
+<div class="game-box" id="app"></div>
+<script>
+const COLORS = ['#D4AF37','#8C1D18','#4A7C59','#2E6B9E','#7B4EA8'];
+const LEVELS = [
+  { size: 3, pairs: [[[0,0],[2,2]], [[0,2],[2,0]]] },
+  { size: 4, pairs: [[[0,0],[3,3]], [[0,3],[3,0]], [[1,0],[1,3]]] },
+  { size: 5, pairs: [[[0,0],[4,4]], [[0,4],[4,0]], [[2,0],[2,4]], [[0,2],[4,2]]] },
+  { size: 6, pairs: [[[0,0],[5,5]], [[0,5],[5,0]], [[2,0],[2,5]], [[0,3],[5,3]], [[3,1],[3,4]]] },
+  { size: 7, pairs: [[[0,0],[6,6]], [[0,6],[6,0]], [[3,0],[3,6]], [[0,3],[6,3]], [[2,1],[4,5]], [[1,5],[5,1]]] },
+];
+
+let level = 0, moves = 0, solved = 0;
+let grid = [], paths = [], dragging = null, activePair = null;
+let phase = 'title'; // title | game | win | end
+
+function el(id) { return document.getElementById(id); }
+function app() { return el('app'); }
+
+function render() {
+  if (phase === 'title') renderTitle();
+  else if (phase === 'game') renderGame();
+  else if (phase === 'win') renderWin();
+  else if (phase === 'end') renderEnd();
+}
+
+function renderTitle() {
+  app().innerHTML = `
+    <div class="screen">
+      <h2>◼ SIGNAL ROUTE</h2>
+      <p style="color:var(--amber);font-size:0.7rem;letter-spacing:3px;margin-bottom:16px">NETWORK PATH SIMULATION // LINKED TO: PROJETOVIAGEM</p>
+      <div class="instructions">
+        <strong>MISSION:</strong> Connect matching colored nodes by drawing paths through the grid.<br>
+        <strong>RULES:</strong> Paths cannot cross. Fill all cells to complete a level.<br>
+        <strong>CONTROLS:</strong> Click a node, then click adjacent cells to extend the path. Click the matching node to complete a pair.
+      </div>
+      <button class="btn" onclick="startGame()">[ INITIATE SIMULATION → ]</button>
+    </div>`;
+}
+
+function startGame() {
+  phase = 'game'; level = 0; moves = 0; solved = 0;
+  initLevel(); render();
+}
+
+function initLevel() {
+  const L = LEVELS[level];
+  const size = L.size;
+  grid = Array.from({length: size}, () => Array(size).fill(null));
+  paths = L.pairs.map((pair, i) => ({
+    color: COLORS[i], nodes: pair, cells: [], complete: false
+  }));
+  paths.forEach(p => {
+    p.nodes.forEach(([r,c]) => { grid[r][c] = {type:'node', pairIdx: paths.indexOf(p)}; });
+  });
+  dragging = null; activePair = null;
+}
+
+function renderGame() {
+  const L = LEVELS[level];
+  const size = L.size;
+  const completedPairs = paths.filter(p=>p.complete).length;
+
+  app().innerHTML = `
+    <h1>SIGNAL ROUTE</h1>
+    <div class="subtitle">NETWORK PATH SIMULATION</div>
+    <div class="hud">
+      <span>LEVEL <strong>${level+1}/5</strong></span>
+      <span>MOVES <strong>${moves}</strong></span>
+      <span>PAIRS <strong>${completedPairs}/${paths.length}</strong></span>
+    </div>
+    <div id="grid" style="grid-template-columns:repeat(${size},60px)"></div>
+    <div class="msg" id="msg"></div>
+    <div style="text-align:center">
+      <button class="btn btn-crimson" onclick="initLevel();render()">[ RESET ]</button>
+    </div>`;
+
+  const gEl = el('grid');
+  for (let r = 0; r < size; r++) {
+    for (let c = 0; c < size; c++) {
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      cell.dataset.r = r; cell.dataset.c = c;
+
+      const pairInCell = findPairForCell(r, c);
+      if (pairInCell !== null) {
+        const p = paths[pairInCell];
+        const isNode = p.nodes.some(([nr,nc]) => nr===r && nc===c);
+        if (isNode) {
+          cell.className += ' node';
+          cell.style.borderColor = p.color;
+          cell.style.color = p.color;
+          cell.textContent = '◆';
+        } else {
+          // path cell
+          cell.style.background = p.color + '22';
+          cell.style.borderColor = p.color + '55';
+          const dot = document.createElement('div');
+          dot.style.cssText = `width:8px;height:8px;border-radius:50%;background:${p.color};opacity:0.6`;
+          cell.appendChild(dot);
+        }
+        if (p.complete) cell.classList.add('correct');
+      }
+
+      cell.addEventListener('mousedown', e => onCellDown(r,c));
+      cell.addEventListener('mouseenter', e => { if(dragging!==null) onCellEnter(r,c); });
+      gEl.appendChild(cell);
+    }
+  }
+
+  document.addEventListener('mouseup', onMouseUp, {once:true});
+}
+
+function findPairForCell(r, c) {
+  for (let i = 0; i < paths.length; i++) {
+    const p = paths[i];
+    if (p.nodes.some(([nr,nc]) => nr===r && nc===c)) return i;
+    if (p.cells.some(([cr,cc]) => cr===r && cc===c)) return i;
+  }
+  return null;
+}
+
+function onCellDown(r, c) {
+  const pIdx = findPairForCell(r, c);
+  if (pIdx !== null) {
+    const p = paths[pIdx];
+    // Start or restart path from a node
+    if (p.nodes.some(([nr,nc]) => nr===r && nc===c)) {
+      p.cells = []; p.complete = false;
+      activePair = pIdx; dragging = [r,c];
+      render();
+    }
+  }
+}
+
+function onCellEnter(r, c) {
+  if (activePair === null) return;
+  const p = paths[activePair];
+  // Check adjacency to last cell
+  const last = dragging;
+  if (Math.abs(last[0]-r) + Math.abs(last[1]-c) !== 1) return;
+  // Check not already in another complete pair
+  const existing = findPairForCell(r,c);
+  if (existing !== null && existing !== activePair) return;
+  // Don't revisit own cells (except endpoint node)
+  if (p.cells.some(([cr,cc]) => cr===r && cc===c)) return;
+  // Check if it's the matching end node
+  const endNode = p.nodes.find(([nr,nc]) => !(nr===p.nodes[0][0] && nc===p.nodes[0][1]));
+  if (endNode[0]===r && endNode[1]===c) {
+    p.cells.push([r,c]); p.complete = true;
+    dragging = null; activePair = null; moves++;
+    const msg = el('msg');
+    if (msg) msg.textContent = '✓ CIRCUIT COMPLETE';
+    checkAllSolved(); render(); return;
+  }
+  p.cells.push([r,c]);
+  dragging = [r,c]; moves++;
+  render();
+}
+
+function onMouseUp() { dragging = null; activePair = null; }
+
+function checkAllSolved() {
+  if (paths.every(p => p.complete)) {
+    setTimeout(() => {
+      if (level < LEVELS.length - 1) { phase = 'win'; render(); }
+      else { phase = 'end'; render(); }
+    }, 400);
+  }
+}
+
+function renderWin() {
+  app().innerHTML = `
+    <div class="screen">
+      <h2>LEVEL ${level+1} COMPLETE</h2>
+      <p>Signal routes established. Network topology secured.</p>
+      <p style="color:var(--amber)">MOVES: ${moves}</p>
+      <button class="btn" onclick="level++;initLevel();phase='game';render()">[ NEXT LEVEL → ]</button>
+    </div>`;
+}
+
+function renderEnd() {
+  app().innerHTML = `
+    <div class="screen">
+      <h2>◼ SIMULATION COMPLETE</h2>
+      <div class="score-big">${5} / 5</div>
+      <p>All network routes mapped. Infrastructure secure.<br>Signal route from <strong style="color:var(--amber)">ProjetoViagem</strong> to <strong style="color:var(--amber)">Aether Vault</strong> established.</p>
+      <button class="btn" onclick="startGame()">[ RUN AGAIN ]</button>
+      <button class="btn btn-crimson" onclick="window.history.back()">[ ← RETURN TO GRID ]</button>
+    </div>`;
+}
+
+render();
+</script>
+</body>
+</html>
