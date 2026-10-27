@@ -1,4 +1,4 @@
-<div align="center">
+﻿<div align="center">
 
 <img src="https://readme-typing-svg.demolab.com?font=Space+Mono&size=24&duration=3200&pause=900&color=00D9FF&center=true&vCenter=true&width=760&lines=Victor+Hugo+Ramos;Web+%7C+Android+%7C+IA+aplicada;Do+primeiro+site+ao+Aether+Vault" alt="Animação de apresentação" />
 
@@ -33,6 +33,7 @@ Player de áudio offline para Android com reprodução Media3, persistência Roo
 
 <a href="https://github.com/VictorRamosHC/hugh-player"><img src="https://img.shields.io/badge/Ver_repositório-0F172A?style=for-the-badge&logo=github" alt="Ver Aether Vault"></a>
 <a href="https://github.com/VictorRamosHC/hugh-player/actions"><img src="https://img.shields.io/github/actions/workflow/status/VictorRamosHC/hugh-player/build-apk.yml?branch=main&style=for-the-badge&label=CI" alt="Status da CI"></a>
+<a href="https://github.com/VictorRamosHC/hugh-player/releases/latest"><img src="https://img.shields.io/badge/Download_APK-v1.5.0-00E5FF?style=for-the-badge&logo=android&logoColor=0F172A" alt="Download APK"></a>
 
 **Stack:** Kotlin · Jetpack Compose · Media3 · Room
 
@@ -125,7 +126,6 @@ Meu primeiro projeto web publicado: uma página estática que marcou o início d
 - [AD Belém](https://github.com/VictorRamosHC/Ad-belem) — painel de gestão.
 - [EBD Nova Suíça](https://github.com/VictorRamosHC/EBD-Nova-suica) — plataforma digital.
 - [Recepção Igreja](https://github.com/VictorRamosHC/Recepcao-igreja) — sistema de recepção.
-- [govbr-zoeira](https://github.com/VictorRamosHC/govbr-zoeira) — experimento visual.
 
 </details>
 
