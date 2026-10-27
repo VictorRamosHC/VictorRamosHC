@@ -1,194 +1,720 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Color Protocol // Prisma Grid</title>
+  <title>Color Protocol // Prisma Facade Synthesis</title>
   <style>
-    :root{--bg:#030305;--panel:#0A0B10;--amber:#D4AF37;--ivory:#F5F0E8;--crimson:#8C1D18;--muted:#64748B;--text:#E0E7FF;--border:#1E293B;}
-    *{box-sizing:border-box;margin:0;padding:0;font-family:'Consolas','Space Mono',monospace;}
-    body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;}
-    h1{color:var(--amber);font-size:1.4rem;letter-spacing:4px;text-align:center;margin-bottom:4px;}
-    .subtitle{color:var(--muted);font-size:0.75rem;letter-spacing:3px;text-align:center;margin-bottom:20px;}
-    .game-box{border:1px solid var(--amber);background:var(--panel);padding:24px;max-width:700px;width:100%;}
-    .hud{display:flex;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);font-size:0.8rem;}
-    .hud span{color:var(--muted);}
-    .hud strong{color:var(--amber);}
-    .colors-row{display:flex;gap:20px;margin-bottom:24px;align-items:flex-start;flex-wrap:wrap;}
-    .swatch-box{flex:1;min-width:180px;}
-    .swatch-label{font-size:0.7rem;color:var(--muted);letter-spacing:2px;margin-bottom:8px;}
-    .swatch{width:100%;height:120px;border:1px solid var(--border);}
-    .controls{flex:2;min-width:260px;}
-    .slider-row{margin-bottom:12px;}
-    .slider-row label{display:flex;justify-content:space-between;font-size:0.75rem;margin-bottom:4px;}
-    .slider-row label span{color:var(--amber);}
-    input[type=range]{width:100%;-webkit-appearance:none;height:4px;background:var(--border);outline:none;cursor:pointer;}
-    input[type=range].r::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:0;background:#CC3333;cursor:pointer;}
-    input[type=range].g::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:0;background:#33CC33;cursor:pointer;}
-    input[type=range].b::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:0;background:#3355CC;cursor:pointer;}
-    .hex-display{font-size:0.9rem;color:var(--amber);margin-bottom:8px;letter-spacing:2px;}
-    .score-display{font-size:0.85rem;margin-bottom:4px;}
-    .score-display .good{color:#00C060;}
-    .score-display .bad{color:var(--crimson);}
-    .btn{background:transparent;border:1px solid var(--amber);color:var(--amber);padding:8px 20px;cursor:pointer;font-family:inherit;font-size:0.85rem;letter-spacing:2px;transition:all 0.2s;margin:4px;}
-    .btn:hover{background:var(--amber);color:var(--bg);}
-    .btn-crimson{border-color:var(--crimson);color:var(--crimson);}
-    .btn-crimson:hover{background:var(--crimson);color:var(--ivory);}
-    .progress{display:flex;gap:8px;margin-bottom:16px;}
-    .round-pip{width:14px;height:14px;border:1px solid var(--border);background:var(--bg);}
-    .round-pip.done{background:var(--amber);}
-    .round-pip.active{border-color:var(--amber);}
-    .result-row{margin-bottom:6px;font-size:0.8rem;display:flex;justify-content:space-between;}
-    .screen{text-align:center;padding:40px 20px;}
-    .screen h2{color:var(--amber);font-size:1.6rem;letter-spacing:3px;margin-bottom:12px;}
-    .screen p{color:var(--muted);font-size:0.85rem;line-height:1.7;margin-bottom:20px;}
-    .score-big{font-size:3rem;color:var(--amber);margin:16px 0;}
-    .instructions{background:#06070e;border:1px solid var(--border);padding:12px 16px;margin-bottom:20px;font-size:0.8rem;color:var(--muted);line-height:1.7;}
-    .instructions strong{color:var(--ivory);}
-    .msg{text-align:center;font-size:0.85rem;min-height:22px;margin-top:12px;}
+    :root {
+      --bg: #030305;
+      --panel: #0A0B10;
+      --panel-elevated: #11131B;
+      --amber: #D4AF37;
+      --amber-dim: rgba(212, 175, 55, 0.15);
+      --ivory: #F5F0E8;
+      --crimson: #8C1D18;
+      --crimson-dim: rgba(140, 29, 24, 0.2);
+      --muted: #64748B;
+      --text: #E0E7FF;
+      --border: #1E293B;
+      --font-mono: 'Consolas', 'Space Mono', 'Courier New', monospace;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-mono);
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      user-select: none;
+    }
+    .game-container {
+      width: 100%;
+      max-width: 900px;
+      background: var(--panel);
+      border: 1px solid var(--amber);
+      padding: 28px 24px;
+      box-shadow: 0 0 35px rgba(0, 0, 0, 0.85);
+      position: relative;
+    }
+    .brand-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+    .brand-title {
+      color: var(--amber);
+      font-size: 1.1rem;
+      letter-spacing: 3px;
+      font-weight: bold;
+    }
+    .brand-sub {
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+    }
+    .hud {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+      background: var(--panel-elevated);
+      border: 1px solid var(--border);
+      padding: 10px 16px;
+    }
+    .hud-stat {
+      display: flex;
+      flex-direction: column;
+    }
+    .hud-label {
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+    .hud-val {
+      font-size: 1.15rem;
+      font-weight: bold;
+      color: var(--amber);
+    }
+    .hud-val.ivory {
+      color: var(--ivory);
+    }
+    .progress-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .progress-pip {
+      flex: 1;
+      height: 6px;
+      background: #090B12;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+    .progress-pip.done {
+      background: var(--amber);
+      border-color: var(--amber);
+    }
+    .progress-pip.active {
+      border-color: var(--ivory);
+      box-shadow: 0 0 8px rgba(245, 240, 232, 0.3);
+    }
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 680px) {
+      .workspace-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .swatch-panel {
+      background: #06070E;
+      border: 1px solid var(--border);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+    }
+    .panel-caption {
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .color-swatch {
+      width: 100%;
+      height: 140px;
+      border: 1px solid var(--border);
+      transition: background-color 0.05s ease;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .swatch-overlay-label {
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      background: rgba(3, 3, 5, 0.75);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      color: var(--ivory);
+      pointer-events: none;
+    }
+    .swatch-meta {
+      margin-top: 10px;
+      font-size: 0.72rem;
+      letter-spacing: 1.5px;
+      color: var(--muted);
+      text-align: center;
+      min-height: 18px;
+    }
+    .sliders-panel {
+      background: #06070E;
+      border: 1px solid var(--border);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .slider-group {
+      margin-bottom: 14px;
+    }
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      letter-spacing: 1.5px;
+      margin-bottom: 6px;
+    }
+    .slider-header .val {
+      font-weight: bold;
+      color: var(--amber);
+    }
+    input[type=range] {
+      width: 100%;
+      height: 8px;
+      background: #0D101C;
+      border: 1px solid var(--border);
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 20px;
+      background: var(--amber);
+      border: 1px solid var(--ivory);
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+    }
+    input[type=range].slider-crimson::-webkit-slider-thumb {
+      background: var(--crimson);
+      border-color: var(--ivory);
+      box-shadow: 0 0 8px rgba(140, 29, 24, 0.5);
+    }
+    input[type=range].slider-slate::-webkit-slider-thumb {
+      background: var(--muted);
+      border-color: var(--ivory);
+      box-shadow: 0 0 8px rgba(100, 116, 139, 0.5);
+    }
+    .breakdown-box {
+      background: var(--panel-elevated);
+      border: 1px solid var(--border);
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      font-size: 0.78rem;
+      line-height: 1.6;
+      animation: fadeIn 0.2s ease-out;
+    }
+    .breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #141824;
+      padding: 4px 0;
+    }
+    .breakdown-row:last-child {
+      border-bottom: none;
+    }
+    .btn {
+      background: transparent;
+      border: 1px solid var(--amber);
+      color: var(--amber);
+      padding: 10px 22px;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: all 0.18s;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+    .btn:hover {
+      background: var(--amber);
+      color: var(--bg);
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+    }
+    .btn-block {
+      width: 100%;
+      margin-top: 8px;
+    }
+    .btn-secondary {
+      border-color: var(--muted);
+      color: var(--muted);
+    }
+    .btn-secondary:hover {
+      background: var(--muted);
+      color: var(--bg);
+    }
+    .screen {
+      text-align: center;
+      padding: 40px 16px;
+    }
+    .screen h2 {
+      color: var(--amber);
+      font-size: 1.6rem;
+      letter-spacing: 3px;
+      margin-bottom: 12px;
+    }
+    .screen p {
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.7;
+      margin-bottom: 24px;
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .briefing-box {
+      background: #06070E;
+      border: 1px solid var(--border);
+      padding: 16px 20px;
+      margin: 0 auto 28px;
+      max-width: 640px;
+      text-align: left;
+      font-size: 0.78rem;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+    .briefing-box strong {
+      color: var(--ivory);
+    }
+    .score-banner {
+      font-size: 3.2rem;
+      font-weight: bold;
+      color: var(--amber);
+      margin: 16px 0 8px;
+      letter-spacing: 4px;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
-<div class="game-box" id="app"></div>
+
+<div class="game-container" id="app"></div>
+
 <script>
+// --- Web Audio API Synthesizer ---
+class SoundManager {
+  constructor() {
+    this.ctx = null;
+  }
+  init() {
+    if (!this.ctx) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) this.ctx = new AudioCtx();
+    }
+    if (this.ctx && this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
+  }
+  tone(freq, duration = 0.1, type = 'sine', volume = 0.08) {
+    if (!this.ctx) return;
+    try {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+      gain.gain.setValueAtTime(volume, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + duration);
+    } catch (e) {}
+  }
+  click() { this.tone(700, 0.04, 'sine', 0.04); }
+  sliderTick() { this.tone(480, 0.02, 'sine', 0.02); }
+  commit(score) {
+    if (score >= 85) {
+      [587.33, 783.99, 1046.5].forEach((f, i) => {
+        setTimeout(() => this.tone(f, 0.16, 'sine', 0.07), i * 75);
+      });
+    } else if (score >= 60) {
+      [440, 554.37].forEach((f, i) => {
+        setTimeout(() => this.tone(f, 0.14, 'sine', 0.06), i * 85);
+      });
+    } else {
+      this.tone(196, 0.22, 'sawtooth', 0.07);
+    }
+  }
+}
+const sound = new SoundManager();
+
+// --- Curated Architectural Targets (from explorer_survey_2 §3.4) ---
 const TARGETS = [
-  {r:212, g:140, b:100},
-  {r:180, g:50,  b:60},
-  {r:100, g:160, b:200},
-  {r:50,  g:120, b:80},
-  {r:160, g:100, b:180},
+  {
+    name: 'Obsidian Gold Facade',
+    codeName: 'SPEC-A1 // AMBER GILT',
+    r: 212, g: 175, b: 55,
+    hex: '#D4AF37'
+  },
+  {
+    name: 'Infrastructure Crimson Substructure',
+    codeName: 'SPEC-B2 // DEEP CRIMSON',
+    r: 140, g: 29, b: 24,
+    hex: '#8C1D18'
+  },
+  {
+    name: 'Architectural Ivory Concrete',
+    codeName: 'SPEC-C3 // OPAL IVORY',
+    r: 245, g: 240, b: 232,
+    hex: '#F5F0E8'
+  },
+  {
+    name: 'Telemetry Slate Granite',
+    codeName: 'SPEC-D4 // GRAPHITE SLATE',
+    r: 100, g: 116, b: 139,
+    hex: '#64748B'
+  },
+  {
+    name: 'Deep Monolith Substrate',
+    codeName: 'SPEC-E5 // OBSIDIAN MATRIX',
+    r: 30, g: 41, b: 59,
+    hex: '#1E293B'
+  }
 ];
 
-let phase='title', round=0, totalScore=0, roundScores=[];
-let rVal=128, gVal=128, bVal=128;
+// --- Game State ---
+let currentScreen = 'title'; // 'title' | 'mixing' | 'evaluated' | 'summary'
+let roundIndex = 0;
+let userR = 128;
+let userG = 128;
+let userB = 128;
+let totalScore = 0;
+let roundHistory = [];
+let lastEvaluatedScore = 0;
 
-function app(){return document.getElementById('app');}
-function toHex(v){return v.toString(16).padStart(2,'0').toUpperCase();}
-function hexStr(r,g,b){return `#${toHex(r)}${toHex(g)}${toHex(b)}`;}
+function app() { return document.getElementById('app'); }
 
-function calcScore(target,r,g,b){
-  const dist=(Math.abs(target.r-r)+Math.abs(target.g-g)+Math.abs(target.b-b))/3;
-  return Math.max(0,Math.round(100-dist));
+function toHex2(val) {
+  return val.toString(16).padStart(2, '0').toUpperCase();
+}
+function toHexStr(r, g, b) {
+  return `#${toHex2(r)}${toHex2(g)}${toHex2(b)}`;
 }
 
-function render(){
-  if(phase==='title') renderTitle();
-  else if(phase==='game') renderGame();
-  else if(phase==='end') renderEnd();
+// Score formula: 100 - avgChannelDistance
+function calculateChannelScore(target, r, g, b) {
+  const avgDist = (Math.abs(target.r - r) + Math.abs(target.g - g) + Math.abs(target.b - b)) / 3;
+  return Math.max(0, Math.round(100 - avgDist));
 }
 
-function renderTitle(){
-  app().innerHTML=`<div class="screen">
-    <h2>◼ COLOR PROTOCOL</h2>
-    <p style="color:var(--amber);font-size:0.7rem;letter-spacing:3px;margin-bottom:16px">PRISMA COMPOSITION GRID // LINKED TO: PRISMA HOUSE PAINTER</p>
-    <div class="instructions">
-      <strong>MISSION:</strong> Match the target color using the RGB sliders.<br>
-      <strong>SCORING:</strong> Score = 100 minus average channel distance. 5 rounds total.<br>
-      <strong>GOAL:</strong> Achieve a perfect match (100) on each round.
+function render() {
+  if (currentScreen === 'title') renderTitle();
+  else if (currentScreen === 'mixing' || currentScreen === 'evaluated') renderMixing();
+  else if (currentScreen === 'summary') renderSummary();
+}
+
+function renderTitle() {
+  app().innerHTML = `
+    <div class="brand-header">
+      <div class="brand-title">PRISMA HOUSE PAINTER // COLOR PROTOCOL</div>
+      <div class="brand-sub">FACADE SPECTRAL SYNTHESIS</div>
     </div>
-    <button class="btn" onclick="startGame()">[ ENTER PRISMA GRID → ]</button></div>`;
-}
+    <div class="screen">
+      <h2>◼ SPECTRAL RECONSTRUCTION GRID</h2>
+      <p>Precision architectural color calibration linked to <strong>Prisma House Painter</strong>. Reconstruct classified corporate facade pigments using calibrated Red, Green, and Blue synthesis channels.</p>
+      
+      <div class="briefing-box">
+        <strong>OPERATIONAL SPECIFICATIONS:</strong><br>
+        1. A target swatch is presented. The target hex code remains <strong>masked</strong> until submission.<br>
+        2. Adjust the calibrated <strong>RGB mixing sliders (0–255)</strong> to replicate the target pigment optically.<br>
+        3. Real-time scores are concealed during mixing to enforce perceptual calibration.<br>
+        4. <strong>Scoring Formula</strong>: <span style="color:var(--amber);">Score = 100 − Average Channel Distance</span>.<br>
+        5. Complete 5 rounds of curated infrastructure pigments to establish architectural color consistency.
+      </div>
 
-function startGame(){phase='game';round=0;totalScore=0;roundScores=[];nextRound();}
-
-function nextRound(){
-  rVal=128;gVal=128;bVal=128;
-  updateGame();
-}
-
-function updateGame(){
-  const target=TARGETS[round];
-  const myColor=hexStr(rVal,gVal,bVal);
-  const targetColor=hexStr(target.r,target.g,target.b);
-  const liveScore=calcScore(target,rVal,gVal,bVal);
-
-  app().innerHTML=`
-    <h1>COLOR PROTOCOL</h1>
-    <div class="subtitle">PRISMA COMPOSITION GRID</div>
-    <div class="hud">
-      <span>ROUND <strong>${round+1}/5</strong></span>
-      <span>TOTAL SCORE <strong>${totalScore}</strong></span>
-      <span>LIVE MATCH <strong style="color:${liveScore>=80?'#00C060':liveScore>=50?'var(--amber)':'var(--crimson)'}">${liveScore}%</strong></span>
+      <button class="btn" onclick="startProtocol()">[ ENTER PRISMA GRID → ]</button>
     </div>
-    <div class="progress">${TARGETS.map((_,i)=>`<div class="round-pip ${i<round?'done':i===round?'active':''}"></div>`).join('')}</div>
-    <div class="colors-row">
-      <div class="swatch-box">
-        <div class="swatch-label">◆ TARGET COLOR</div>
-        <div class="swatch" style="background:${targetColor}"></div>
-        <div style="font-size:0.7rem;color:var(--muted);margin-top:4px;text-align:center">${targetColor}</div>
-      </div>
-      <div class="swatch-box">
-        <div class="swatch-label">◆ YOUR MIX</div>
-        <div class="swatch" style="background:${myColor}" id="myColor"></div>
-        <div class="hex-display" style="text-align:center;margin-top:4px" id="hexOut">${myColor}</div>
-      </div>
-      <div class="controls">
-        <div class="slider-row">
-          <label>RED <span id="rOut">${rVal}</span></label>
-          <input type="range" class="r" min="0" max="255" value="${rVal}" id="slR" oninput="rVal=+this.value;liveUpdate()">
-        </div>
-        <div class="slider-row">
-          <label>GREEN <span id="gOut">${gVal}</span></label>
-          <input type="range" class="g" min="0" max="255" value="${gVal}" id="slG" oninput="gVal=+this.value;liveUpdate()">
-        </div>
-        <div class="slider-row">
-          <label>BLUE <span id="bOut">${bVal}</span></label>
-          <input type="range" class="b" min="0" max="255" value="${bVal}" id="slB" oninput="bVal=+this.value;liveUpdate()">
-        </div>
-        <button class="btn" onclick="submitColor()" style="margin-top:8px;width:100%">[ LOCK IN COLOR ]</button>
-      </div>
-    </div>
-    <div class="msg" id="msg"></div>`;
+  `;
 }
 
-function liveUpdate(){
-  const target=TARGETS[round];
-  const myColor=hexStr(rVal,gVal,bVal);
-  const s=document.getElementById('myColor');
-  const hx=document.getElementById('hexOut');
-  const rO=document.getElementById('rOut');
-  const gO=document.getElementById('gOut');
-  const bO=document.getElementById('bOut');
-  if(s)s.style.background=myColor;
-  if(hx)hx.textContent=myColor;
-  if(rO)rO.textContent=rVal;
-  if(gO)gO.textContent=gVal;
-  if(bO)bO.textContent=bVal;
-  const hud=document.querySelector('.hud strong:last-child');
-  const sc=calcScore(target,rVal,gVal,bVal);
-  if(hud){hud.textContent=sc+'%';hud.style.color=sc>=80?'#00C060':sc>=50?'var(--amber)':'var(--crimson)';}
+function startProtocol() {
+  sound.init();
+  sound.click();
+  roundIndex = 0;
+  totalScore = 0;
+  roundHistory = [];
+  initRound();
+  currentScreen = 'mixing';
+  render();
 }
 
-function submitColor(){
-  const target=TARGETS[round];
-  const sc=calcScore(target,rVal,gVal,bVal);
-  totalScore+=sc;
-  roundScores.push({round:round+1,score:sc,target:hexStr(target.r,target.g,target.b),mine:hexStr(rVal,gVal,bVal)});
-  const msg=document.getElementById('msg');
-  if(msg){
-    msg.textContent=`ROUND ${round+1} — Score: ${sc}/100`;
-    msg.style.color=sc>=80?'#00C060':sc>=50?'var(--amber)':'var(--crimson)';
+function initRound() {
+  userR = 128;
+  userG = 128;
+  userB = 128;
+  currentScreen = 'mixing';
+}
+
+function renderMixing() {
+  const target = TARGETS[roundIndex];
+  const targetStyle = `rgb(${target.r}, ${target.g}, ${target.b})`;
+  const userStyle = `rgb(${userR}, ${userG}, ${userB})`;
+  const userHex = toHexStr(userR, userG, userB);
+  const isEvaluated = (currentScreen === 'evaluated');
+
+  let breakdownHtml = '';
+  if (isEvaluated) {
+    const dr = Math.abs(target.r - userR);
+    const dg = Math.abs(target.g - userG);
+    const db = Math.abs(target.b - userB);
+    const avgDist = ((dr + dg + db) / 3).toFixed(1);
+
+    breakdownHtml = `
+      <div class="breakdown-box">
+        <div style="font-weight:bold;color:var(--amber);margin-bottom:8px;letter-spacing:1.5px;">
+          SPECTRAL ANALYSIS BREAKDOWN // ROUND ${roundIndex + 1}
+        </div>
+        <div class="breakdown-row">
+          <span>CLASSIFIED TARGET SPEC:</span>
+          <strong style="color:var(--ivory);">${target.name} (${target.hex} // R:${target.r} G:${target.g} B:${target.b})</strong>
+        </div>
+        <div class="breakdown-row">
+          <span>YOUR MIXED PIGMENT:</span>
+          <strong style="color:var(--text);">${userHex} // R:${userR} G:${userG} B:${userB}</strong>
+        </div>
+        <div class="breakdown-row">
+          <span>CHANNEL DEVIATIONS:</span>
+          <span>ΔR: ${dr} · ΔG: ${dg} · ΔB: ${db} (Avg Distance: ${avgDist})</span>
+        </div>
+        <div class="breakdown-row" style="margin-top:6px;font-size:0.95rem;">
+          <span style="color:var(--amber);font-weight:bold;">ROUND SCORE:</span>
+          <strong style="color:var(--amber);">${lastEvaluatedScore} / 100</strong>
+        </div>
+      </div>
+    `;
   }
-  round++;
-  setTimeout(()=>{
-    if(round<5){nextRound();}
-    else{phase='end';render();}
-  },900);
+
+  app().innerHTML = `
+    <div class="brand-header">
+      <div class="brand-title">COLOR PROTOCOL // PRISMA HOUSE PAINTER</div>
+      <div class="brand-sub">ROUND ${roundIndex + 1} OF 5</div>
+    </div>
+
+    <div class="hud">
+      <div class="hud-stat">
+        <span class="hud-label">Pigment Target</span>
+        <span class="hud-val">${roundIndex + 1} / 5</span>
+      </div>
+      <div class="hud-stat">
+        <span class="hud-label">Total Score</span>
+        <span class="hud-val">${totalScore}</span>
+      </div>
+      <div class="hud-stat">
+        <span class="hud-label">Last Round Score</span>
+        <span class="hud-val ivory">${isEvaluated ? lastEvaluatedScore : (roundHistory.length > 0 ? roundHistory[roundHistory.length - 1].score : '—')}</span>
+      </div>
+      <div class="hud-stat">
+        <span class="hud-label">Target Status</span>
+        <span class="hud-val ivory">${isEvaluated ? 'UNLOCKED' : 'CLASSIFIED'}</span>
+      </div>
+    </div>
+
+    <div class="progress-bar">
+      ${TARGETS.map((_, i) => `
+        <div class="progress-pip ${i < roundIndex ? 'done' : (i === roundIndex ? 'active' : '')}"></div>
+      `).join('')}
+    </div>
+
+    <div class="workspace-grid">
+      <div class="swatch-panel">
+        <div class="panel-caption">
+          <span>◆ TARGET FACADE SPEC</span>
+          <span style="color:var(--amber);">${target.codeName}</span>
+        </div>
+        <div class="color-swatch" style="background: ${targetStyle};">
+          <div class="swatch-overlay-label">
+            ${isEvaluated ? target.hex : 'TARGET PIGMENT // CLASSIFIED'}
+          </div>
+        </div>
+        <div class="swatch-meta">
+          ${isEvaluated ? `SPEC CONFIRMED: ${target.name}` : 'OPTICAL MATCH REQUIRED // MASKED SPEC'}
+        </div>
+      </div>
+
+      <div class="swatch-panel">
+        <div class="panel-caption">
+          <span>◆ YOUR MIXED PIGMENT</span>
+          <span id="userHexDisplay" style="color:var(--ivory);">${userHex}</span>
+        </div>
+        <div class="color-swatch" id="userSwatch" style="background: ${userStyle};">
+          <div class="swatch-overlay-label" id="userRgbDisplay">
+            R:${userR} G:${userG} B:${userB}
+          </div>
+        </div>
+        <div class="swatch-meta">
+          ADJUST CHANNELS TO EQUALIZE LUMINANCE AND CHROMINANCE
+        </div>
+      </div>
+    </div>
+
+    ${breakdownHtml}
+
+    <div class="sliders-panel">
+      <div class="slider-group">
+        <div class="slider-header">
+          <span>RED CHANNEL [0–255]</span>
+          <span class="val" id="valR">${userR}</span>
+        </div>
+        <input type="range" class="slider-crimson" min="0" max="255" value="${userR}" id="sliderR" ${isEvaluated ? 'disabled' : ''} oninput="updateChannel('r', this.value)">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-header">
+          <span>GREEN CHANNEL [0–255]</span>
+          <span class="val" id="valG">${userG}</span>
+        </div>
+        <input type="range" min="0" max="255" value="${userG}" id="sliderG" ${isEvaluated ? 'disabled' : ''} oninput="updateChannel('g', this.value)">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-header">
+          <span>BLUE CHANNEL [0–255]</span>
+          <span class="val" id="valB">${userB}</span>
+        </div>
+        <input type="range" class="slider-slate" min="0" max="255" value="${userB}" id="sliderB" ${isEvaluated ? 'disabled' : ''} oninput="updateChannel('b', this.value)">
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:10px;">
+        ${!isEvaluated ? `
+          <button class="btn btn-block" onclick="commitAnalysis()">[ COMMIT SPECTRAL ANALYSIS ]</button>
+        ` : `
+          <button class="btn btn-block" onclick="proceedNextRound()">
+            ${roundIndex < TARGETS.length - 1 ? '[ PROCEED TO NEXT SPECIFICATION → ]' : '[ VIEW FINAL RECONSTRUCTION REPORT → ]'}
+          </button>
+        `}
+      </div>
+    </div>
+  `;
 }
 
-function renderEnd(){
-  const avg=Math.round(totalScore/5);
-  const grade=avg>=90?'MASTER COLORIST':avg>=70?'PRISMA ARCHITECT':avg>=50?'PALETTE ENGINEER':'COLOR TRAINEE';
-  app().innerHTML=`<div class="screen">
-    <h2>◼ PROTOCOL COMPLETE</h2>
-    <div class="score-big">${totalScore}<span style="font-size:1rem;color:var(--muted)">/500</span></div>
-    <p>AVERAGE MATCH: <strong style="color:var(--amber)">${avg}%</strong> — RANK: <strong style="color:var(--amber)">${grade}</strong></p>
-    ${roundScores.map(rs=>`<div class="result-row"><span>Round ${rs.round}</span><span style="display:flex;gap:12px;align-items:center"><span style="display:inline-block;width:18px;height:18px;background:${rs.target};border:1px solid #333"></span> → <span style="display:inline-block;width:18px;height:18px;background:${rs.mine};border:1px solid #333"></span></span><span style="color:${rs.score>=80?'#00C060':rs.score>=50?'var(--amber)':'var(--crimson)'}">${rs.score}%</span></div>`).join('')}
-    <br>
-    <button class="btn" onclick="startGame()">[ RUN AGAIN ]</button>
-    <button class="btn btn-crimson" onclick="window.history.back()">[ ← RETURN TO GRID ]</button></div>`;
+function updateChannel(channel, val) {
+  sound.sliderTick();
+  const intVal = parseInt(val, 10);
+  if (channel === 'r') userR = intVal;
+  if (channel === 'g') userG = intVal;
+  if (channel === 'b') userB = intVal;
+
+  const hex = toHexStr(userR, userG, userB);
+  const rgb = `rgb(${userR}, ${userG}, ${userB})`;
+
+  const hexDisplay = document.getElementById('userHexDisplay');
+  const rgbDisplay = document.getElementById('userRgbDisplay');
+  const swatch = document.getElementById('userSwatch');
+  const valR = document.getElementById('valR');
+  const valG = document.getElementById('valG');
+  const valB = document.getElementById('valB');
+
+  if (hexDisplay) hexDisplay.textContent = hex;
+  if (rgbDisplay) rgbDisplay.textContent = `R:${userR} G:${userG} B:${userB}`;
+  if (swatch) swatch.style.background = rgb;
+  if (valR) valR.textContent = userR;
+  if (valG) valG.textContent = userG;
+  if (valB) valB.textContent = userB;
 }
 
+function commitAnalysis() {
+  sound.init();
+  const target = TARGETS[roundIndex];
+  const roundScore = calculateChannelScore(target, userR, userG, userB);
+  lastEvaluatedScore = roundScore;
+  totalScore += roundScore;
+
+  roundHistory.push({
+    round: roundIndex + 1,
+    target,
+    mixedHex: toHexStr(userR, userG, userB),
+    userR, userG, userB,
+    score: roundScore
+  });
+
+  sound.commit(roundScore);
+  currentScreen = 'evaluated';
+  render();
+}
+
+function proceedNextRound() {
+  sound.click();
+  if (roundIndex < TARGETS.length - 1) {
+    roundIndex++;
+    initRound();
+    render();
+  } else {
+    currentScreen = 'summary';
+    render();
+  }
+}
+
+function renderSummary() {
+  const avg = Math.round(totalScore / TARGETS.length);
+  const rank = avg >= 92
+    ? 'MASTER ARCHITECTURAL COLORIST'
+    : avg >= 80
+      ? 'SENIOR PRISMA SPECIALIST'
+      : avg >= 65
+        ? 'FACADE RESTORATION ENGINEER'
+        : 'APPRENTICE COLOR TECHNICIAN';
+
+  app().innerHTML = `
+    <div class="brand-header">
+      <div class="brand-title">COLOR PROTOCOL // SYNTHESIS SUMMARY</div>
+      <div class="brand-sub">AUDIT COMPLETED</div>
+    </div>
+    <div class="screen">
+      <h2>◼ SPECTRAL RECONSTRUCTION COMPLETED</h2>
+      <div class="score-banner">${totalScore}<span style="font-size:1.2rem;color:var(--muted);"> / 500</span></div>
+      <p>5 architectural pigments reconstructed.<br>
+      ACCURACY RATING: <strong style="color:var(--amber);">${avg}% AVERAGE MATCH</strong>.<br>
+      PROFICIENCY RANK: <strong style="color:var(--ivory);">${rank}</strong>.</p>
+
+      <div class="briefing-box" style="margin-bottom:24px;">
+        <div style="font-weight:bold;color:var(--amber);margin-bottom:10px;letter-spacing:1.5px;text-align:center;">
+          TARGET VS RECONSTRUCTED COMPARISON
+        </div>
+        ${roundHistory.map(h => `
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #141824;font-size:0.75rem;">
+            <span style="color:var(--muted);">Round ${h.round}: ${h.target.name}</span>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="display:inline-block;width:16px;height:16px;background:${h.target.hex};border:1px solid #333;" title="Target: ${h.target.hex}"></span>
+              <span style="color:var(--muted);">→</span>
+              <span style="display:inline-block;width:16px;height:16px;background:${h.mixedHex};border:1px solid #333;" title="Yours: ${h.mixedHex}"></span>
+              <strong style="color:${h.score >= 80 ? 'var(--amber)' : (h.score >= 60 ? 'var(--ivory)' : 'var(--crimson)')};min-width:44px;text-align:right;">
+                ${h.score}%
+              </strong>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
+        <button class="btn" onclick="startProtocol()">[ RUN CALIBRATION AGAIN ]</button>
+        <button class="btn btn-secondary" onclick="window.location.href='../../README.md'">[ RETURN TO PROFILE ]</button>
+      </div>
+    </div>
+  `;
+}
+
+// Initial render
 render();
 </script>
 </body>

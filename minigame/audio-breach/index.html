@@ -1,222 +1,733 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Audio Breach // Aether Vault Rhythm Sync</title>
+  <title>Audio Breach // Aether Vault Harmonic Signal Synchronization</title>
   <style>
-    :root{--bg:#030305;--panel:#0A0B10;--amber:#D4AF37;--ivory:#F5F0E8;--crimson:#8C1D18;--muted:#64748B;--text:#E0E7FF;--border:#1E293B;}
-    *{box-sizing:border-box;margin:0;padding:0;font-family:'Consolas','Space Mono',monospace;}
-    body{background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;}
-    h1{color:var(--amber);font-size:1.4rem;letter-spacing:4px;text-align:center;margin-bottom:4px;}
-    .subtitle{color:var(--muted);font-size:0.75rem;letter-spacing:3px;text-align:center;margin-bottom:20px;}
-    .game-box{border:1px solid var(--amber);background:var(--panel);padding:24px;max-width:700px;width:100%;}
-    .hud{display:flex;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);font-size:0.8rem;}
-    .hud strong{color:var(--amber);}
-    .hud span{color:var(--muted);}
-    .waveform{height:60px;background:#060710;border:1px solid var(--border);margin-bottom:20px;display:flex;align-items:center;justify-content:center;gap:3px;overflow:hidden;padding:8px;}
-    .wave-bar{width:5px;background:var(--amber);border-radius:0;transition:height 0.08s;}
-    .status-line{text-align:center;font-size:0.85rem;min-height:28px;color:var(--amber);margin-bottom:16px;letter-spacing:2px;}
-    .freq-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;}
-    .freq-btn{padding:20px 8px;background:#060710;border:1px solid var(--border);cursor:pointer;text-align:center;font-family:inherit;font-size:0.75rem;color:var(--muted);transition:all 0.15s;letter-spacing:1px;}
-    .freq-btn:hover{border-color:var(--amber);color:var(--amber);}
-    .freq-btn.active{background:rgba(212,175,55,0.2);border-color:var(--amber);color:var(--amber);}
-    .freq-btn.playing{background:rgba(212,175,55,0.3);border-color:var(--ivory);color:var(--ivory);box-shadow:0 0 10px rgba(212,175,55,0.3);}
-    .freq-btn.correct{background:rgba(0,192,96,0.15);border-color:#00C060;color:#00C060;}
-    .freq-btn.wrong{background:rgba(140,29,24,0.15);border-color:var(--crimson);color:var(--crimson);}
-    .progress-row{display:flex;gap:8px;margin-bottom:12px;}
-    .pip{width:12px;height:12px;border:1px solid var(--border);}
-    .pip.done{background:var(--amber);}
-    .pip.correct{background:#00C060;}
-    .pip.wrong{background:var(--crimson);}
-    .pip.active{border-color:var(--amber);}
-    .btn{background:transparent;border:1px solid var(--amber);color:var(--amber);padding:8px 20px;cursor:pointer;font-family:inherit;font-size:0.85rem;letter-spacing:2px;transition:all 0.2s;margin:4px;}
-    .btn:hover{background:var(--amber);color:var(--bg);}
-    .btn-crimson{border-color:var(--crimson);color:var(--crimson);}
-    .btn-crimson:hover{background:var(--crimson);color:var(--ivory);}
-    .screen{text-align:center;padding:40px 20px;}
-    .screen h2{color:var(--amber);font-size:1.6rem;letter-spacing:3px;margin-bottom:12px;}
-    .screen p{color:var(--muted);font-size:0.85rem;line-height:1.7;margin-bottom:20px;}
-    .score-big{font-size:3rem;color:var(--amber);margin:16px 0;}
-    .instructions{background:#06070e;border:1px solid var(--border);padding:12px 16px;margin-bottom:20px;font-size:0.8rem;color:var(--muted);line-height:1.7;}
-    .instructions strong{color:var(--ivory);}
+    :root {
+      --bg: #030305;
+      --panel: #0A0B10;
+      --panel-elevated: #11131B;
+      --amber: #D4AF37;
+      --amber-dim: rgba(212, 175, 55, 0.15);
+      --ivory: #F5F0E8;
+      --crimson: #8C1D18;
+      --crimson-dim: rgba(140, 29, 24, 0.2);
+      --muted: #64748B;
+      --text: #E0E7FF;
+      --border: #1E293B;
+      --font-mono: 'Consolas', 'Space Mono', 'Courier New', monospace;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-mono);
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      user-select: none;
+    }
+    .game-container {
+      width: 100%;
+      max-width: 900px;
+      background: var(--panel);
+      border: 1px solid var(--amber);
+      padding: 28px 24px;
+      box-shadow: 0 0 35px rgba(0, 0, 0, 0.85);
+      position: relative;
+    }
+    .brand-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+    .brand-title {
+      color: var(--amber);
+      font-size: 1.1rem;
+      letter-spacing: 3px;
+      font-weight: bold;
+    }
+    .brand-sub {
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+    }
+    .hud {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+      background: var(--panel-elevated);
+      border: 1px solid var(--border);
+      padding: 10px 16px;
+    }
+    .hud-stat {
+      display: flex;
+      flex-direction: column;
+    }
+    .hud-label {
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+    .hud-val {
+      font-size: 1.15rem;
+      font-weight: bold;
+      color: var(--amber);
+    }
+    .hud-val.ivory {
+      color: var(--ivory);
+    }
+    .waveform-visualizer {
+      height: 64px;
+      background: #05060A;
+      border: 1px solid var(--border);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 8px 16px;
+      overflow: hidden;
+    }
+    .wave-bar {
+      width: 8px;
+      background: var(--amber);
+      border-radius: 1px;
+      transition: height 0.08s ease;
+      opacity: 0.7;
+    }
+    .wave-bar.active {
+      opacity: 1;
+      background: var(--ivory);
+      box-shadow: 0 0 8px rgba(245, 240, 232, 0.6);
+    }
+    .status-banner {
+      text-align: center;
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      min-height: 28px;
+      margin-bottom: 16px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .status-banner.listen {
+      color: var(--amber);
+    }
+    .status-banner.input {
+      color: var(--ivory);
+    }
+    .status-banner.success {
+      color: var(--amber);
+    }
+    .status-banner.error {
+      color: var(--crimson);
+    }
+    .pips-container {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+    .seq-pip {
+      width: 14px;
+      height: 14px;
+      border: 1px solid var(--border);
+      background: #070910;
+      transition: all 0.2s;
+    }
+    .seq-pip.lit {
+      background: var(--amber);
+      border-color: var(--amber);
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+    }
+    .seq-pip.failed {
+      background: var(--crimson);
+      border-color: var(--crimson);
+    }
+    .terminals-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 680px) {
+      .terminals-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    .terminal-pad {
+      background: #070912;
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--muted);
+      padding: 18px 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      position: relative;
+    }
+    .terminal-pad:hover:not(:disabled) {
+      background: #0F1322;
+      border-color: var(--amber);
+      box-shadow: 0 0 12px rgba(212, 175, 55, 0.2);
+    }
+    .terminal-pad:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+    .terminal-pad.lit-system {
+      background: rgba(212, 175, 55, 0.25) !important;
+      border-color: var(--amber) !important;
+      border-top-color: var(--ivory) !important;
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+      transform: translateY(-2px);
+    }
+    .terminal-pad.lit-user {
+      background: rgba(245, 240, 232, 0.2) !important;
+      border-color: var(--ivory) !important;
+      border-top-color: var(--amber) !important;
+      box-shadow: 0 0 16px rgba(245, 240, 232, 0.5);
+      transform: translateY(-2px);
+    }
+    .terminal-pad.lit-error {
+      background: rgba(140, 29, 24, 0.3) !important;
+      border-color: var(--crimson) !important;
+      border-top-color: var(--crimson) !important;
+      box-shadow: 0 0 16px rgba(140, 29, 24, 0.6);
+    }
+    .terminal-glyph {
+      font-size: 1.2rem;
+      color: var(--amber);
+      margin-bottom: 6px;
+    }
+    .terminal-name {
+      font-size: 0.78rem;
+      font-weight: bold;
+      color: var(--ivory);
+      letter-spacing: 1.5px;
+      margin-bottom: 2px;
+    }
+    .terminal-freq {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+    .terminal-hotkey {
+      position: absolute;
+      top: 4px;
+      right: 6px;
+      font-size: 0.6rem;
+      color: var(--muted);
+    }
+    .controls-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .btn {
+      background: transparent;
+      border: 1px solid var(--amber);
+      color: var(--amber);
+      padding: 10px 22px;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: all 0.18s;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+    .btn:hover {
+      background: var(--amber);
+      color: var(--bg);
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+    }
+    .btn-secondary {
+      border-color: var(--muted);
+      color: var(--muted);
+    }
+    .btn-secondary:hover {
+      background: var(--muted);
+      color: var(--bg);
+    }
+    .btn-crimson {
+      border-color: var(--crimson);
+      color: var(--crimson);
+    }
+    .btn-crimson:hover {
+      background: var(--crimson);
+      color: var(--ivory);
+    }
+    .screen {
+      text-align: center;
+      padding: 40px 16px;
+    }
+    .screen h2 {
+      color: var(--amber);
+      font-size: 1.6rem;
+      letter-spacing: 3px;
+      margin-bottom: 12px;
+    }
+    .screen p {
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.7;
+      margin-bottom: 24px;
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .briefing-box {
+      background: #06070E;
+      border: 1px solid var(--border);
+      padding: 16px 20px;
+      margin: 0 auto 28px;
+      max-width: 640px;
+      text-align: left;
+      font-size: 0.78rem;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+    .briefing-box strong {
+      color: var(--ivory);
+    }
+    .score-banner {
+      font-size: 3.2rem;
+      font-weight: bold;
+      color: var(--amber);
+      margin: 16px 0 8px;
+      letter-spacing: 4px;
+    }
   </style>
 </head>
 <body>
-<div class="game-box" id="app"></div>
+
+<div class="game-container" id="app"></div>
+
 <script>
-// Frequency library — 8 distinct, memorable tones
-const FREQS = [220, 293.66, 349.23, 440, 523.25, 659.25, 783.99, 987.77];
-const FREQ_LABELS = ['A3','D4','F4','A4','C5','E5','G5','B5'];
-
-let audioCtx = null;
-let phase = 'title', round = 0, score = 0;
-let sequence = [], playerSeq = [], playing = false;
-let roundResults = [];
-
-function getCtx(){
-  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  return audioCtx;
-}
-
-function playTone(freq, duration=0.4, startTime=0){
-  const ctx = getCtx();
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  osc.type = 'sine';
-  osc.frequency.value = freq;
-  gain.gain.setValueAtTime(0.001, ctx.currentTime + startTime);
-  gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + startTime + 0.02);
-  gain.gain.linearRampToValueAtTime(0.001, ctx.currentTime + startTime + duration - 0.02);
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-  osc.start(ctx.currentTime + startTime);
-  osc.stop(ctx.currentTime + startTime + duration);
-}
-
-function app(){return document.getElementById('app');}
-
-function render(){
-  if(phase==='title') renderTitle();
-  else if(phase==='game') renderGame();
-  else if(phase==='end') renderEnd();
-}
-
-function renderTitle(){
-  app().innerHTML=`<div class="screen">
-    <h2>◼ AUDIO BREACH</h2>
-    <p style="color:var(--amber);font-size:0.7rem;letter-spacing:3px;margin-bottom:16px">SIGNAL SYNC ENGINE // LINKED TO: AETHER VAULT</p>
-    <div class="instructions">
-      <strong>MISSION:</strong> Listen to the tone sequence. Then click the matching frequency buttons in the same order.<br>
-      <strong>ROUNDS:</strong> 5 rounds. Sequence length grows each round (3 → 7 tones).<br>
-      <strong>SCORING:</strong> 20 points per correct round. Listen carefully — no replays.
-    </div>
-    <button class="btn" onclick="startGame()">[ ACCESS AETHER VAULT → ]</button></div>`;
-}
-
-function startGame(){phase='game';round=0;score=0;roundResults=[];startRound();}
-
-function startRound(){
-  const seqLen = 3 + round; // 3,4,5,6,7
-  sequence = Array.from({length:seqLen}, ()=>Math.floor(Math.random()*FREQS.length));
-  playerSeq = [];
-  playing = true;
-  render();
-  playSequence(() => { playing = false; render(); });
-}
-
-function playSequence(callback){
-  sequence.forEach((fi, i) => {
-    const t = i * 0.6;
-    playTone(FREQS[fi], 0.4, t);
-    setTimeout(()=>{
-      const btns = document.querySelectorAll('.freq-btn');
-      btns.forEach(b=>b.classList.remove('playing'));
-      const target = document.querySelector(`.freq-btn[data-fi="${fi}"]`);
-      if(target) target.classList.add('playing');
-      setTimeout(()=>{ if(target) target.classList.remove('playing'); }, 350);
-    }, t*1000);
-  });
-  setTimeout(callback, sequence.length * 600 + 200);
-}
-
-function renderGame(){
-  const seqLen = 3 + round;
-  const wBars = Array.from({length:24},(_,i)=>{
-    const h = playing ? Math.round(10+Math.random()*40) : 4;
-    return `<div class="wave-bar" style="height:${h}px"></div>`;
-  }).join('');
-
-  app().innerHTML=`
-    <h1>AUDIO BREACH</h1>
-    <div class="subtitle">SIGNAL SYNC ENGINE</div>
-    <div class="hud">
-      <span>ROUND <strong>${round+1}/5</strong></span>
-      <span>SEQUENCE <strong>${seqLen} TONES</strong></span>
-      <span>SCORE <strong>${score}</strong></span>
-    </div>
-    <div class="waveform" id="waveform">${wBars}</div>
-    <div class="status-line" id="status">${playing?'▶ PLAYING SEQUENCE — LISTEN...':'◼ YOUR TURN — REPEAT THE SEQUENCE'}</div>
-    <div class="freq-grid" id="freqGrid">
-      ${FREQS.map((f,i)=>`<button class="freq-btn" data-fi="${i}" onclick="onFreqClick(${i})" ${playing?'disabled':''}>
-        <div style="font-size:1rem;margin-bottom:4px">♩</div>
-        <div>${FREQ_LABELS[i]}</div>
-        <div style="font-size:0.65rem;color:inherit;margin-top:2px">${Math.round(f)}Hz</div>
-      </button>`).join('')}
-    </div>
-    <div class="progress-row">
-      ${Array.from({length:seqLen},(_,i)=>`<div class="pip ${i<playerSeq.length?'done':''}"></div>`).join('')}
-    </div>`;
-
-  if(playing){
-    const animate=()=>{
-      const bars=document.querySelectorAll('.wave-bar');
-      bars.forEach(b=>b.style.height=Math.round(4+Math.random()*50)+'px');
-      if(playing) requestAnimationFrame(animate);
-    };
-    requestAnimationFrame(animate);
+// --- Web Audio API Synthesizer ---
+class AudioBreachSynthesizer {
+  constructor() {
+    this.ctx = null;
+  }
+  init() {
+    if (!this.ctx) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) this.ctx = new AudioCtx();
+    }
+    if (this.ctx && this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
+  }
+  playTone(freq, duration = 0.45, type = 'sine', volume = 0.12) {
+    if (!this.ctx) return;
+    try {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+      gain.gain.setValueAtTime(0.001, this.ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(volume, this.ctx.currentTime + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + duration);
+    } catch (e) {}
+  }
+  successChime() {
+    [440, 554.37, 659.25, 880].forEach((f, i) => {
+      setTimeout(() => this.playTone(f, 0.2, 'sine', 0.08), i * 75);
+    });
+  }
+  errorBuzz() {
+    if (!this.ctx) return;
+    try {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(120, this.ctx.currentTime);
+      gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.35);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.35);
+    } catch (e) {}
   }
 }
+const synth = new AudioBreachSynthesizer();
 
-function onFreqClick(fi){
-  if(playing) return;
-  playTone(FREQS[fi], 0.3);
-  // Flash button
-  const btn=document.querySelector(`.freq-btn[data-fi="${fi}"]`);
-  if(btn){ btn.classList.add('active'); setTimeout(()=>btn.classList.remove('active'),300); }
+// --- 5 Curated Frequency Terminals ---
+const TERMINALS = [
+  { id: 0, code: 'NODE 01', label: 'ALPHA',   freq: 220,    note: 'A3',  glyph: '∿' },
+  { id: 1, code: 'NODE 02', label: 'BETA',    freq: 294,    note: 'D4',  glyph: '≋' },
+  { id: 2, code: 'NODE 03', label: 'GAMMA',   freq: 330,    note: 'E4',  glyph: '⍾' },
+  { id: 3, code: 'NODE 04', label: 'DELTA',   freq: 440,    note: 'A4',  glyph: '⌖' },
+  { id: 4, code: 'NODE 05', label: 'EPSILON', freq: 554,    note: 'C#5', glyph: '⌬' }
+];
 
-  playerSeq.push(fi);
+// --- 5 Progressive Rounds: 3 to 7 tone sequence length ---
+const ROUND_LENGTHS = [3, 4, 5, 6, 7];
+const TOTAL_ROUNDS = 5;
 
-  // Check correctness so far
-  const pos = playerSeq.length - 1;
-  if(playerSeq[pos] !== sequence[pos]){
-    // Wrong
-    roundResults.push({round:round+1,correct:false,seqLen:3+round});
-    const status=document.getElementById('status');
-    if(status){status.textContent='✗ WRONG SIGNAL — SEQUENCE FAILED';status.style.color='var(--crimson)';}
-    setTimeout(()=>{
-      round++;
-      if(round<5) startRound();
-      else {phase='end';render();}
-    },1200);
+// --- Game State ---
+let currentScreen = 'title'; // 'title' | 'play' | 'summary'
+let roundIndex = 0;
+let score = 0;
+let sequence = [];
+let playerInputs = [];
+let isPlayingSequence = false;
+let roundHistory = [];
+let animVisualizerId = null;
+
+function app() { return document.getElementById('app'); }
+
+function render() {
+  if (currentScreen === 'title') renderTitle();
+  else if (currentScreen === 'play') renderPlay();
+  else if (currentScreen === 'summary') renderSummary();
+}
+
+function renderTitle() {
+  app().innerHTML = `
+    <div class="brand-header">
+      <div class="brand-title">AETHER VAULT // AUDIO BREACH</div>
+      <div class="brand-sub">HARMONIC SIGNAL SYNCHRONIZER</div>
+    </div>
+    <div class="screen">
+      <h2>◼ ACOUSTIC CRYPTOGRAPHIC PROTOCOL</h2>
+      <p>Synchronize harmonic transmission sequences to unlock the encrypted partitions of <strong>Aether Vault</strong>. Synthesized purely in real-time via the Web Audio API.</p>
+      
+      <div class="briefing-box">
+        <strong>OPERATION PROTOCOL:</strong><br>
+        1. Click "[ INITIALIZE AUDIO BREACH → ]" to activate the Web Audio engine.<br>
+        2. In each cycle, listen to the acoustic sequence transmitted across <strong>5 frequency terminals</strong>:<br>
+           &nbsp;&nbsp;• <strong>ALPHA (220 Hz)</strong> · <strong>BETA (294 Hz)</strong> · <strong>GAMMA (330 Hz)</strong> · <strong>DELTA (440 Hz)</strong> · <strong>EPSILON (554 Hz)</strong><br>
+        3. Replicate the frequency sequence in identical order using mouse clicks or keyboard hotkeys <strong>[1–5]</strong>.<br>
+        4. Complexity scales progressively across 5 cycles: <strong>3 → 4 → 5 → 6 → 7 tones</strong>.<br>
+        5. Perfect sequence reproduction yields <strong>+100 points</strong> per cycle.
+      </div>
+
+      <button class="btn" onclick="startSession()">[ INITIALIZE AUDIO BREACH → ]</button>
+    </div>
+  `;
+}
+
+function startSession() {
+  synth.init();
+  synth.playTone(440, 0.1);
+  roundIndex = 0;
+  score = 0;
+  roundHistory = [];
+  currentScreen = 'play';
+  startCycle();
+}
+
+function startCycle() {
+  const seqLength = ROUND_LENGTHS[roundIndex];
+  sequence = [];
+  for (let i = 0; i < seqLength; i++) {
+    sequence.push(Math.floor(Math.random() * TERMINALS.length));
+  }
+  playerInputs = [];
+  isPlayingSequence = true;
+  renderPlay();
+
+  // Play the acoustic transmission sequence after short pause
+  setTimeout(() => {
+    transmitSequence();
+  }, 600);
+}
+
+function transmitSequence() {
+  isPlayingSequence = true;
+  updateStatus('▶ TRANSMITTING CRYPTOGRAPHIC SIGNAL — LISTEN...', 'listen');
+  disableTerminalButtons(true);
+
+  sequence.forEach((terminalIdx, step) => {
+    const delay = step * 620;
+    setTimeout(() => {
+      const term = TERMINALS[terminalIdx];
+      synth.playTone(term.freq, 0.42, 'sine', 0.14);
+      highlightTerminal(terminalIdx, 'lit-system', 400);
+      triggerWaveBars();
+    }, delay);
+  });
+
+  const totalTime = sequence.length * 620 + 250;
+  setTimeout(() => {
+    isPlayingSequence = false;
+    disableTerminalButtons(false);
+    updateStatus('◼ INPUT REQUIRED // REPLICATE FREQUENCY SEQUENCE', 'input');
+  }, totalTime);
+}
+
+function handleTerminalClick(terminalIdx) {
+  if (isPlayingSequence) return;
+  synth.init();
+
+  const term = TERMINALS[terminalIdx];
+  synth.playTone(term.freq, 0.35, 'sine', 0.12);
+  highlightTerminal(terminalIdx, 'lit-user', 220);
+  triggerWaveBars();
+
+  playerInputs.push(terminalIdx);
+  const currentStep = playerInputs.length - 1;
+
+  // Check if current input matches the sequence
+  if (playerInputs[currentStep] !== sequence[currentStep]) {
+    // Incorrect input
+    synth.errorBuzz();
+    highlightTerminal(terminalIdx, 'lit-error', 350);
+    markPip(currentStep, 'failed');
+    updateStatus('✗ FREQUENCY DESYNCHRONIZATION DETECTED // SEQUENCE REJECTED', 'error');
+    isPlayingSequence = true;
+    disableTerminalButtons(true);
+
+    roundHistory.push({
+      round: roundIndex + 1,
+      tones: sequence.length,
+      success: false,
+      scoreAdded: 0
+    });
+
+    setTimeout(() => {
+      proceedAfterCycle();
+    }, 1400);
     return;
   }
 
-  // Update pips
-  const pips=document.querySelectorAll('.pip');
-  if(pips[pos]) pips[pos].classList.add('done');
+  // Correct step
+  markPip(currentStep, 'lit');
 
-  if(playerSeq.length === sequence.length){
-    // Correct!
-    score += 20;
-    roundResults.push({round:round+1,correct:true,seqLen:3+round});
-    const status=document.getElementById('status');
-    if(status){status.textContent='✓ SEQUENCE SYNCHRONIZED — SIGNAL LOCKED';status.style.color='#00C060';}
-    setTimeout(()=>{
-      round++;
-      if(round<5) startRound();
-      else {phase='end';render();}
-    },1000);
+  // Check if sequence is complete
+  if (playerInputs.length === sequence.length) {
+    // Round succeeded!
+    synth.successChime();
+    const cycleScore = 100 + (roundIndex * 20);
+    score += cycleScore;
+    updateStatus(`✓ SIGNAL SYNCHRONIZED (+${cycleScore} PTS)`, 'success');
+    updateHudScore();
+    isPlayingSequence = true;
+    disableTerminalButtons(true);
+
+    roundHistory.push({
+      round: roundIndex + 1,
+      tones: sequence.length,
+      success: true,
+      scoreAdded: cycleScore
+    });
+
+    setTimeout(() => {
+      proceedAfterCycle();
+    }, 1300);
   }
 }
 
-function renderEnd(){
-  const correct=roundResults.filter(r=>r.correct).length;
-  const grade=score>=100?'SIGNAL_MASTER':score>=60?'FREQUENCY_ENGINEER':score>=40?'RHYTHM_ANALYST':'SIGNAL_TRAINEE';
-  app().innerHTML=`<div class="screen">
-    <h2>◼ BREACH COMPLETE</h2>
-    <div class="score-big">${score}<span style="font-size:1rem;color:var(--muted)">/100</span></div>
-    <p>ROUNDS CORRECT: <strong style="color:var(--amber)">${correct}/5</strong> — RANK: <strong style="color:var(--amber)">${grade}</strong></p>
-    ${roundResults.map(r=>`<div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:4px">
-      <span style="color:var(--muted)">Round ${r.round} (${r.seqLen} tones)</span>
-      <span style="color:${r.correct?'#00C060':'var(--crimson)'}">${r.correct?'✓ SYNCED':'✗ LOST'}</span>
-    </div>`).join('')}
-    <br>
-    <p>Aether Vault — where every frequency matters and every beat is sovereign.</p>
-    <button class="btn" onclick="startGame()">[ RUN AGAIN ]</button>
-    <button class="btn btn-crimson" onclick="window.history.back()">[ ← RETURN TO GRID ]</button></div>`;
+function proceedAfterCycle() {
+  if (roundIndex < TOTAL_ROUNDS - 1) {
+    roundIndex++;
+    startCycle();
+  } else {
+    currentScreen = 'summary';
+    synth.successChime();
+    render();
+  }
 }
 
+function highlightTerminal(idx, className, duration) {
+  const pad = document.getElementById(`term-${idx}`);
+  if (pad) {
+    pad.classList.add(className);
+    setTimeout(() => {
+      pad.classList.remove(className);
+    }, duration);
+  }
+}
+
+function markPip(stepIndex, className) {
+  const pip = document.getElementById(`pip-${stepIndex}`);
+  if (pip) {
+    pip.className = `seq-pip ${className}`;
+  }
+}
+
+function disableTerminalButtons(disabled) {
+  const btns = document.querySelectorAll('.terminal-pad');
+  btns.forEach(b => b.disabled = disabled);
+}
+
+function updateStatus(text, statusClass) {
+  const banner = document.getElementById('statusBanner');
+  if (banner) {
+    banner.textContent = text;
+    banner.className = `status-banner ${statusClass}`;
+  }
+}
+
+function updateHudScore() {
+  const scoreEl = document.getElementById('scoreVal');
+  if (scoreEl) scoreEl.textContent = score;
+}
+
+function triggerWaveBars() {
+  const bars = document.querySelectorAll('.wave-bar');
+  bars.forEach(b => {
+    const h = Math.round(8 + Math.random() * 48);
+    b.style.height = `${h}px`;
+    b.classList.add('active');
+  });
+  setTimeout(() => {
+    bars.forEach(b => {
+      b.style.height = '6px';
+      b.classList.remove('active');
+    });
+  }, 220);
+}
+
+function renderPlay() {
+  const seqLength = ROUND_LENGTHS[roundIndex];
+
+  app().innerHTML = `
+    <div class="brand-header">
+      <div class="brand-title">AETHER VAULT // AUDIO BREACH</div>
+      <div class="brand-sub">CYCLE: ${roundIndex + 1} / ${TOTAL_ROUNDS}</div>
+    </div>
+
+    <div class="hud">
+      <div class="hud-stat">
+        <span class="hud-label">Signal Cycle</span>
+        <span class="hud-val">${roundIndex + 1} / ${TOTAL_ROUNDS}</span>
+      </div>
+      <div class="hud-stat">
+        <span class="hud-label">Sequence Length</span>
+        <span class="hud-val">${seqLength} TONES</span>
+      </div>
+      <div class="hud-stat">
+        <span class="hud-label">Vault Score</span>
+        <span class="hud-val ivory" id="scoreVal">${score}</span>
+      </div>
+      <div class="hud-stat">
+        <span class="hud-label">Aether Channel</span>
+        <span class="hud-val ivory">ACTIVE</span>
+      </div>
+    </div>
+
+    <div class="waveform-visualizer" id="waveVisualizer">
+      ${Array.from({ length: 28 }, () => `<div class="wave-bar" style="height:6px;"></div>`).join('')}
+    </div>
+
+    <div class="status-banner listen" id="statusBanner">
+      ▶ INITIALIZING SIGNAL TRANSMISSION...
+    </div>
+
+    <div class="pips-container">
+      ${Array.from({ length: seqLength }, (_, i) => `
+        <div class="seq-pip" id="pip-${i}"></div>
+      `).join('')}
+    </div>
+
+    <div class="terminals-grid">
+      ${TERMINALS.map((t, i) => `
+        <button class="terminal-pad" id="term-${i}" onclick="handleTerminalClick(${i})">
+          <div class="terminal-hotkey">[${i + 1}]</div>
+          <div class="terminal-glyph">${t.glyph}</div>
+          <div class="terminal-name">${t.label}</div>
+          <div class="terminal-freq">${t.freq} Hz</div>
+        </button>
+      `).join('')}
+    </div>
+
+    <div class="controls-bar">
+      <div style="font-size:0.75rem;color:var(--muted);letter-spacing:1px;">
+        INPUT: CLICK TERMINALS OR USE KEYS [1–5]
+      </div>
+      <button class="btn btn-crimson" style="padding:6px 14px;font-size:0.7rem;" onclick="abortSession()">[ ABORT ]</button>
+    </div>
+  `;
+}
+
+function abortSession() {
+  currentScreen = 'title';
+  render();
+}
+
+function renderSummary() {
+  const correctCycles = roundHistory.filter(h => h.success).length;
+  const rank = correctCycles === 5
+    ? 'CHIEF ACOUSTIC CRYPTOGRAPHER'
+    : correctCycles >= 4
+      ? 'AETHER SIGNAL ARCHITECT'
+      : correctCycles >= 2
+        ? 'RESONANCE OPERATIONS SPECIALIST'
+        : 'FREQUENCY APPRENTICE';
+
+  app().innerHTML = `
+    <div class="brand-header">
+      <div class="brand-title">AETHER VAULT // BREACH COMPLETED</div>
+      <div class="brand-sub">VAULT PARTITIONS AUDITED</div>
+    </div>
+    <div class="screen">
+      <h2>◼ HARMONIC DECRYPTION COMPLETE</h2>
+      <div class="score-banner">${score}</div>
+      <p>5 progressive acoustic transmission cycles processed.<br>
+      SYNCHRONIZATION RATIO: <strong style="color:var(--amber);">${correctCycles} / 5 CYCLES ACCURATE</strong>.<br>
+      SECURITY CLEARANCE: <strong style="color:var(--ivory);">${rank}</strong>.</p>
+
+      <div class="briefing-box" style="margin-bottom:24px;">
+        <div style="font-weight:bold;color:var(--amber);margin-bottom:10px;letter-spacing:1.5px;text-align:center;">
+          FREQUENCY TRANSMISSION CYCLE BREAKDOWN
+        </div>
+        ${roundHistory.map(h => `
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #141824;font-size:0.75rem;">
+            <span style="color:var(--muted);">Cycle ${h.round} (${h.tones} Tones)</span>
+            <strong style="color:${h.success ? 'var(--amber)' : 'var(--crimson)'};">
+              ${h.success ? `✓ SYNCHRONIZED (+${h.scoreAdded} PTS)` : '✗ REJECTED (0 PTS)'}
+            </strong>
+          </div>
+        `).join('')}
+      </div>
+
+      <p style="font-size:0.78rem;color:var(--muted);line-height:1.6;">
+        Linked System: <strong>Aether Vault</strong> — sovereign real-time audio synthesis and architectural harmonics.
+      </p>
+
+      <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:20px;">
+        <button class="btn" onclick="startSession()">[ REINITIALIZE BREACH SIMULATION ]</button>
+        <button class="btn btn-secondary" onclick="window.location.href='../../README.md'">[ RETURN TO PROFILE ]</button>
+      </div>
+    </div>
+  `;
+}
+
+// Keyboard shortcuts for hotkeys 1, 2, 3, 4, 5
+window.addEventListener('keydown', (e) => {
+  if (currentScreen !== 'play' || isPlayingSequence) return;
+  if (e.key === '1') handleTerminalClick(0);
+  else if (e.key === '2') handleTerminalClick(1);
+  else if (e.key === '3') handleTerminalClick(2);
+  else if (e.key === '4') handleTerminalClick(3);
+  else if (e.key === '5') handleTerminalClick(4);
+});
+
+// Initial render
 render();
 </script>
 </body>
