@@ -6,6 +6,13 @@
 
 <img src="https://readme-typing-svg.demolab.com?font=Space+Mono&size=20&duration=3000&pause=1000&color=D4AF37&center=true&vCenter=true&width=860&lines=CORP%2F%2FSYSTEMS+ARCHITECTURE;NETWORK+NODE%3A+VICTOR-HUGH;ARCHITECTURE+STATUS%3A+EVOLVING;BUILD+%C2%B7+REFACTOR+%C2%B7+HARDEN;SIGNAL+ROUTE%3A+PROJECT+%E2%86%92+SYSTEM+%E2%86%92+PRODUCT" alt="Corporate Terminal" />
 
+<p>
+  <a href="https://github.com/VictorRamosHC"><img src="https://img.shields.io/badge/OPERATOR-VICTOR__HUGO-030305?style=for-the-badge&logo=gnu-bash&logoColor=D4AF37" alt="Operador"></a>
+  <a href="https://github.com/VictorRamosHC?tab=repositories"><img src="https://img.shields.io/badge/DATA__VAULT-REPOSITÓRIOS-030305?style=for-the-badge&logo=git&logoColor=F5F0E8" alt="Repositórios"></a>
+  <a href="https://github.com/VictorRamosHC/hugh-player/releases/latest"><img src="https://img.shields.io/badge/PAYLOAD-AETHER__v1.5.0-030305?style=for-the-badge&logo=android&logoColor=D4AF37" alt="Latest APK"></a>
+  <a href="https://victorramoshc.github.io/VictorRamosHC/minigame/"><img src="https://img.shields.io/badge/GAMES__HUB-ONLINE-030305?style=for-the-badge&logo=vercel&logoColor=00FF66" alt="Games Hub"></a>
+</p>
+
 </div>
 
 ---
@@ -16,28 +23,12 @@ Engenheiro de software focado em sistemas distribuídos, arquitetura resiliente 
 
 ---
 
-## ⚡ [ 02 // EVOLUTION LINE ]
+## ⚡ [ 02 // EVOLUTION LINE & TOPOLOGY ]
 
 ```text
-ProjetoViagem ──→ GlassTask ──→ Prisma House Painter ──→ Aether Vault
-[ Foundations ]    [ Ergonomics ]   [ Design System ]        [ Sovereign Audio ]
+ProjetoViagem ────► GlassTask ────► Prisma House Painter ────► Aether Vault
+[ Foundations ]      [ Ergonomics ]      [ Design System ]          [ Sovereign Audio ]
 ```
-
----
-
-## 🏛️ [ 03 // SYSTEMS ARCHITECTURE ]
-
-| System | Demonstrates | Stack & Engineering | Access |
-| :--- | :--- | :--- | :---: |
-| [**Aether Vault**](https://github.com/VictorRamosHC/hugh-player) | Sovereign offline Android audio player, Media3 ExoPlayer engine, 5-band DSP, synchronized .LRC lyrics, Room SQLite | `Kotlin 2.0` · `Compose` · `Media3` · `Room` | [<img src="https://img.shields.io/badge/Download_APK-v1.5.0-030305?style=flat-square&logo=android&logoColor=D4AF37" alt="APK">](https://github.com/VictorRamosHC/hugh-player/releases/latest) |
-| [**Prisma House Painter**](https://github.com/VictorRamosHC/Prisma-House-painter) | Institutional design system, decoupled components, reactive state, responsive performance | `Next.js` · `React` · `TypeScript` · `Tailwind` | [<img src="https://img.shields.io/badge/Deploy-Vercel-030305?style=flat-square&logo=vercel&logoColor=D4AF37" alt="Deploy">](https://prisma-house-painter.vercel.app) |
-| [**GlassTask**](https://github.com/VictorRamosHC/Gerenciador-de-tarefas) | High-ergonomics task prioritization dashboard with glassmorphism UI, client persistence, real-time counters | `Vanilla JS` · `CSS Glass` · `localStorage` | [<img src="https://img.shields.io/badge/Deploy-Vercel-030305?style=flat-square&logo=vercel&logoColor=D4AF37" alt="Deploy">](https://gerenciador-de-tarefas-one-gold.vercel.app) |
-| [**Cassino Reverso**](https://github.com/VictorRamosHC/cassino-reverso) | Gamified statistical simulator designed for probabilistic awareness and anti-gambling education | `Next.js` · `TypeScript` · `Tailwind` | [<img src="https://img.shields.io/badge/Deploy-Vercel-030305?style=flat-square&logo=vercel&logoColor=D4AF37" alt="Deploy">](https://cassino-reverso.vercel.app) |
-| [**ProjetoViagem**](https://github.com/VictorRamosHC/ProjetoViagem) | Semantic web markup standards and foundational layout engineering; genesis of engineering trajectory | `HTML5` · `CSS3` | [<img src="https://img.shields.io/badge/Code-GitHub-030305?style=flat-square&logo=github&logoColor=D4AF37" alt="Repo">](https://github.com/VictorRamosHC/ProjetoViagem) |
-
----
-
-## 🌐 [ 04 // TOPOLOGY & ROUTING ]
 
 <div align="center">
   <img src="assets/network_map.svg" alt="Systems Topology & Routing Map" width="100%" />
@@ -45,18 +36,32 @@ ProjetoViagem ──→ GlassTask ──→ Prisma House Painter ──→ Aethe
 
 ---
 
-## ◼ [ 05 // INTERACTIVE SYSTEMS ]
+## 🏛️ [ 03 // SYSTEMS ARCHITECTURE ]
 
-| System | Description | Access |
-|---|---|---|
-| **Signal Route** | Map the correct network path between nodes. Linked to ProjetoViagem. | [PLAY SIMULATION →](./minigame/signal-route/index.html) |
-| **Task Triage** | Prioritize the backlog before operational collapse. Linked to GlassTask. | [OPEN CONTROL ROOM →](./minigame/task-triage/index.html) |
-| **Color Protocol** | Reconstruct the facade composition. Linked to Prisma House Painter. | [ENTER PRISMA GRID →](./minigame/color-protocol/index.html) |
-| **Audio Breach** | Synchronize frequency, rhythm, and signal. Linked to Aether Vault. | [ACCESS AETHER VAULT →](./minigame/audio-breach/index.html) |
+| Sistema | O que demonstra | Stack & Engenharia | Acesso |
+| :--- | :--- | :--- | :---: |
+| [**Aether Vault**](https://github.com/VictorRamosHC/hugh-player) | Player Android offline soberano, motor de áudio Media3 ExoPlayer, DSP 5 bandas, letras .LRC sincronizadas, Room SQLite | `Kotlin 2.0` · `Compose` · `Media3` · `Room` | [<img src="https://img.shields.io/badge/Download_APK-v1.5.0-030305?style=flat-square&logo=android&logoColor=D4AF37" alt="APK">](https://github.com/VictorRamosHC/hugh-player/releases/latest) |
+| [**Prisma House Painter**](https://github.com/VictorRamosHC/Prisma-House-painter) | Plataforma institucional com design system moderno, componentes desacoplados e alta performance | `Next.js` · `React` · `TypeScript` · `Tailwind` | [<img src="https://img.shields.io/badge/Deploy-Vercel-030305?style=flat-square&logo=vercel&logoColor=D4AF37" alt="Deploy">](https://prisma-house-painter.vercel.app) |
+| [**GlassTask**](https://github.com/VictorRamosHC/Gerenciador-de-tarefas) | Aplicação interativa de tarefas com glassmorphism, persistência local e métricas em tempo real | `Vanilla JS` · `CSS Glass` · `localStorage` | [<img src="https://img.shields.io/badge/Deploy-Vercel-030305?style=flat-square&logo=vercel&logoColor=D4AF37" alt="Deploy">](https://gerenciador-de-tarefas-one-gold.vercel.app) |
+| [**Cassino Reverso**](https://github.com/VictorRamosHC/cassino-reverso) | Simulador educacional gamificado para conscientização matemática e probabilística | `Next.js` · `TypeScript` · `Tailwind` | [<img src="https://img.shields.io/badge/Deploy-Vercel-030305?style=flat-square&logo=vercel&logoColor=D4AF37" alt="Deploy">](https://cassino-reverso.vercel.app) |
+| [**ProjetoViagem**](https://github.com/VictorRamosHC/ProjetoViagem) | Fundamentos de estruturação semântica web e o marco inicial da trajetória | `HTML5` · `CSS3` | [<img src="https://img.shields.io/badge/Code-GitHub-030305?style=flat-square&logo=github&logoColor=D4AF37" alt="Repo">](https://github.com/VictorRamosHC/ProjetoViagem) |
 
 ---
 
-## 🛠️ [ 06 // TECHNICAL ARSENAL ]
+## ◼ [ 04 // INTERACTIVE SYSTEMS ]
+
+> Cada minigame é uma simulação interativa vinculada a um projeto real. Nenhum framework, nenhuma dependência externa — código soberano rodando offline e executável diretamente no seu navegador.
+
+| Sistema | Descrição | Acessar |
+| :--- | :--- | :---: |
+| **Signal Route** | Mapeie o caminho correto entre nós de rede sem cruzar rotas. Vinculado a **ProjetoViagem**. | [![PLAY](https://img.shields.io/badge/PLAY_SIMULATION-030305?style=for-the-badge&logo=target&logoColor=D4AF37)](https://victorramoshc.github.io/VictorRamosHC/minigame/signal-route/) |
+| **Task Triage** | Priorize o backlog antes do colapso operacional. Vinculado a **GlassTask**. | [![OPEN](https://img.shields.io/badge/OPEN_CONTROL_ROOM-030305?style=for-the-badge&logo=target&logoColor=D4AF37)](https://victorramoshc.github.io/VictorRamosHC/minigame/task-triage/) |
+| **Color Protocol** | Reconstrua a composição visual da fachada por RGB. Vinculado a **Prisma House Painter**. | [![ENTER](https://img.shields.io/badge/ENTER_PRISMA_GRID-030305?style=for-the-badge&logo=target&logoColor=D4AF37)](https://victorramoshc.github.io/VictorRamosHC/minigame/color-protocol/) |
+| **Audio Breach** | Sincronize frequência, ritmo e sinal via Web Audio API. Vinculado a **Aether Vault**. | [![ACCESS](https://img.shields.io/badge/ACCESS_AETHER_VAULT-030305?style=for-the-badge&logo=target&logoColor=D4AF37)](https://victorramoshc.github.io/VictorRamosHC/minigame/audio-breach/) |
+
+---
+
+## 🛠️ [ 05 // TECHNICAL ARSENAL ]
 
 <p align="center">
   <img src="https://img.shields.io/badge/Kotlin-030305?style=for-the-badge&logo=kotlin&logoColor=D4AF37" alt="Kotlin">
@@ -70,7 +75,7 @@ ProjetoViagem ──→ GlassTask ──→ Prisma House Painter ──→ Aethe
 
 ---
 
-## 📊 [ 07 // SYSTEM TELEMETRY ]
+## 📊 [ 06 // SYSTEM TELEMETRY ]
 
 <div align="center">
   <img height="165" src="https://github-readme-stats.vercel.app/api?username=VictorRamosHC&show_icons=true&hide_border=false&bg_color=030305&title_color=D4AF37&icon_color=8C1D18&text_color=E0E7FF&border_color=D4AF37" alt="GitHub Stats" />
