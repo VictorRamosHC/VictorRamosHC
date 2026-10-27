@@ -1,0 +1,362 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARASAKA_NET // BREACH PROTOCOL v2.0.77</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030305;
+      --panel: #0a0b10;
+      --cyan: #00e5ff;
+      --red: #ff003c;
+      --gold: #d4af37;
+      --text: #e0e7ff;
+      --dim: #64748b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Space Mono', monospace; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding: 20px;
+    }
+    .hud-box {
+      border: 1px solid var(--cyan);
+      box-shadow: 0 0 25px rgba(0, 229, 255, 0.2), inset 0 0 15px rgba(0, 229, 255, 0.05);
+      background: var(--panel);
+      padding: 24px;
+      border-radius: 4px;
+      max-width: 820px;
+      width: 100%;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #1e293b;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+    .title { color: var(--cyan); font-weight: bold; font-size: 1.1rem; }
+    .timer { color: var(--red); font-weight: bold; font-size: 1.2rem; }
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 680px) {
+      .main-grid { grid-template-columns: 1fr; }
+    }
+    .matrix-board {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+    .cell {
+      background: #0f1118;
+      border: 1px solid #1e293b;
+      padding: 12px 6px;
+      text-align: center;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      color: var(--dim);
+    }
+    .cell.selectable {
+      color: var(--text);
+      border-color: var(--cyan);
+      background: rgba(0, 229, 255, 0.08);
+    }
+    .cell.selectable:hover {
+      background: var(--cyan);
+      color: #030305;
+      box-shadow: 0 0 12px var(--cyan);
+    }
+    .cell.active-row-col {
+      border-color: rgba(0, 229, 255, 0.5);
+    }
+    .cell.used {
+      opacity: 0.15;
+      cursor: not-allowed;
+      border-color: transparent;
+    }
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .buffer-box {
+      border: 1px solid #1e293b;
+      padding: 12px;
+      background: #08090e;
+    }
+    .buffer-slots {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .slot {
+      width: 44px;
+      height: 44px;
+      border: 1px dashed var(--dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      color: var(--cyan);
+      background: #040508;
+    }
+    .slot.filled {
+      border: 1px solid var(--cyan);
+      box-shadow: 0 0 8px rgba(0, 229, 255, 0.3);
+    }
+    .sequences {
+      border: 1px solid #1e293b;
+      padding: 12px;
+      background: #08090e;
+    }
+    .seq-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #131722;
+      font-size: 0.9rem;
+    }
+    .seq-code { color: var(--gold); font-weight: bold; }
+    .status-badge {
+      font-size: 0.75rem;
+      padding: 2px 6px;
+      border-radius: 2px;
+      background: #1e293b;
+      color: var(--dim);
+    }
+    .status-badge.completed {
+      background: rgba(0, 255, 102, 0.15);
+      color: #00ff66;
+      border: 1px solid #00ff66;
+    }
+    .log-panel {
+      margin-top: 18px;
+      font-size: 0.85rem;
+      color: var(--dim);
+      border-top: 1px solid #1e293b;
+      padding-top: 12px;
+    }
+    .log-highlight { color: #00ff66; }
+    .btn {
+      background: transparent;
+      border: 1px solid var(--cyan);
+      color: var(--cyan);
+      padding: 8px 16px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s ease;
+      margin-top: 10px;
+    }
+    .btn:hover { background: var(--cyan); color: #030305; }
+  </style>
+</head>
+<body>
+  <div class="hud-box">
+    <div class="header">
+      <div class="title">ARASAKA_NET // BREACH PROTOCOL v2.0.77</div>
+      <div class="timer" id="timerDisplay">BREACH TIME: 45.0s</div>
+    </div>
+
+    <div class="main-grid">
+      <div>
+        <div style="font-size: 0.85rem; color: var(--dim); margin-bottom: 8px;">
+          CODE MATRIX <span id="modeLabel" style="color: var(--cyan);">[SELECT ROW]</span>
+        </div>
+        <div class="matrix-board" id="matrixBoard"></div>
+      </div>
+
+      <div class="sidebar">
+        <div class="buffer-box">
+          <div style="font-size: 0.8rem; color: var(--dim);">BUFFER CAPACITY [4/4]</div>
+          <div class="buffer-slots" id="bufferSlots">
+            <div class="slot">_</div>
+            <div class="slot">_</div>
+            <div class="slot">_</div>
+            <div class="slot">_</div>
+          </div>
+        </div>
+
+        <div class="sequences">
+          <div style="font-size: 0.8rem; color: var(--dim); margin-bottom: 6px;">TARGET DAEMON PAYLOADS</div>
+          <div class="seq-item">
+            <span>DATAMINE_V1 [XP+500]</span>
+            <span class="seq-code" id="target1">1C 55</span>
+            <span class="status-badge" id="badge1">PENDING</span>
+          </div>
+          <div class="seq-item">
+            <span>ICE_BREAKER [AETHER_KEY]</span>
+            <span class="seq-code" id="target2">BD 7A 55</span>
+            <span class="status-badge" id="badge2">PENDING</span>
+          </div>
+        </div>
+
+        <button class="btn" onclick="initGame()">RESET BREACH SEQUENCE</button>
+      </div>
+    </div>
+
+    <div class="log-panel" id="logPanel">
+      > Awaiting intrusion vector selection from initial horizontal row...
+    </div>
+  </div>
+
+  <script>
+    const CODES = ['1C', 'BD', '55', '7A', 'E9'];
+    const SIZE = 5;
+    let matrix = [];
+    let isRow = true;
+    let activeIdx = 0;
+    let buffer = [];
+    let usedCells = new Set();
+    let timeLeft = 45.0;
+    let timerId = null;
+    let audioCtx = null;
+
+    function playBeep(freq = 600, duration = 0.08) {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.value = freq;
+        osc.type = 'sawtooth';
+        gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch(e) {}
+    }
+
+    function initGame() {
+      clearInterval(timerId);
+      buffer = [];
+      usedCells.clear();
+      isRow = true;
+      activeIdx = 0;
+      timeLeft = 45.0;
+
+      matrix = [];
+      for (let i = 0; i < SIZE * SIZE; i++) {
+        matrix.push(CODES[Math.floor(Math.random() * CODES.length)]);
+      }
+
+      document.getElementById('badge1').textContent = 'PENDING';
+      document.getElementById('badge1').className = 'status-badge';
+      document.getElementById('badge2').textContent = 'PENDING';
+      document.getElementById('badge2').className = 'status-badge';
+      document.getElementById('logPanel').innerHTML = '> Awaiting intrusion vector selection from initial horizontal row...';
+
+      renderMatrix();
+      renderBuffer();
+
+      timerId = setInterval(() => {
+        timeLeft -= 0.1;
+        document.getElementById('timerDisplay').textContent = `BREACH TIME: ${Math.max(0, timeLeft).toFixed(1)}s`;
+        if (timeLeft <= 0) {
+          clearInterval(timerId);
+          document.getElementById('logPanel').innerHTML = '<span style="color:var(--red);">! INTRUSION FAILED: ICE TRACE COMPLETE. DISCONNECTED.</span>';
+          disableAll();
+        }
+      }, 100);
+    }
+
+    function renderMatrix() {
+      const board = document.getElementById('matrixBoard');
+      board.innerHTML = '';
+      document.getElementById('modeLabel').textContent = isRow ? `[ROW ${activeIdx + 1}]` : `[COL ${activeIdx + 1}]`;
+
+      for (let r = 0; r < SIZE; r++) {
+        for (let c = 0; c < SIZE; c++) {
+          const idx = r * SIZE + c;
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+          cell.textContent = matrix[idx];
+
+          const isUsed = usedCells.has(idx);
+          if (isUsed) {
+            cell.classList.add('used');
+          } else {
+            const isSelectable = isRow ? (r === activeIdx) : (c === activeIdx);
+            if (isSelectable) {
+              cell.classList.add('selectable');
+              cell.onclick = () => selectCell(r, c, idx);
+            }
+          }
+          board.appendChild(cell);
+        }
+      }
+    }
+
+    function selectCell(r, c, idx) {
+      if (buffer.length >= 4) return;
+      playBeep(440 + buffer.length * 150, 0.1);
+      usedCells.add(idx);
+      buffer.push(matrix[idx]);
+
+      isRow = !isRow;
+      activeIdx = isRow ? r : c;
+
+      renderMatrix();
+      renderBuffer();
+      checkSequences();
+
+      if (buffer.length >= 4) {
+        clearInterval(timerId);
+        disableAll();
+      }
+    }
+
+    function renderBuffer() {
+      const slots = document.getElementById('bufferSlots').children;
+      for (let i = 0; i < 4; i++) {
+        if (i < buffer.length) {
+          slots[i].textContent = buffer[i];
+          slots[i].className = 'slot filled';
+        } else {
+          slots[i].textContent = '_';
+          slots[i].className = 'slot';
+        }
+      }
+    }
+
+    function checkSequences() {
+      const bufStr = buffer.join(' ');
+      if (bufStr.includes('1C 55')) {
+        document.getElementById('badge1').textContent = 'UPLOADED';
+        document.getElementById('badge1').className = 'status-badge completed';
+      }
+      if (bufStr.includes('BD 7A 55')) {
+        document.getElementById('badge2').textContent = 'UPLOADED';
+        document.getElementById('badge2').className = 'status-badge completed';
+      }
+
+      const win1 = document.getElementById('badge1').textContent === 'UPLOADED';
+      const win2 = document.getElementById('badge2').textContent === 'UPLOADED';
+
+      if (win1 || win2) {
+        document.getElementById('logPanel').innerHTML = `<span class="log-highlight">✓ PAYLOAD DECRYPTED! ACCESS CODE: <strong>ARCHON-AETHER-2026</strong></span>`;
+      }
+    }
+
+    function disableAll() {
+      const cells = document.querySelectorAll('.cell');
+      cells.forEach(c => c.onclick = null);
+    }
+
+    window.onload = initGame;
+  </script>
+</body>
+</html>
