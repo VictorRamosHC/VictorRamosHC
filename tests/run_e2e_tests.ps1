@@ -659,12 +659,23 @@ if ($Tier -eq "All" -or $Tier -eq "3") {
         $true
     }
 
-    Run-Test "3" "T3.09_README_TELEMETRY_THEME" "GitHub Stats & Streak widgets use obsidian bg and corporate colors" {
-        $hasStatsObsidian = ($readmeContent -match 'github-readme-stats\.vercel\.app[\s\S]*?bg_color=030305')
-        $hasStatsAmber    = ($readmeContent -match 'github-readme-stats\.vercel\.app[\s\S]*?title_color=D4AF37')
-        $hasStreakObsidian = ($readmeContent -match 'streak-stats\.demolab\.com[\s\S]*?background=030305')
-        if (-not ($hasStatsObsidian -and $hasStatsAmber -and $hasStreakObsidian)) {
-            throw "Telemetry widgets do not use unified obsidian/amber corporate palette"
+    Run-Test "3" "T3.09_README_TELEMETRY_THEME" "Telemetry uses obsidian/amber corporate palette (bespoke SVG or widgets)" {
+        if ($readmeContent -match 'assets/telemetry_console\.svg') {
+            $telemetrySvgPath = Join-Path $ProjectRoot "assets\telemetry_console.svg"
+            if (-not (Test-Path $telemetrySvgPath)) { throw "assets/telemetry_console.svg referenced in README but not found" }
+            $svgContent = Get-Content -Path $telemetrySvgPath -Raw
+            $hasObsidian = $svgContent -match '#030305'
+            $hasAmber    = $svgContent -match '#D4AF37'
+            if (-not ($hasObsidian -and $hasAmber)) {
+                throw "assets/telemetry_console.svg does not use unified obsidian/amber corporate palette"
+            }
+        } else {
+            $hasStatsObsidian = ($readmeContent -match 'github-readme-stats\.vercel\.app[\s\S]*?bg_color=030305')
+            $hasStatsAmber    = ($readmeContent -match 'github-readme-stats\.vercel\.app[\s\S]*?title_color=D4AF37')
+            $hasStreakObsidian = ($readmeContent -match 'streak-stats\.demolab\.com[\s\S]*?background=030305')
+            if (-not ($hasStatsObsidian -and $hasStatsAmber -and $hasStreakObsidian)) {
+                throw "Telemetry widgets do not use unified obsidian/amber corporate palette"
+            }
         }
         $true
     }
@@ -691,7 +702,7 @@ if ($Tier -eq "All" -or $Tier -eq "4") {
             @{ Name = "7. Interactive Systems Table"; Pattern = '(?m)^##[^#\n]*(INTERACTIVE SYSTEMS)' },
             @{ Name = "8. Technical Arsenal Badges"; Pattern = '(?m)^##[^#\n]*(TECHNICAL ARSENAL|ARSENAL TECNOLÓGICO)' },
             @{ Name = "9. System Telemetry"; Pattern = '(?m)^##[^#\n]*(SYSTEM TELEMETRY|TELEMETRIA)' },
-            @{ Name = "10. Footer Wave"; Pattern = 'capsule-render\.vercel\.app[^"]*section=footer' }
+            @{ Name = "10. Footer Wave or Provenance Seal"; Pattern = '(?m)(capsule-render\.vercel\.app[^"]*section=footer|##[^#\n]*(DIGITAL PROVENANCE|ATTRIBUTION SEAL|SOVEREIGN))' }
         )
 
         $lastPos = -1
@@ -713,15 +724,19 @@ if ($Tier -eq "All" -or $Tier -eq "4") {
 
     Run-Test "4" "T4.02_SCENARIO_INTERACTIVE_SYSTEMS_PRECEDES_STATS" "Interactive Systems minigame table appears BEFORE telemetry & stats" {
         $interactiveIdx = $readmeContent.IndexOf("INTERACTIVE SYSTEMS")
-        $statsIdx = $readmeContent.IndexOf("github-readme-stats")
+        $telemetryIdx = if ($readmeContent.Contains("assets/telemetry_console.svg")) {
+            $readmeContent.IndexOf("assets/telemetry_console.svg")
+        } else {
+            $readmeContent.IndexOf("github-readme-stats")
+        }
         if ($interactiveIdx -eq -1) {
             throw "INTERACTIVE SYSTEMS section not found"
         }
-        if ($statsIdx -eq -1) {
-            throw "github-readme-stats not found"
+        if ($telemetryIdx -eq -1) {
+            throw "Telemetry component not found"
         }
-        if ($interactiveIdx -ge $statsIdx) {
-            throw "INTERACTIVE SYSTEMS (index $interactiveIdx) appears after stats (index $statsIdx)"
+        if ($interactiveIdx -ge $telemetryIdx) {
+            throw "INTERACTIVE SYSTEMS (index $interactiveIdx) appears after telemetry (index $telemetryIdx)"
         }
         $true
     }
