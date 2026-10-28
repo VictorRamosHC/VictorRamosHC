@@ -141,9 +141,9 @@ if ($Tier -eq "All" -or $Tier -eq "1") {
         ($content -match "sigil-ring|sigil") -or ($content -match "polygon.*points=.*200,70")
     }
 
-    Run-Test "1" "T1.05_BANNER_ROUTING_LINES" "corporate_grid.svg contains amber & crimson network pulse paths" {
+    Run-Test "1" "T1.05_BANNER_ROUTING_LINES" "corporate_grid.svg contains corporate circuit and network routing lines in carmesim & graphite" {
         $content = Get-Content -Path $bannerPath -Raw
-        ($content -match '#D4AF37') -and ($content -match '#8C1D18') -and ($content -match "path.*route-primary|path.*stroke")
+        ($content -match '#A81B1E') -and ($content -match "path.*route-primary|path.*stroke")
     }
 
     Run-Test "1" "T1.06_BANNER_ANIMATION_KEYFRAMES" "corporate_grid.svg has slow non-flashing keyframes/animation" {
@@ -439,38 +439,29 @@ if ($Tier -eq "All" -or $Tier -eq "2") {
         $true
     }
 
-    Run-Test "2" "T2.09_COLOR_PROTOCOL_FIVE_ROUNDS" "Color Protocol specifies exactly 5 target color rounds within 0-255" {
+    Run-Test "2" "T2.09_COLOR_PROTOCOL_SRGB_LINEARIZATION_AND_LRV" "Facade Lab defines sRGB linearization, estimated LRV, and WCAG luminance ratio" {
         $content = Get-Content -Path $colorProtocolPath -Raw
-        # Verify 5 targets defined in JS
-        $match = [regex]::Match($content, 'TARGETS\s*=\s*\[([\s\S]*?)\];')
-        if (-not $match.Success) {
-            throw "Could not find TARGETS array in Color Protocol"
-        }
-        $targetsBlock = $match.Groups[1].Value
-        $targetItems = [regex]::Matches($targetsBlock, '\{[^}]*r\s*:\s*([0-9]+)[^}]*g\s*:\s*([0-9]+)[^}]*b\s*:\s*([0-9]+)[^}]*\}')
-        if ($targetItems.Count -ne 5) {
-            throw "TARGETS array contains $($targetItems.Count) rounds, expected exactly 5"
-        }
-        foreach ($t in $targetItems) {
-            $r = [int]$t.Groups[1].Value
-            $g = [int]$t.Groups[2].Value
-            $b = [int]$t.Groups[3].Value
-            if ($r -lt 0 -or $r -gt 255 -or $g -lt 0 -or $g -gt 255 -or $b -lt 0 -or $b -gt 255) {
-                throw "Target color channel out of bounds [0, 255]: ($r, $g, $b)"
-            }
+        $hasLinear = ($content -match 'sRGBtoLinear|0\.04045|12\.92')
+        $hasLuminance = ($content -match 'getRelativeLuminance|0\.2126|0\.7152|0\.0722')
+        $hasEstimateLRV = ($content -match 'estimateLRV|Estimativa de LRV')
+        $hasContrast = ($content -match 'calcContrastRatio|Fórmula WCAG|Razão de Contraste')
+        if (-not ($hasLinear -and $hasLuminance -and $hasEstimateLRV -and $hasContrast)) {
+            throw "Facade Lab is missing sRGB linearization, relative luminance or WCAG contrast formula"
         }
         $true
     }
 
-    # Task Triage Boundaries (30s Timers & 3 Rounds)
+    # Task Triage Boundaries (Strict Capacity & Transitive Dependencies)
     $taskTriagePath = Join-Path $ProjectRoot "minigame\task-triage\index.html"
 
-    Run-Test "2" "T2.10_TASK_TRIAGE_TIMER_30S_AND_3_ROUNDS" "Task Triage defines 30s timers and 3 rounds total" {
+    Run-Test "2" "T2.10_TASK_TRIAGE_STRICT_CAPACITY_AND_TRANSITIVE_DEPS" "Critical Queue implements 18-point capacity hard limit and transitive dependency validation" {
         $content = Get-Content -Path $taskTriagePath -Raw
-        $has30s = ($content -match 'timer\s*=\s*30') -or ($content -match '30\s*seconds')
-        $has3Rounds = ($content -match 'round\s*<\s*3') -or ($content -match '3\s*rounds') -or ($content -match 'ROUND_DURATION\s*=\s*30')
-        if (-not ($has30s -and $has3Rounds)) {
-            throw "Task Triage does not configure 30s timer and 3 rounds"
+        $has18Capacity = ($content -match 'MAX_CAPACITY\s*=\s*18')
+        $hasTransitive = ($content -match 'isTaskChainValid|while\s*\([^)]*dependsOn\)')
+        $hasZeroOnOverflow = ($content -match 'isOverCapacity[\s\S]*?finalScore\s*=\s*0|usedPts\s*>\s*MAX_CAPACITY')
+        $has160Base = ($content -match '160')
+        if (-not ($has18Capacity -and $hasTransitive -and $hasZeroOnOverflow -and $has160Base)) {
+            throw "Critical Queue does not configure strict 18-pt capacity limit, 160-value baseline, and transitive dependency validation"
         }
         $true
     }
@@ -486,38 +477,32 @@ if ($Tier -eq "All" -or $Tier -eq "2") {
         $true
     }
 
-    # Signal Route Grid Boundaries (3x3 to 7x7)
+    # Signal Route Grid Boundaries (5 Days, 3 Stages, Budget & Fatigue)
     $signalRoutePath = Join-Path $ProjectRoot "minigame\signal-route\index.html"
 
-    Run-Test "2" "T2.12_SIGNAL_ROUTE_FIVE_LEVELS_RANGE" "Signal Route defines 5 levels progressing from 3x3 to 7x7" {
+    Run-Test "2" "T2.12_EXPEDITION_PLANNER_THREE_STAGES_AND_STATE_RESET" "Expedition Planner defines 5-day / 3-stage logistics, 10% baseline fatigue, and state reset" {
         $content = Get-Content -Path $signalRoutePath -Raw
-        $match = [regex]::Match($content, 'LEVELS\s*=\s*(\[[\s\S]*?\]);')
-        if (-not $match.Success) {
-            throw "Could not extract LEVELS array from Signal Route"
-        }
-        # Check that sizes 3, 4, 5, 6, 7 are present in sequence
-        $sizes = [regex]::Matches($match.Groups[1].Value, 'size\s*:\s*([3-7])')
-        if ($sizes.Count -ne 5) {
-            throw "Found $($sizes.Count) level sizes, expected 5"
-        }
-        $sizeVals = $sizes | ForEach-Object { [int]$_.Groups[1].Value }
-        for ($i = 0; $i -lt 5; $i++) {
-            if ($sizeVals[$i] -ne ($i + 3)) {
-                throw "Level $($i+1) size is $($sizeVals[$i]), expected $($i+3)"
-            }
+        $has3Stages = ($content -match 'TRECHO 01') -and ($content -match 'TRECHO 02') -and ($content -match 'TRECHO 03')
+        $hasBaseFatigue = ($content -match 'baseFatigue\s*=\s*10')
+        $hasBudget250k = ($content -match 'budget\s*=\s*250000|250000')
+        $hasContingency = ($content -match 'contingencyAlert|TIFÃO')
+        if (-not ($has3Stages -and $hasBaseFatigue -and $hasBudget250k -and $hasContingency)) {
+            throw "Expedition Planner does not define 3 stages, 10% baseline fatigue, ¥250k budget or weather contingency"
         }
         $true
     }
 
-    # Audio Breach Sequences (3 to 7 tones)
+    # Audio Breach Sequences (5-Band DSP, Profile Index 0, Disclaimer & Fallback)
     $audioBreachPath = Join-Path $ProjectRoot "minigame\audio-breach\index.html"
 
-    Run-Test "2" "T2.13_AUDIO_BREACH_SEQUENCE_GROWTH" "Audio Breach sequences grow from 3 to 7 tones over 5 rounds" {
+    Run-Test "2" "T2.13_SIGNAL_TUNER_FIVE_BANDS_AND_INITIAL_PROFILE" "Signal Tuner defines 5-band DSP filters, starts at profile index 0, and includes simulation disclaimer" {
         $content = Get-Content -Path $audioBreachPath -Raw
-        $hasSeqFormula = ($content -match 'ROUND_LENGTHS\s*=\s*\[\s*3\s*,\s*4\s*,\s*5\s*,\s*6\s*,\s*7\s*\]') -or ($content -match '3\s*\+\s*round') -or ($content -match 'seqLen\s*=\s*3')
-        $has5Rounds = ($content -match 'TOTAL_ROUNDS\s*=\s*5') -or ($content -match 'round\s*<\s*5') -or ($content -match '5\s*rounds')
-        if (-not ($hasSeqFormula -and $has5Rounds)) {
-            throw "Audio Breach does not specify 5 rounds with 3 to 7 tones sequence progression"
+        $has5Bands = ($content -match '60\s*Hz') -and ($content -match '250\s*Hz') -and ($content -match '1\s*kHz') -and ($content -match '4\s*kHz') -and ($content -match '16\s*kHz')
+        $hasInitProfile = ($content -match 'currentProfileIdx\s*=\s*-1') -or ($content -match 'PROFILES\[0\]')
+        $hasDisclaimer = ($content -match 'Simulação lúdica de engenharia DSP|não constituindo medição acústica')
+        $hasErrorBanner = ($content -match 'audioErrorBanner|ÁUDIO SINTETIZADO INDISPONÍVEL')
+        if (-not ($has5Bands -and $hasInitProfile -and $hasDisclaimer -and $hasErrorBanner)) {
+            throw "Signal Tuner is missing 5-band DSP structure, initial profile index 0, simulation disclaimer or audio error banner"
         }
         $true
     }
@@ -745,89 +730,28 @@ if ($Tier -eq "All" -or $Tier -eq "4") {
         $true
     }
 
-    # Scenario 2: Algorithmic Verification of Signal Route Levels
-    Run-Test "4" "T4.03_SCENARIO_SIGNAL_ROUTE_LEVEL3_SOLVABILITY" "Signal Route levels (including Level 3) are mathematically solvable" {
+    # Scenario 2: Algorithmic Verification of Expedition Planner
+    Run-Test "4" "T4.03_SCENARIO_EXPEDITION_PLANNER_LOGISTIC_SCORING" "Expedition Planner calculates remaining budget and fatigue bound scoring" {
         $signalRoutePath = Join-Path $ProjectRoot "minigame\signal-route\index.html"
-        $code = Get-Content -Path $signalRoutePath -Raw
-        $match = [regex]::Match($code, 'LEVELS\s*=\s*(\[[\s\S]*?\]);')
-        if (-not $match.Success) {
-            throw "Could not extract LEVELS array"
-        }
-
-        # Run node verification script for planar BFS/DFS solvability
-        $nodeScript = @"
-const LEVELS = $($match.Groups[1].Value);
-
-function solve(level) {
-  const size = level.size;
-  const pairs = level.pairs;
-  const grid = Array.from({length: size}, () => Array(size).fill(-1));
-  pairs.forEach((p, idx) => {
-    const a = p.a || p[0];
-    const b = p.b || p[1];
-    grid[a[0]][a[1]] = idx;
-    grid[b[0]][b[1]] = idx;
-  });
-
-  function search(pairIdx, r, c) {
-    if (pairIdx === pairs.length) return true;
-    const target = pairs[pairIdx].b || pairs[pairIdx][1];
-    const dirs = [[0,1],[1,0],[0,-1],[-1,0]];
-    for (const [dr, dc] of dirs) {
-      const nr = r + dr, nc = c + dc;
-      if (nr < 0 || nr >= size || nc < 0 || nc >= size) continue;
-      if (nr === target[0] && nc === target[1]) {
-        if (pairIdx + 1 === pairs.length) return true;
-        const nextStart = pairs[pairIdx + 1].a || pairs[pairIdx + 1][0];
-        if (search(pairIdx + 1, nextStart[0], nextStart[1])) return true;
-      } else if (grid[nr][nc] === -1) {
-        grid[nr][nc] = pairIdx;
-        if (search(pairIdx, nr, nc)) return true;
-        grid[nr][nc] = -1;
-      }
-    }
-    return false;
-  }
-
-  const start = pairs[0].a || pairs[0][0];
-  return search(0, start[0], start[1]);
-}
-
-let allSolvable = true;
-LEVELS.forEach((lvl, i) => {
-  const solvable = solve(lvl);
-  if (!solvable) {
-    allSolvable = false;
-    process.stderr.write('Level ' + (i+1) + ' is unsolvable\n');
-  }
-});
-if (!allSolvable) process.exit(1);
-process.exit(0);
-"@
-
-        $tempScript = [System.IO.Path]::GetTempFileName() + ".js"
-        Set-Content -Path $tempScript -Value $nodeScript -Encoding utf8
-        try {
-            $nodeResult = Start-Process -FilePath "node" -ArgumentList "`"$tempScript`"" -NoNewWindow -Wait -PassThru
-            if ($nodeResult.ExitCode -ne 0) {
-                throw "Signal Route puzzle solvability verification failed for one or more levels"
-            }
-        }
-        finally {
-            if (Test-Path $tempScript) { Remove-Item $tempScript -Force }
+        $content = Get-Content -Path $signalRoutePath -Raw
+        $hasCostSum = ($content -match 'selectedOptions\.leg1\.cost\s*\+\s*selectedOptions\.leg2\.cost\s*\+\s*selectedOptions\.leg3\.cost')
+        $hasFatigueSum = ($content -match 'selectedOptions\.leg1\.fatigue\s*\+\s*selectedOptions\.leg2\.fatigue\s*\+\s*selectedOptions\.leg3\.fatigue')
+        $hasScoreBound = ($content -match 'Math\.max\(\s*0\s*,\s*Math\.min\(\s*100')
+        if (-not ($hasCostSum -and $hasFatigueSum -and $hasScoreBound)) {
+            throw "Expedition Planner missing multi-leg cost/fatigue aggregation or score bounding"
         }
         $true
     }
 
-    # Scenario 3: Color Protocol Scoring Calculation
-    Run-Test "4" "T4.04_SCENARIO_COLOR_PROTOCOL_SCORING_LOGIC" "Color Protocol score formula calculates: 100 - avgChannelDistance bounded at 0" {
+    # Scenario 3: Facade Lab Scoring Calculation
+    Run-Test "4" "T4.04_SCENARIO_FACADE_LAB_SCORING_LOGIC" "Facade Lab evaluates LRV penalty and finish bonus bounded in [0, 100]" {
         $colorProtocolPath = Join-Path $ProjectRoot "minigame\color-protocol\index.html"
         $content = Get-Content -Path $colorProtocolPath -Raw
-        $hasDist = ($content -match 'Math\.abs\([^)]+\)\s*\+\s*Math\.abs\([^)]+\)\s*\+\s*Math\.abs\([^)]+\)') -or ($content -match 'calcScore|avgChannelDistance')
-        $has100Minus = ($content -match '100\s*-\s*dist') -or ($content -match '100\s*-\s*avg')
-        $hasMaxZero = ($content -match 'Math\.max\(\s*0\s*,') -or ($content -match 'sc\s*<\s*0\s*\?\s*0')
-        if (-not ($hasDist -and $has100Minus -and $hasMaxZero)) {
-            throw "Color Protocol does not implement standard scoring formula 100 - avgChannelDistance with lower bound 0"
+        $hasPenalty = ($content -match 'targetLRVMin|targetLRVMax|lrvPenalty')
+        $hasBonus = ($content -match 'finishBonus|idealFinishes')
+        $hasMaxZero = ($content -match 'Math\.max\(\s*0\s*,\s*Math\.min\(\s*100')
+        if (-not ($hasPenalty -and $hasBonus -and $hasMaxZero)) {
+            throw "Facade Lab does not implement LRV penalty, finish bonus or [0, 100] bounding"
         }
         $true
     }
@@ -846,15 +770,15 @@ process.exit(0);
         $true
     }
 
-    # Scenario 5: Task Triage Animation & Gameplay Loop
-    Run-Test "4" "T4.06_SCENARIO_TASK_TRIAGE_GAMEPLAY_LOOP" "Task Triage implements requestAnimationFrame game loop and placement scoring" {
+    # Scenario 5: Task Triage Transitive Dependency & Rejection
+    Run-Test "4" "T4.06_SCENARIO_TASK_TRIAGE_GAMEPLAY_LOOP" "Task Triage implements transitive dependency checking and capacity rejection" {
         $taskTriagePath = Join-Path $ProjectRoot "minigame\task-triage\index.html"
         $content = Get-Content -Path $taskTriagePath -Raw
         $hasLoop = ($content -match 'requestAnimationFrame')
-        $hasScoreInc = ($content -match 'score\s*\+=\s*10|score\s*\+=\s*correct')
-        $hasScoreDec = ($content -match 'score\s*-=\s*5|score\s*=\s*Math\.max\([^)]*score\s*-\s*5|score\s*\+=\s*-5|penalty')
-        if (-not ($hasLoop -and $hasScoreInc -and $hasScoreDec)) {
-            throw "Task Triage is missing game loop or +10/-5 scoring logic"
+        $hasTransitive = ($content -match 'isTaskChainValid')
+        $hasRejection = ($content -match 'isOverCapacity')
+        if (-not ($hasLoop -and $hasTransitive -and $hasRejection)) {
+            throw "Task Triage is missing game loop, transitive chain validation or capacity rejection"
         }
         $true
     }

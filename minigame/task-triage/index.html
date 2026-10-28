@@ -439,58 +439,84 @@
       const pct = Math.min(100, (used / MAX_CAPACITY) * 100);
       document.getElementById('capacityBar').style.width = `${pct}%`;
       const lbl = document.getElementById('capacityLabel');
-      lbl.textContent = `${used} / ${MAX_CAPACITY} PTS USADOS`;
 
       if (used > MAX_CAPACITY) {
+        lbl.textContent = `${used} / ${MAX_CAPACITY} PTS USADOS (+${used - MAX_CAPACITY} PTS EXCEDENTE)`;
         lbl.style.color = 'var(--alert-red)';
       } else {
+        lbl.textContent = `${used} / ${MAX_CAPACITY} PTS USADOS`;
         lbl.style.color = 'var(--accent-red)';
       }
+    }
+
+    // Transitive dependency resolution: verifies all ancestors in chain are selected
+    function isTaskChainValid(taskId) {
+      let curr = TASKS.find(t => t.id === taskId);
+      while (curr && curr.dependsOn) {
+        if (!selectedTaskIds.has(curr.dependsOn)) {
+          return false;
+        }
+        curr = TASKS.find(t => t.id === curr.dependsOn);
+      }
+      return true;
     }
 
     function executeSprint() {
       if (timerInterval) clearInterval(timerInterval);
 
       let usedPts = 0;
-      let score = 0;
+      let validValueSum = 0;
       let violations = 0;
 
       selectedTaskIds.forEach(id => {
         const t = TASKS.find(x => x.id === id);
         if (t) {
           usedPts += t.pts;
-          score += t.value; // score += 10 for each correct high value
-          
-          // Check dependency
-          if (t.dependsOn && !selectedTaskIds.has(t.dependsOn)) {
+          if (isTaskChainValid(id)) {
+            validValueSum += t.value;
+          } else {
             violations++;
-            score = Math.max(0, score - 5); // penalty score -= 5
           }
         }
       });
 
-      // Capacity penalty
-      if (usedPts > MAX_CAPACITY) {
-        score = Math.max(0, score - 5);
+      const isOverCapacity = usedPts > MAX_CAPACITY;
+      let finalScore = 0;
+
+      if (isOverCapacity) {
+        // Strict Hard Limit: any capacity overflow zeroes out score
+        finalScore = 0;
+      } else {
+        // Normalized score against optimal 160-value theoretical baseline
+        const rawRatioScore = Math.round((validValueSum / 160) * 100);
+        finalScore = Math.max(0, Math.min(100, rawRatioScore - (violations * 20)));
       }
 
       // requestAnimationFrame loop simulation
       requestAnimationFrame(() => {
         document.getElementById('resDepViolations').textContent = violations;
-        document.getElementById('resCapUsed').textContent = `${usedPts} / ${MAX_CAPACITY} PTS`;
-        document.getElementById('resScore').textContent = `${score} / 100`;
+        if (isOverCapacity) {
+          document.getElementById('resCapUsed').innerHTML = `${usedPts} / ${MAX_CAPACITY} PTS <span style="color:var(--alert-red); font-weight:700;">(+${usedPts - MAX_CAPACITY} PTS EXCEDENTE)</span>`;
+        } else {
+          document.getElementById('resCapUsed').textContent = `${usedPts} / ${MAX_CAPACITY} PTS`;
+        }
+        document.getElementById('resScore').textContent = `${finalScore} / 100`;
 
         const tEl = document.getElementById('resTitle');
         const dEl = document.getElementById('resDesc');
 
-        if (violations === 0 && usedPts <= MAX_CAPACITY && score >= 50) {
+        if (!isOverCapacity && violations === 0 && finalScore >= 50) {
           tEl.textContent = '✓ Pipeline de Sprint Executado com Sucesso';
-          dEl.textContent = `Planejamento aprovado com ${usedPts} pontos de esforço alocados e zero violações de dependência técnica. As tarefas críticas foram entregues no prazo.`;
+          tEl.style.color = 'var(--text-main)';
+          dEl.textContent = `Planejamento aprovado com ${usedPts} pontos de esforço alocados (teto: ${MAX_CAPACITY}) e zero violações de dependência técnica. As tarefas críticas foram entregues no prazo com score ${finalScore}/100.`;
+        } else if (isOverCapacity) {
+          tEl.textContent = '⚠ Rejeição por Estouro de Capacidade (Over-Capacity)';
+          tEl.style.color = 'var(--alert-red)';
+          dEl.textContent = `A alocação atingiu ${usedPts} pontos, excedendo o teto estrito de infraestrutura (${MAX_CAPACITY} pts). O pipeline foi sumariamente rejeitado (Score: 0 / 100).`;
         } else {
-          tEl.textContent = '⚠ Falha na Execução do Backlog';
-          dEl.textContent = violations > 0 ? 
-            `Foram detectadas ${violations} tarefas alocadas sem que seus pré-requisitos fossem incluídos na sprint.` :
-            `A capacidade máxima de ${MAX_CAPACITY} pontos foi excedida (${usedPts} pts alocados).`;
+          tEl.textContent = '⚠ Falha por Violação de Dependência Técnica';
+          tEl.style.color = 'var(--alert-red)';
+          dEl.textContent = `Foram detectadas ${violations} tarefas selecionadas sem que todos os seus pré-requisitos transitivos estivessem presentes na sprint.`;
         }
 
         showScreen('screenResult');

@@ -193,15 +193,18 @@
       <!-- SCREEN 1: TITLE SCREEN -->
       <div id="screenTitle" class="screen active">
         <div style="text-align: center; padding: 24px 10px;">
+          <div style="background: var(--surface-subtle); border-left: 3px solid var(--accent-red); padding: 10px 14px; font-size: 0.76rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 20px; text-align: left; max-width: 680px; margin-left: auto; margin-right: auto;">
+            <strong>AVISO DE ESCOPO:</strong> Simulação lúdica de engenharia DSP via Web Audio API. Curvas espectrais, respostas de frequência e aderência são parâmetros simulados do minijogo, não constituindo medição acústica de hardware nem validação do reprodutor Android hugh-player.
+          </div>
           <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-red); letter-spacing: 2px; margin-bottom: 8px;">
-            ARASAKA ACOUSTIC RESEARCH &amp; DSP LAB
+            AETHER ACOUSTIC RESEARCH &amp; DSP LAB
           </div>
           <h1 style="font-size: 1.7rem; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.5px;">
             SIGNAL TUNER // 音響周波数調整
           </h1>
           <p style="color: var(--text-muted); max-width: 540px; margin: 0 auto 24px; font-size: 0.88rem;">
             Calibre o motor de equalização de 5 bandas com filtros Biquad analíticos em tempo real.
-            Baseado no módulo de áudio DSP offline do player soberano <strong>Aether Vault</strong>.
+            Baseado conceitualmente na arquitetura de equalização de áudio offline do <strong>Aether Vault</strong>.
           </p>
           <button class="btn btn-red" onclick="startTuner()">[ INICIAR CALIBRAÇÃO DE SINAL ]</button>
         </div>
@@ -209,6 +212,12 @@
 
       <!-- SCREEN 2: GAMEPLAY TUNER -->
       <div id="screenGame" class="screen">
+        <div id="audioErrorBanner" style="display: none; background: #FFF5F5; border: 1px solid var(--accent-red); color: var(--accent-red); padding: 8px 12px; font-size: 0.75rem; font-family: var(--font-mono); margin-bottom: 12px; border-radius: 2px;">
+          [ ÁUDIO SINTETIZADO INDISPONÍVEL NESTE DISPOSITIVO / MODO VISUAL DSP ATIVO ]
+        </div>
+        <div style="background: var(--surface-subtle); border-left: 3px solid var(--accent-red); padding: 8px 12px; font-size: 0.74rem; color: var(--text-muted); margin-bottom: 12px;">
+          Simulação interativa DSP: a curva alvo e a pontuação representam desafios lúdicos do minijogo.
+        </div>
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 14px;">
           <div>
             <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent-red); font-weight: 700;">PERFIL ALVO:</span>
@@ -312,7 +321,7 @@
       { name: "Studio Reference Flat", target: [0, 0, 0, 0, 0] }
     ];
 
-    let currentProfileIdx = 0;
+    let currentProfileIdx = -1;
     let userBands = [0, 0, 0, 0, 0];
     let audioCtx = null;
     let isPlaying = false;
@@ -496,6 +505,11 @@
         document.getElementById('audioPlayIcon').textContent = '⏹';
       } catch (e) {
         console.warn('Web Audio error:', e);
+        const errBanner = document.getElementById('audioErrorBanner');
+        if (errBanner) errBanner.style.display = 'block';
+        isPlaying = false;
+        const playIcon = document.getElementById('audioPlayIcon');
+        if (playIcon) playIcon.textContent = '⚠';
       }
     }
 

@@ -295,8 +295,11 @@
             <!-- Light Condition Toggle -->
             <div class="control-group">
               <div class="control-label">
-                <span>SIMULAÇÃO DE ILUMINAÇÃO SOLAR</span>
+                <span>SIMULAÇÃO DE ILUMINAÇÃO SOLAR (PRÉ-VISUALIZAÇÃO ESTÉTICA)</span>
                 <span id="lightType" style="color: var(--accent-red);">12:00 MEIO-DIA</span>
+              </div>
+              <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: -2px; margin-bottom: 4px;">
+                A iluminação altera o sombreamento e a reflexão no canvas; a pontuação avalia a conformidade de LRV e o acabamento.
               </div>
               <div class="selector-grid">
                 <button class="select-btn active" onclick="setLighting('noon', this)">MEIO-DIA</button>
@@ -356,16 +359,19 @@
 
           <div style="background: var(--surface-subtle); padding: 14px 18px; border-radius: 2px; margin-bottom: 24px;">
             <div class="metric-row">
-              <span style="color: var(--text-muted);">Índice de Refletância Luminosa (LRV):</span>
+              <span style="color: var(--text-muted);">Estimativa de LRV a partir da cor sRGB:</span>
               <strong id="resLRV" style="font-family: var(--font-mono);">72%</strong>
             </div>
             <div class="metric-row">
-              <span style="color: var(--text-muted);">Contraste Visual Normativo:</span>
-              <strong id="resContrast" style="font-family: var(--font-mono);">5.4 : 1 (Ótimo)</strong>
+              <span style="color: var(--text-muted);">Razão de Contraste (Fórmula WCAG vs. Caixilho #111317):</span>
+              <strong id="resContrast" style="font-family: var(--font-mono);">5.4 : 1</strong>
             </div>
             <div class="metric-row">
               <span style="color: var(--text-muted);">Score de Aderência Técnica:</span>
               <strong id="resScore" style="font-family: var(--font-mono); color: var(--accent-red);">94 / 100</strong>
+            </div>
+            <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 10px; line-height: 1.4; border-top: 1px solid var(--border); padding-top: 8px;">
+              * A razão de contraste é uma comparação de luminância relativa entre as cores digitais da fachada e do caixilho calculada pela fórmula WCAG, não constituindo certificação de acessibilidade arquitetônica. O LRV é estimado a partir dos valores sRGB da tela.
             </div>
           </div>
 
@@ -381,25 +387,16 @@
 
   <script>
     // State
-    let currentScenario = 0;
+    let currentScenario = -1;
     let currentColor = { r: 220, g: 224, b: 230 };
     let currentLighting = 'noon'; // noon, morning, sunset
     let currentFinish = 'matte'; // matte, satin, gloss
 
-    // Target color rounds definition for E2E verification suite
-    const TARGETS = [
-      { r: 220, g: 224, b: 230 },
-      { r: 45, g: 55, b: 72 },
-      { r: 180, g: 140, b: 100 },
-      { r: 245, g: 240, b: 232 },
-      { r: 168, g: 27, b: 30 }
-    ];
-
     const SCENARIOS = [
       {
         title: "Edifício Corporativo — Insolação Direta de Verão",
-        desc: "Exigência: Alto Índice de Refletância (LRV >= 60%), contraste elegante com caixilhos escuros e acabamento sem ofuscamento reflexivo (Matte ou Satin).",
-        targetLRVMin: 55,
+        desc: "Exigência: Alto Índice de Refletância (LRV >= 60% até 85%), acabamento com proteção térmica sem ofuscamento reflexivo (Matte ou Satin).",
+        targetLRVMin: 60,
         targetLRVMax: 85,
         idealFinishes: ['matte', 'satin'],
         idealLight: 'noon'
@@ -408,19 +405,44 @@
         title: "Pavilhão Cultural Subterrâneo — Luz Artificial Fria",
         desc: "Exigência: Tonalidade sóbria e grafite (LRV entre 15% e 40%), acabamento resistente e contraste técnico.",
         targetLRVMin: 15,
-        targetLRVMax: 45,
+        targetLRVMax: 40,
         idealFinishes: ['satin', 'gloss'],
         idealLight: 'morning'
       },
       {
         title: "Residência em Encosta — Exposição ao Pôr do Sol",
-        desc: "Exigência: Tonalidade quente e terrosa que absorva a luz alaranjada de forma suave sem perder saturação.",
+        desc: "Exigência: Tonalidade quente e terrosa (LRV entre 40% e 70%) que mantenha equilíbrio visual e térmico.",
         targetLRVMin: 40,
         targetLRVMax: 70,
         idealFinishes: ['matte'],
         idealLight: 'sunset'
       }
     ];
+
+    // sRGB channel linearization
+    function sRGBtoLinear(c8) {
+      const c = c8 / 255;
+      return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    }
+
+    // Relative luminance calculation based on standard sRGB CIE Y
+    function getRelativeLuminance(r, g, b) {
+      return 0.2126 * sRGBtoLinear(r) + 0.7152 * sRGBtoLinear(g) + 0.0722 * sRGBtoLinear(b);
+    }
+
+    // Estimated LRV derived from sRGB relative luminance (0 to 100)
+    function estimateLRV(r, g, b) {
+      return Math.round(getRelativeLuminance(r, g, b) * 100);
+    }
+
+    // Ratio between facade and dark graphite frame (#111317 -> 17, 19, 23) via WCAG formula
+    function calcContrastRatio(r, g, b) {
+      const L1 = getRelativeLuminance(r, g, b);
+      const L2 = getRelativeLuminance(17, 19, 23); // dark graphite frame
+      const lighter = Math.max(L1, L2);
+      const darker = Math.min(L1, L2);
+      return (lighter + 0.05) / (darker + 0.05);
+    }
 
     function showScreen(screenId) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -579,20 +601,15 @@
 
     // Algorithmic compliance scoring
     function calcScore(r, g, b, sc, finish) {
-      // Light Reflectance Value approximation
-      const lrv = Math.round((0.2126 * r + 0.7152 * g + 0.0722 * b) / 255 * 100);
+      const lrv = estimateLRV(r, g, b);
       
       let lrvPenalty = 0;
-      if (lrv < sc.targetLRVMin) lrvPenalty = (sc.targetLRVMin - lrv) * 1.5;
-      else if (lrv > sc.targetLRVMax) lrvPenalty = (lrv - sc.targetLRVMax) * 1.5;
+      if (lrv < sc.targetLRVMin) lrvPenalty = (sc.targetLRVMin - lrv) * 2.0;
+      else if (lrv > sc.targetLRVMax) lrvPenalty = (lrv - sc.targetLRVMax) * 2.0;
 
-      let finishBonus = sc.idealFinishes.includes(finish) ? 15 : -15;
+      const finishBonus = sc.idealFinishes.includes(finish) ? 20 : -20;
       
-      // Target channel distance
-      const targetR = 210, targetG = 215, targetB = 220;
-      const avgChannelDistance = (Math.abs(r - targetR) + Math.abs(g - targetG) + Math.abs(b - targetB)) / 3;
-      
-      let rawScore = 100 - avgChannelDistance * 0.2 - lrvPenalty + finishBonus;
+      let rawScore = 100 - lrvPenalty + finishBonus;
       return {
         score: Math.max(0, Math.min(100, Math.round(rawScore))),
         lrv: lrv
@@ -602,12 +619,11 @@
     function evaluateComposition() {
       const sc = SCENARIOS[currentScenario];
       const res = calcScore(currentColor.r, currentColor.g, currentColor.b, sc, currentFinish);
+      const contrast = calcContrastRatio(currentColor.r, currentColor.g, currentColor.b);
       
       document.getElementById('resLRV').textContent = `${res.lrv}%`;
       document.getElementById('resScore').textContent = `${res.score} / 100`;
-
-      const contrastRatio = ((res.lrv + 5) / 5).toFixed(1);
-      document.getElementById('resContrast').textContent = `${contrastRatio} : 1`;
+      document.getElementById('resContrast').textContent = `${contrast.toFixed(2)} : 1`;
 
       const titleEl = document.getElementById('resultTitle');
       const feedEl = document.getElementById('resultFeedback');
@@ -615,11 +631,11 @@
       if (res.score >= 70) {
         titleEl.textContent = '✓ Composição Aprovada pelo Departamento de Engenharia';
         titleEl.style.color = 'var(--text-main)';
-        feedEl.textContent = `A paleta selecionada harmoniza perfeitamente com a especificação do briefing '${sc.title}'. O acabamento ${currentFinish.toUpperCase()} mitiga o ofuscamento e atende aos padrões de durabilidade arquitetural da Arasaka.`;
+        feedEl.textContent = `A paleta selecionada harmoniza com a especificação do briefing '${sc.title}'. O acabamento ${currentFinish.toUpperCase()} mitiga reflexos e atende aos parâmetros técnicos.`;
       } else {
         titleEl.textContent = '⚠ Composição Reprovada por Inconformidade Normativa';
         titleEl.style.color = 'var(--accent-red)';
-        feedEl.textContent = `O valor de LRV (${res.lrv}%) ou a escolha do acabamento divergiram dos requisitos técnicos para este cenário. Reajuste os sliders de tom e o tipo de acabamento.`;
+        feedEl.textContent = `A estimativa de LRV (${res.lrv}%) ou a escolha do acabamento divergiram dos requisitos técnicos para este cenário. Reajuste os sliders de tom e o tipo de acabamento.`;
       }
 
       showScreen('screenResult');

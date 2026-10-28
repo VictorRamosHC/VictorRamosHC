@@ -255,26 +255,18 @@
             <span class="hud-val" id="hudFatigue" style="color: var(--accent-red);">15% / 100%</span>
           </div>
           <div class="metric-hud-item">
-            <span class="hud-label">EXPERIÊNCIAS CONCLUÍDAS:</span>
-            <span class="hud-val" id="hudExp">0 / 4</span>
+            <span class="hud-label">ETAPAS LOGÍSTICAS:</span>
+            <span class="hud-val" id="hudExp">3 / 3</span>
           </div>
-        </div>
-
-        <!-- Contingency Notice (Appears on Day 3) -->
-        <div id="contingencyAlert" class="contingency-box" style="display: none;">
-          <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--alert-red); font-weight: 700; margin-bottom: 4px;">
-            ⚠️ ALERTA METEOROLÓGICO: TIFÃO NA REGIÃO DE HAKONE
-          </div>
-          <div>Linhas de trem convencional suspensas temporariamente. Escolha entre o desvio expresso Shinkansen ou pernoite em Onsen tradicional para restaurar energia.</div>
         </div>
 
         <!-- Leg 1: Tokyo -> Hakone -->
         <div class="stage-card">
           <div class="stage-header">
-            <span class="stage-title">TRECHO 01: TÓQUIO ➔ HAKONE (DIA 1-2)</span>
+            <span class="stage-title">TRECHO 01: TÓQUIO ➔ HAKONE (DIAS 1-2)</span>
             <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);">MONTE FUJI SECTOR</span>
           </div>
-          <div class="choice-grid">
+          <div class="choice-grid" id="gridLeg1">
             <div class="choice-card active" onclick="selectOption('leg1', 'shinkansen', 14000, 10, this)">
               <div style="font-weight: 600;">Trem Expresso Shinkansen + Ryokan</div>
               <div style="color: var(--text-muted); font-size: 0.75rem;">Viagem em 45min, repouso térmico total.</div>
@@ -291,10 +283,17 @@
         <!-- Leg 2: Hakone -> Kyoto -->
         <div class="stage-card">
           <div class="stage-header">
-            <span class="stage-title">TRECHO 02: HAKONE ➔ KYOTO (DIA 3-4)</span>
+            <span class="stage-title">TRECHO 02: HAKONE ➔ KYOTO (DIAS 3-4)</span>
             <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);">HISTORICAL CAPITAL</span>
           </div>
-          <div class="choice-grid">
+          <!-- Contingency Notice directly linked to Leg 2 conditions -->
+          <div id="contingencyAlert" class="contingency-box" style="margin-bottom: 14px;">
+            <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--alert-red); font-weight: 700; margin-bottom: 4px;">
+              ⚠️ CONTINGÊNCIA METEOROLÓGICA: ALERTA DE TIFÃO NO SETOR DE HAKONE
+            </div>
+            <div>Linhas de trem convencional e rodoviárias com restrições severas. O trecho exige escolha entre Shinkansen protegido ou conexões locais lentas com acúmulo de fadiga.</div>
+          </div>
+          <div class="choice-grid" id="gridLeg2">
             <div class="choice-card active" onclick="selectOption('leg2', 'bullet', 22000, 15, this)">
               <div style="font-weight: 600;">Tokaido Shinkansen GranClass</div>
               <div style="color: var(--text-muted); font-size: 0.75rem;">Conforto executivo e tempo livre para templos.</div>
@@ -397,8 +396,22 @@
     function startExpedition() {
       budget = 250000;
       baseFatigue = 10;
+      selectedOptions = {
+        leg1: { cost: 14000, fatigue: 10 },
+        leg2: { cost: 22000, fatigue: 15 },
+        leg3: { cost: 8000,  fatigue: 10 }
+      };
+
+      // Reset DOM active states
+      document.querySelectorAll('.choice-grid').forEach(grid => {
+        const cards = grid.querySelectorAll('.choice-card');
+        cards.forEach((c, idx) => {
+          if (idx === 0) c.classList.add('active');
+          else c.classList.remove('active');
+        });
+      });
+
       showScreen('screenGame');
-      document.getElementById('contingencyAlert').style.display = 'block';
       updateHud();
     }
 
