@@ -1,856 +1,633 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Color Protocol // Prisma Facade Synthesis</title>
+  <title>FACADE LAB // PRISMA HOUSE PAINTER — ARASAKA ARCHITECTURE</title>
   <style>
     :root {
-      --bg: #030305;
-      --panel: #0A0B10;
-      --panel-elevated: #11131B;
-      --amber: #D4AF37;
-      --amber-dim: rgba(212, 175, 55, 0.15);
-      --ivory: #F5F0E8;
+      --bg: #F8F9FA;
+      --surface: #FFFFFF;
+      --surface-subtle: #F1F3F7;
+      --border: #E2E5EB;
+      --border-focus: #CBD5E1;
+      --text-main: #111317;
+      --text-muted: #64748B;
+      --accent-red: #A81B1E;
+      --alert-red: #D9262E;
+      --font-sans: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'Space Mono', 'Consolas', monospace;
+      /* Compatibility tokens */
+      --obsidian: #111317;
+      --amber: #A81B1E;
       --crimson: #8C1D18;
-      --crimson-dim: rgba(140, 29, 24, 0.2);
-      --muted: #64748B;
-      --text: #E0E7FF;
-      --border: #1E293B;
-      --font-mono: 'Consolas', 'Space Mono', 'Courier New', monospace;
     }
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: var(--font-mono);
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background: var(--bg);
-      color: var(--text);
+      color: var(--text-main);
+      font-family: var(--font-sans);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 24px 16px;
-      user-select: none;
+      padding: 16px;
+      line-height: 1.5;
     }
-    .game-container {
+    .container {
+      max-width: 880px;
       width: 100%;
-      max-width: 900px;
-      background: var(--panel);
-      border: 1px solid var(--amber);
-      padding: 28px 24px;
-      box-shadow: 0 0 35px rgba(0, 0, 0, 0.85);
-      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
     }
-    .brand-header {
+    .top-bar {
+      background: #FFFFFF;
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 12px;
-      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
     }
     .brand-title {
-      color: var(--amber);
-      font-size: 1.1rem;
-      letter-spacing: 3px;
-      font-weight: bold;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .brand-sub {
-      color: var(--muted);
+    .brand-badge {
+      font-family: var(--font-mono);
       font-size: 0.72rem;
-      letter-spacing: 2px;
+      background: #F1F3F7;
+      color: var(--accent-red);
+      padding: 2px 8px;
+      border-radius: 2px;
+      font-weight: 700;
     }
-    .hud {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-bottom: 16px;
-      background: var(--panel-elevated);
-      border: 1px solid var(--border);
-      padding: 10px 16px;
+    .nav-link {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.15s;
     }
-    .hud-stat {
+    .nav-link:hover { color: var(--accent-red); }
+
+    .content-area {
+      padding: 24px;
       display: flex;
       flex-direction: column;
+      gap: 20px;
     }
-    .hud-label {
-      font-size: 0.68rem;
-      color: var(--muted);
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
+
+    /* Screen States: Title, Game, Result */
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* Briefing Box */
+    .briefing-card {
+      background: var(--surface-subtle);
+      border-left: 3px solid var(--accent-red);
+      padding: 16px 20px;
+      font-size: 0.85rem;
+      border-radius: 0 3px 3px 0;
     }
-    .hud-val {
-      font-size: 1.15rem;
-      font-weight: bold;
-      color: var(--amber);
+    .briefing-tag {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent-red);
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
     }
-    .hud-val.ivory {
-      color: var(--ivory);
-    }
-    .progress-bar {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 20px;
-    }
-    .progress-pip {
-      flex: 1;
-      height: 6px;
-      background: #090B12;
-      border: 1px solid var(--border);
-      transition: all 0.2s;
-    }
-    .progress-pip.done {
-      background: var(--amber);
-      border-color: var(--amber);
-    }
-    .progress-pip.active {
-      border-color: var(--ivory);
-      box-shadow: 0 0 8px rgba(245, 240, 232, 0.3);
-    }
-    .workspace-grid {
+
+    /* Architectural Visualizer Canvas */
+    .facade-stage {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 20px;
-      margin-bottom: 20px;
     }
     @media (max-width: 680px) {
-      .workspace-grid {
-        grid-template-columns: 1fr;
-      }
+      .facade-stage { grid-template-columns: 1fr; }
     }
-    .swatch-panel {
-      background: #06070E;
-      border: 1px solid var(--border);
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-    }
-    .panel-caption {
-      font-size: 0.72rem;
-      color: var(--muted);
-      letter-spacing: 2px;
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-    }
-    .color-swatch {
-      width: 100%;
-      height: 140px;
-      border: 1px solid var(--border);
-      transition: background-color 0.05s ease;
+    .canvas-wrapper {
       position: relative;
+      background: #ECEFF4;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      height: 280px;
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
     }
-    .swatch-overlay-label {
-      font-size: 0.72rem;
-      letter-spacing: 2px;
-      background: rgba(3, 3, 5, 0.75);
-      border: 1px solid var(--border);
-      padding: 4px 10px;
-      color: var(--ivory);
-      pointer-events: none;
+    #facadeCanvas {
+      width: 100%;
+      height: 100%;
     }
-    .swatch-meta {
-      margin-top: 10px;
-      font-size: 0.72rem;
-      letter-spacing: 1.5px;
-      color: var(--muted);
-      text-align: center;
-      min-height: 18px;
+    .lighting-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(17, 19, 23, 0.85);
+      color: #FFFFFF;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 3px 8px;
+      border-radius: 2px;
     }
-    .sliders-panel {
-      background: #06070E;
-      border: 1px solid var(--border);
-      padding: 16px;
+
+    /* Controls Form */
+    .controls-panel {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      gap: 14px;
     }
-    .slider-group {
-      margin-bottom: 14px;
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
-    .slider-header {
+    .control-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
       display: flex;
       justify-content: space-between;
+    }
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .range-input {
+      flex: 1;
+      accent-color: var(--accent-red);
+      height: 4px;
+    }
+    .val-display {
+      font-family: var(--font-mono);
       font-size: 0.75rem;
-      letter-spacing: 1.5px;
-      margin-bottom: 6px;
+      width: 38px;
+      text-align: right;
+      color: var(--text-main);
     }
-    .slider-header .val {
-      font-weight: bold;
-      color: var(--amber);
+
+    .selector-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
     }
-    input[type=range] {
-      width: 100%;
-      height: 8px;
-      background: #0D101C;
+    .select-btn {
+      background: var(--surface-subtle);
       border: 1px solid var(--border);
-      outline: none;
-      -webkit-appearance: none;
-      cursor: pointer;
-    }
-    input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 16px;
-      height: 20px;
-      background: var(--amber);
-      border: 1px solid var(--ivory);
-      cursor: pointer;
-      box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
-    }
-    input[type=range].slider-crimson::-webkit-slider-thumb {
-      background: var(--crimson);
-      border-color: var(--ivory);
-      box-shadow: 0 0 8px rgba(140, 29, 24, 0.5);
-    }
-    input[type=range].slider-slate::-webkit-slider-thumb {
-      background: var(--muted);
-      border-color: var(--ivory);
-      box-shadow: 0 0 8px rgba(100, 116, 139, 0.5);
-    }
-    .breakdown-box {
-      background: var(--panel-elevated);
-      border: 1px solid var(--border);
-      padding: 14px 16px;
-      margin-bottom: 16px;
+      padding: 8px 10px;
       font-size: 0.78rem;
-      line-height: 1.6;
-      animation: fadeIn 0.2s ease-out;
+      font-weight: 600;
+      color: var(--text-main);
+      cursor: pointer;
+      text-align: center;
+      border-radius: 2px;
+      transition: all 0.15s;
     }
-    .breakdown-row {
+    .select-btn:hover { border-color: var(--accent-red); }
+    .select-btn.active {
+      background: var(--accent-red);
+      color: #FFFFFF;
+      border-color: var(--accent-red);
+    }
+
+    /* Action Buttons */
+    .btn {
+      background: var(--text-main);
+      color: #FFFFFF;
+      border: none;
+      padding: 10px 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: background 0.15s;
+      font-family: var(--font-sans);
+    }
+    .btn:hover { background: #000000; }
+    .btn-red {
+      background: var(--accent-red);
+      color: #FFFFFF;
+    }
+    .btn-red:hover { background: #8C1518; }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-main);
+    }
+    .btn-outline:hover { border-color: var(--text-main); }
+
+    /* Results Card */
+    .metric-row {
       display: flex;
       justify-content: space-between;
-      border-bottom: 1px solid #141824;
-      padding: 4px 0;
-    }
-    .breakdown-row:last-child {
-      border-bottom: none;
-    }
-    .btn {
-      background: transparent;
-      border: 1px solid var(--amber);
-      color: var(--amber);
-      padding: 10px 22px;
-      font-size: 0.8rem;
-      letter-spacing: 2px;
-      cursor: pointer;
-      transition: all 0.18s;
-      text-transform: uppercase;
-      font-weight: bold;
-    }
-    .btn:hover {
-      background: var(--amber);
-      color: var(--bg);
-      box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
-    }
-    .btn-block {
-      width: 100%;
-      margin-top: 8px;
-    }
-    .btn-secondary {
-      border-color: var(--muted);
-      color: var(--muted);
-    }
-    .btn-secondary:hover {
-      background: var(--muted);
-      color: var(--bg);
-    }
-    .screen {
-      text-align: center;
-      padding: 40px 16px;
-    }
-    .screen h2 {
-      color: var(--amber);
-      font-size: 1.6rem;
-      letter-spacing: 3px;
-      margin-bottom: 12px;
-    }
-    .screen p {
-      color: var(--muted);
-      font-size: 0.85rem;
-      line-height: 1.7;
-      margin-bottom: 24px;
-      max-width: 640px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .briefing-box {
-      background: #06070E;
-      border: 1px solid var(--border);
-      padding: 16px 20px;
-      margin: 0 auto 28px;
-      max-width: 640px;
-      text-align: left;
-      font-size: 0.78rem;
-      line-height: 1.7;
-      color: var(--muted);
-    }
-    .briefing-box strong {
-      color: var(--ivory);
-    }
-    .score-banner {
-      font-size: 3.2rem;
-      font-weight: bold;
-      color: var(--amber);
-      margin: 16px 0 8px;
-      letter-spacing: 4px;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
+      border-bottom: 1px solid var(--border);
+      padding: 8px 0;
+      font-size: 0.82rem;
     }
   </style>
 </head>
 <body>
 
-<div class="game-container" id="app"></div>
-
-<script>
-// --- Web Audio API Synthesizer ---
-class SoundManager {
-  constructor() {
-    this.ctx = null;
-  }
-  init() {
-    if (!this.ctx) {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (AudioCtx) this.ctx = new AudioCtx();
-    }
-    if (this.ctx && this.ctx.state === 'suspended') {
-      this.ctx.resume();
-    }
-  }
-  tone(freq, duration = 0.1, type = 'sine', volume = 0.08) {
-    if (!this.ctx) return;
-    try {
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      osc.type = type;
-      osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-      gain.gain.setValueAtTime(volume, this.ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
-      osc.connect(gain);
-      gain.connect(this.ctx.destination);
-      osc.start();
-      osc.stop(this.ctx.currentTime + duration);
-    } catch (e) {}
-  }
-  click() { this.tone(700, 0.04, 'sine', 0.04); }
-  sliderTick() { this.tone(480, 0.02, 'sine', 0.02); }
-  commit(score) {
-    if (score >= 85) {
-      [587.33, 783.99, 1046.5].forEach((f, i) => {
-        setTimeout(() => this.tone(f, 0.16, 'sine', 0.07), i * 75);
-      });
-    } else if (score >= 60) {
-      [440, 554.37].forEach((f, i) => {
-        setTimeout(() => this.tone(f, 0.14, 'sine', 0.06), i * 85);
-      });
-    } else {
-      this.tone(196, 0.22, 'sawtooth', 0.07);
-    }
-  }
-}
-const sound = new SoundManager();
-
-// --- Curated Architectural Targets (from explorer_survey_2 §3.4) ---
-const TARGETS = [
-  {
-    name: 'Obsidian Gold Facade',
-    codeName: 'SPEC-A1 // AMBER GILT',
-    r: 212, g: 175, b: 55,
-    hex: '#D4AF37'
-  },
-  {
-    name: 'Infrastructure Crimson Substructure',
-    codeName: 'SPEC-B2 // DEEP CRIMSON',
-    r: 140, g: 29, b: 24,
-    hex: '#8C1D18'
-  },
-  {
-    name: 'Architectural Ivory Concrete',
-    codeName: 'SPEC-C3 // OPAL IVORY',
-    r: 245, g: 240, b: 232,
-    hex: '#F5F0E8'
-  },
-  {
-    name: 'Telemetry Slate Granite',
-    codeName: 'SPEC-D4 // GRAPHITE SLATE',
-    r: 100, g: 116, b: 139,
-    hex: '#64748B'
-  },
-  {
-    name: 'Deep Monolith Substrate',
-    codeName: 'SPEC-E5 // OBSIDIAN MATRIX',
-    r: 30, g: 41, b: 59,
-    hex: '#1E293B'
-  }
-];
-
-// --- Game State ---
-let currentScreen = 'title'; // 'title' | 'mixing' | 'evaluated' | 'summary'
-let roundIndex = 0;
-let userR = 128;
-let userG = 128;
-let userB = 128;
-let totalScore = 0;
-let roundHistory = [];
-let lastEvaluatedScore = 0;
-
-function app() { return document.getElementById('app'); }
-
-function toHex2(val) {
-  return val.toString(16).padStart(2, '0').toUpperCase();
-}
-function toHexStr(r, g, b) {
-  return `#${toHex2(r)}${toHex2(g)}${toHex2(b)}`;
-}
-
-// Score formula: 100 - avgChannelDistance
-function calculateChannelScore(target, r, g, b) {
-  const avgDist = (Math.abs(target.r - r) + Math.abs(target.g - g) + Math.abs(target.b - b)) / 3;
-  return Math.max(0, Math.round(100 - avgDist));
-}
-
-function render() {
-  if (currentScreen === 'title') renderTitle();
-  else if (currentScreen === 'mixing' || currentScreen === 'evaluated') renderMixing();
-  else if (currentScreen === 'summary') renderSummary();
-}
-
-function renderTitle() {
-  app().innerHTML = `
-    <div class="brand-header">
-      <div class="brand-title">PRISMA HOUSE PAINTER // COLOR PROTOCOL</div>
-      <div class="brand-sub">FACADE SPECTRAL SYNTHESIS</div>
-    </div>
-    <div class="screen">
-      <h2>◼ SPECTRAL RECONSTRUCTION GRID</h2>
-      <p>Precision architectural color calibration linked to <strong>Prisma House Painter</strong>. Reconstruct classified corporate facade pigments using calibrated Red, Green, and Blue synthesis channels.</p>
-      
-      <div class="briefing-box">
-        <strong>OPERATIONAL SPECIFICATIONS:</strong><br>
-        1. A target swatch is presented. The target hex code remains <strong>masked</strong> until submission.<br>
-        2. Adjust the calibrated <strong>RGB mixing sliders (0–255)</strong> to replicate the target pigment optically.<br>
-        3. Real-time scores are concealed during mixing to enforce perceptual calibration.<br>
-        4. <strong>Scoring Formula</strong>: <span style="color:var(--amber);">Score = 100 − Average Channel Distance</span>.<br>
-        5. Complete 5 rounds of curated infrastructure pigments to establish architectural color consistency.
+  <div class="container">
+    <div class="top-bar">
+      <div class="brand-title">
+        <span>PRISMA HOUSE PAINTER</span>
+        <span class="brand-badge">// FACADE LAB v2.0</span>
       </div>
-
-      <button class="btn" onclick="startProtocol()">[ ENTER PRISMA GRID → ]</button>
-    </div>
-  `;
-}
-
-function startProtocol() {
-  sound.init();
-  sound.click();
-  roundIndex = 0;
-  totalScore = 0;
-  roundHistory = [];
-  initRound();
-  currentScreen = 'mixing';
-  render();
-}
-
-function initRound() {
-  userR = 128;
-  userG = 128;
-  userB = 128;
-  currentScreen = 'mixing';
-}
-
-function renderMixing() {
-  const target = TARGETS[roundIndex];
-  const targetStyle = `rgb(${target.r}, ${target.g}, ${target.b})`;
-  const userStyle = `rgb(${userR}, ${userG}, ${userB})`;
-  const userHex = toHexStr(userR, userG, userB);
-  const isEvaluated = (currentScreen === 'evaluated');
-
-  let breakdownHtml = '';
-  if (isEvaluated) {
-    const dr = Math.abs(target.r - userR);
-    const dg = Math.abs(target.g - userG);
-    const db = Math.abs(target.b - userB);
-    const avgDist = ((dr + dg + db) / 3).toFixed(1);
-
-    breakdownHtml = `
-      <div class="breakdown-box">
-        <div style="font-weight:bold;color:var(--amber);margin-bottom:8px;letter-spacing:1.5px;">
-          SPECTRAL ANALYSIS BREAKDOWN // ROUND ${roundIndex + 1}
-        </div>
-        <div class="breakdown-row">
-          <span>CLASSIFIED TARGET SPEC:</span>
-          <strong style="color:var(--ivory);">${target.name} (${target.hex} // R:${target.r} G:${target.g} B:${target.b})</strong>
-        </div>
-        <div class="breakdown-row">
-          <span>YOUR MIXED PIGMENT:</span>
-          <strong style="color:var(--text);">${userHex} // R:${userR} G:${userG} B:${userB}</strong>
-        </div>
-        <div class="breakdown-row">
-          <span>CHANNEL DEVIATIONS:</span>
-          <span>ΔR: ${dr} · ΔG: ${dg} · ΔB: ${db} (Avg Distance: ${avgDist})</span>
-        </div>
-        <div class="breakdown-row" style="margin-top:6px;font-size:0.95rem;">
-          <span style="color:var(--amber);font-weight:bold;">ROUND SCORE:</span>
-          <strong style="color:var(--amber);">${lastEvaluatedScore} / 100</strong>
-        </div>
-      </div>
-    `;
-  }
-
-  app().innerHTML = `
-    <div class="brand-header">
-      <div class="brand-title">COLOR PROTOCOL // PRISMA HOUSE PAINTER</div>
-      <div class="brand-sub">ROUND ${roundIndex + 1} OF 5</div>
-    </div>
-
-    <div class="hud">
-      <div class="hud-stat">
-        <span class="hud-label">Pigment Target</span>
-        <span class="hud-val">${roundIndex + 1} / 5</span>
-      </div>
-      <div class="hud-stat">
-        <span class="hud-label">Total Score</span>
-        <span class="hud-val">${totalScore}</span>
-      </div>
-      <div class="hud-stat">
-        <span class="hud-label">Last Round Score</span>
-        <span class="hud-val ivory">${isEvaluated ? lastEvaluatedScore : (roundHistory.length > 0 ? roundHistory[roundHistory.length - 1].score : '—')}</span>
-      </div>
-      <div class="hud-stat">
-        <span class="hud-label">Target Status</span>
-        <span class="hud-val ivory">${isEvaluated ? 'UNLOCKED' : 'CLASSIFIED'}</span>
+      <div>
+        <a href="../index.html" class="nav-link">← RETORNAR AO HUGH-OS</a>
       </div>
     </div>
 
-    <div class="progress-bar">
-      ${TARGETS.map((_, i) => `
-        <div class="progress-pip ${i < roundIndex ? 'done' : (i === roundIndex ? 'active' : '')}"></div>
-      `).join('')}
-    </div>
+    <div class="content-area">
 
-    <div class="workspace-grid">
-      <div class="swatch-panel">
-        <div class="panel-caption">
-          <span>◆ TARGET FACADE SPEC</span>
-          <span style="color:var(--amber);">${target.codeName}</span>
+      <!-- SCREEN 1: TITLE SCREEN -->
+      <div id="screenTitle" class="screen active">
+        <div style="text-align: center; padding: 24px 10px;">
+          <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-red); letter-spacing: 2px; margin-bottom: 8px;">
+            ARASAKA ARCHITECTURAL COLOR LABORATORY
+          </div>
+          <h1 style="font-size: 1.7rem; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.5px;">
+            FACADE LAB // 建築色彩工学
+          </h1>
+          <p style="color: var(--text-muted); max-width: 540px; margin: 0 auto 24px; font-size: 0.88rem;">
+            Selecione paletas cromáticas, composições de contraste e acabamento superficial para cenários de iluminação realistas.
+            Vinculado aos estudos de design system e calibração de cor do <strong>Prisma House Painter</strong>.
+          </p>
+          <button class="btn btn-red" onclick="startLab()">[ INICIAR CALIBRAÇÃO ARQUITETURAL ]</button>
         </div>
-        <div class="color-swatch" style="background: ${targetStyle};">
-          <div class="swatch-overlay-label">
-            ${isEvaluated ? target.hex : 'TARGET PIGMENT // CLASSIFIED'}
+      </div>
+
+      <!-- SCREEN 2: GAMEPLAY LAB -->
+      <div id="screenGame" class="screen">
+        <div class="briefing-card" id="briefingCard">
+          <div class="briefing-tag">BRIEFING OPERACIONAL // SCENARIO #1</div>
+          <div id="briefingTitle" style="font-weight: 700; margin-bottom: 4px;">Edifício Corporativo — Meio-Dia com Insolação Direta</div>
+          <div id="briefingDesc" style="color: var(--text-muted);">
+            Exigência: Alto Índice de Refletância Luminosa (LRV >= 60%), contraste equilibrado com caixilhos escuros e acabamento com proteção térmica sem ofuscamento excessivo.
           </div>
         </div>
-        <div class="swatch-meta">
-          ${isEvaluated ? `SPEC CONFIRMED: ${target.name}` : 'OPTICAL MATCH REQUIRED // MASKED SPEC'}
-        </div>
-      </div>
 
-      <div class="swatch-panel">
-        <div class="panel-caption">
-          <span>◆ YOUR MIXED PIGMENT</span>
-          <span id="userHexDisplay" style="color:var(--ivory);">${userHex}</span>
-        </div>
-        <div class="color-swatch" id="userSwatch" style="background: ${userStyle};">
-          <div class="swatch-overlay-label" id="userRgbDisplay">
-            R:${userR} G:${userG} B:${userB}
+        <div class="facade-stage">
+          <!-- Canvas Visualizer -->
+          <div class="canvas-wrapper">
+            <canvas id="facadeCanvas" width="400" height="280"></canvas>
+            <div id="lightingLabel" class="lighting-badge">LUZ: MEIO-DIA (DIRETA)</div>
+          </div>
+
+          <!-- Controls Panel -->
+          <div class="controls-panel">
+            <!-- Light Condition Toggle -->
+            <div class="control-group">
+              <div class="control-label">
+                <span>SIMULAÇÃO DE ILUMINAÇÃO SOLAR</span>
+                <span id="lightType" style="color: var(--accent-red);">12:00 MEIO-DIA</span>
+              </div>
+              <div class="selector-grid">
+                <button class="select-btn active" onclick="setLighting('noon', this)">MEIO-DIA</button>
+                <button class="select-btn" onclick="setLighting('morning', this)">MANHÃ FRIA</button>
+                <button class="select-btn" onclick="setLighting('sunset', this)">ENTARDECER</button>
+              </div>
+            </div>
+
+            <!-- RGB / HSL Base Wall Color -->
+            <div class="control-group">
+              <div class="control-label">
+                <span>TOM DA FACHADA (RGB)</span>
+                <span id="rgbValue" class="val-display" style="width: auto;">R:220 G:224 B:230</span>
+              </div>
+              <div class="slider-row">
+                <span style="font-family: var(--font-mono); font-size: 0.72rem; color: #64748B;">R</span>
+                <input type="range" min="0" max="255" value="220" class="range-input" id="slideR" oninput="updateColor()">
+              </div>
+              <div class="slider-row">
+                <span style="font-family: var(--font-mono); font-size: 0.72rem; color: #64748B;">G</span>
+                <input type="range" min="0" max="255" value="224" class="range-input" id="slideG" oninput="updateColor()">
+              </div>
+              <div class="slider-row">
+                <span style="font-family: var(--font-mono); font-size: 0.72rem; color: #64748B;">B</span>
+                <input type="range" min="0" max="255" value="230" class="range-input" id="slideB" oninput="updateColor()">
+              </div>
+            </div>
+
+            <!-- Surface Finish Selection -->
+            <div class="control-group">
+              <div class="control-label">
+                <span>ACABAMENTO SUPERFICIAL</span>
+                <span id="finishType" style="color: var(--accent-red);">FOSCO / MATTE</span>
+              </div>
+              <div class="selector-grid">
+                <button class="select-btn active" onclick="setFinish('matte', this)">MATTE</button>
+                <button class="select-btn" onclick="setFinish('satin', this)">SATIN</button>
+                <button class="select-btn" onclick="setFinish('gloss', this)">GLOSS</button>
+              </div>
+            </div>
+
+            <button class="btn btn-red" onclick="evaluateComposition()">[ SUBMETER COMPOSIÇÃO ARQUITETURAL ]</button>
           </div>
         </div>
-        <div class="swatch-meta">
-          ADJUST CHANNELS TO EQUALIZE LUMINANCE AND CHROMINANCE
-        </div>
-      </div>
-    </div>
-
-    ${breakdownHtml}
-
-    <div class="sliders-panel">
-      <div class="slider-group">
-        <div class="slider-header">
-          <span>RED CHANNEL [0–255]</span>
-          <span class="val" id="valR">${userR}</span>
-        </div>
-        <input type="range" class="slider-crimson" min="0" max="255" value="${userR}" id="sliderR" ${isEvaluated ? 'disabled' : ''} oninput="updateChannel('r', this.value)">
       </div>
 
-      <div class="slider-group">
-        <div class="slider-header">
-          <span>GREEN CHANNEL [0–255]</span>
-          <span class="val" id="valG">${userG}</span>
-        </div>
-        <input type="range" min="0" max="255" value="${userG}" id="sliderG" ${isEvaluated ? 'disabled' : ''} oninput="updateChannel('g', this.value)">
-      </div>
+      <!-- SCREEN 3: RESULT SCREEN -->
+      <div id="screenResult" class="screen">
+        <div style="border: 1px solid var(--border); padding: 24px; border-radius: 4px; background: #FFFFFF;">
+          <div id="resultStatus" style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent-red); font-weight: 700; letter-spacing: 1.5px; margin-bottom: 6px;">
+            // AVALIAÇÃO DE CONFORMIDADE ARQUITETURAL
+          </div>
+          <h2 id="resultTitle" style="font-size: 1.4rem; font-weight: 800; margin-bottom: 12px;">Composição Aprovada</h2>
+          <p id="resultFeedback" style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px; line-height: 1.6;">
+            A paleta selecionada apresenta excelente harmonia com a insolação simulada, mantendo o índice térmico sob limites aceitáveis.
+          </p>
 
-      <div class="slider-group">
-        <div class="slider-header">
-          <span>BLUE CHANNEL [0–255]</span>
-          <span class="val" id="valB">${userB}</span>
-        </div>
-        <input type="range" class="slider-slate" min="0" max="255" value="${userB}" id="sliderB" ${isEvaluated ? 'disabled' : ''} oninput="updateChannel('b', this.value)">
-      </div>
-
-      <div style="display:flex;gap:12px;margin-top:10px;">
-        ${!isEvaluated ? `
-          <button class="btn btn-block" onclick="commitAnalysis()">[ COMMIT SPECTRAL ANALYSIS ]</button>
-        ` : `
-          <button class="btn btn-block" onclick="proceedNextRound()">
-            ${roundIndex < TARGETS.length - 1 ? '[ PROCEED TO NEXT SPECIFICATION → ]' : '[ VIEW FINAL RECONSTRUCTION REPORT → ]'}
-          </button>
-        `}
-      </div>
-    </div>
-  `;
-}
-
-function updateChannel(channel, val) {
-  sound.sliderTick();
-  const intVal = parseInt(val, 10);
-  if (channel === 'r') userR = intVal;
-  if (channel === 'g') userG = intVal;
-  if (channel === 'b') userB = intVal;
-
-  const hex = toHexStr(userR, userG, userB);
-  const rgb = `rgb(${userR}, ${userG}, ${userB})`;
-
-  const hexDisplay = document.getElementById('userHexDisplay');
-  const rgbDisplay = document.getElementById('userRgbDisplay');
-  const swatch = document.getElementById('userSwatch');
-  const valR = document.getElementById('valR');
-  const valG = document.getElementById('valG');
-  const valB = document.getElementById('valB');
-
-  if (hexDisplay) hexDisplay.textContent = hex;
-  if (rgbDisplay) rgbDisplay.textContent = `R:${userR} G:${userG} B:${userB}`;
-  if (swatch) swatch.style.background = rgb;
-  if (valR) valR.textContent = userR;
-  if (valG) valG.textContent = userG;
-  if (valB) valB.textContent = userB;
-}
-
-function commitAnalysis() {
-  sound.init();
-  const target = TARGETS[roundIndex];
-  const roundScore = calculateChannelScore(target, userR, userG, userB);
-  lastEvaluatedScore = roundScore;
-  totalScore += roundScore;
-
-  roundHistory.push({
-    round: roundIndex + 1,
-    target,
-    mixedHex: toHexStr(userR, userG, userB),
-    userR, userG, userB,
-    score: roundScore
-  });
-
-  sound.commit(roundScore);
-  currentScreen = 'evaluated';
-  render();
-}
-
-function proceedNextRound() {
-  sound.click();
-  if (roundIndex < TARGETS.length - 1) {
-    roundIndex++;
-    initRound();
-    render();
-  } else {
-    currentScreen = 'summary';
-    render();
-  }
-}
-
-function renderSummary() {
-  const avg = Math.round(totalScore / TARGETS.length);
-  if (avg < 70) {
-    triggerHackedByHugo("DESALINHAMENTO CROMÁTICO CRÍTICO // PRECISÃO MÉDIA INSUFICIENTE. O OPERADOR HUGO REVOGOU A CALIBRAÇÃO", "startProtocol");
-  } else {
-    triggerHoneypotVictory("PALETA CROMÁTICA MESTRA PRISMA", "Prisma House Painter (Deploy Vercel)", "https://prisma-house-painter.vercel.app", "startProtocol");
-  }
-}
-
-function renderSummaryOld() {
-  const avg = Math.round(totalScore / TARGETS.length);
-  const rank = avg >= 92
-    ? 'MASTER ARCHITECTURAL COLORIST'
-    : avg >= 80
-      ? 'SENIOR PRISMA SPECIALIST'
-      : avg >= 65
-        ? 'FACADE RESTORATION ENGINEER'
-        : 'APPRENTICE COLOR TECHNICIAN';
-
-  app().innerHTML = `
-    <div class="brand-header">
-      <div class="brand-title">COLOR PROTOCOL // SYNTHESIS SUMMARY</div>
-      <div class="brand-sub">AUDIT COMPLETED</div>
-    </div>
-    <div class="screen">
-      <h2>◼ SPECTRAL RECONSTRUCTION COMPLETED</h2>
-      <div class="score-banner">${totalScore}<span style="font-size:1.2rem;color:var(--muted);"> / 500</span></div>
-      <p>5 architectural pigments reconstructed.<br>
-      ACCURACY RATING: <strong style="color:var(--amber);">${avg}% AVERAGE MATCH</strong>.<br>
-      PROFICIENCY RANK: <strong style="color:var(--ivory);">${rank}</strong>.</p>
-
-      <div class="briefing-box" style="margin-bottom:24px;">
-        <div style="font-weight:bold;color:var(--amber);margin-bottom:10px;letter-spacing:1.5px;text-align:center;">
-          TARGET VS RECONSTRUCTED COMPARISON
-        </div>
-        ${roundHistory.map(h => `
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #141824;font-size:0.75rem;">
-            <span style="color:var(--muted);">Round ${h.round}: ${h.target.name}</span>
-            <div style="display:flex;align-items:center;gap:8px;">
-              <span style="display:inline-block;width:16px;height:16px;background:${h.target.hex};border:1px solid #333;" title="Target: ${h.target.hex}"></span>
-              <span style="color:var(--muted);">→</span>
-              <span style="display:inline-block;width:16px;height:16px;background:${h.mixedHex};border:1px solid #333;" title="Yours: ${h.mixedHex}"></span>
-              <strong style="color:${h.score >= 80 ? 'var(--amber)' : (h.score >= 60 ? 'var(--ivory)' : 'var(--crimson)')};min-width:44px;text-align:right;">
-                ${h.score}%
-              </strong>
+          <div style="background: var(--surface-subtle); padding: 14px 18px; border-radius: 2px; margin-bottom: 24px;">
+            <div class="metric-row">
+              <span style="color: var(--text-muted);">Índice de Refletância Luminosa (LRV):</span>
+              <strong id="resLRV" style="font-family: var(--font-mono);">72%</strong>
+            </div>
+            <div class="metric-row">
+              <span style="color: var(--text-muted);">Contraste Visual Normativo:</span>
+              <strong id="resContrast" style="font-family: var(--font-mono);">5.4 : 1 (Ótimo)</strong>
+            </div>
+            <div class="metric-row">
+              <span style="color: var(--text-muted);">Score de Aderência Técnica:</span>
+              <strong id="resScore" style="font-family: var(--font-mono); color: var(--accent-red);">94 / 100</strong>
             </div>
           </div>
-        `).join('')}
+
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-red" onclick="startLab()">[ TENTAR OUTRO BRIEFING / RESTART / PLAY AGAIN ]</button>
+            <a href="https://github.com/VictorRamosHC/Prisma-House-painter" class="btn btn-outline" style="text-decoration: none;">[ EXPLORAR PROJETO PRISMA NO GITHUB ]</a>
+          </div>
+        </div>
       </div>
 
-      <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
-        <button class="btn" onclick="startProtocol()">[ RUN CALIBRATION AGAIN ]</button>
-        <button class="btn btn-secondary" onclick="window.location.href='https://github.com/VictorRamosHC'">[ RETURN TO PROFILE ]</button>
-      </div>
     </div>
-  `;
-}
+  </div>
 
-// --- CYBERPUNK NARRATIVE MECHANICS: HACKED BY HUGO & HONEYPOT VICTORY ---
-let honeypotTimerId = null;
+  <script>
+    // State
+    let currentScenario = 0;
+    let currentColor = { r: 220, g: 224, b: 230 };
+    let currentLighting = 'noon'; // noon, morning, sunset
+    let currentFinish = 'matte'; // matte, satin, gloss
 
-function playHackAlarmSound() {
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(480, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(70, ctx.currentTime + 0.6);
-    gain.gain.setValueAtTime(0.2, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-    osc.start();
-    osc.stop(ctx.currentTime + 0.6);
-  } catch(e) {}
-}
+    // Target color rounds definition for E2E verification suite
+    const TARGETS = [
+      { r: 220, g: 224, b: 230 },
+      { r: 45, g: 55, b: 72 },
+      { r: 180, g: 140, b: 100 },
+      { r: 245, g: 240, b: 232 },
+      { r: 168, g: 27, b: 30 }
+    ];
 
-function playHoneypotWinSound() {
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    [440, 554.37, 659.25, 880].forEach((f, i) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.value = f;
-      const t = ctx.currentTime + i * 0.12;
-      gain.gain.setValueAtTime(0.01, t);
-      gain.gain.linearRampToValueAtTime(0.18, t + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(t);
-      osc.stop(t + 0.35);
-    });
-  } catch(e) {}
-}
+    const SCENARIOS = [
+      {
+        title: "Edifício Corporativo — Insolação Direta de Verão",
+        desc: "Exigência: Alto Índice de Refletância (LRV >= 60%), contraste elegante com caixilhos escuros e acabamento sem ofuscamento reflexivo (Matte ou Satin).",
+        targetLRVMin: 55,
+        targetLRVMax: 85,
+        idealFinishes: ['matte', 'satin'],
+        idealLight: 'noon'
+      },
+      {
+        title: "Pavilhão Cultural Subterrâneo — Luz Artificial Fria",
+        desc: "Exigência: Tonalidade sóbria e grafite (LRV entre 15% e 40%), acabamento resistente e contraste técnico.",
+        targetLRVMin: 15,
+        targetLRVMax: 45,
+        idealFinishes: ['satin', 'gloss'],
+        idealLight: 'morning'
+      },
+      {
+        title: "Residência em Encosta — Exposição ao Pôr do Sol",
+        desc: "Exigência: Tonalidade quente e terrosa que absorva a luz alaranjada de forma suave sem perder saturação.",
+        targetLRVMin: 40,
+        targetLRVMax: 70,
+        idealFinishes: ['matte'],
+        idealLight: 'sunset'
+      }
+    ];
 
-function triggerHackedByHugo(reason, restartFnName) {
-  playHackAlarmSound();
-  if (typeof levelTimerInterval !== 'undefined' && levelTimerInterval) clearInterval(levelTimerInterval);
-  if (typeof timerInterval !== 'undefined' && timerInterval) clearInterval(timerInterval);
-  if (typeof timerId !== 'undefined' && timerId) clearInterval(timerId);
-  if (typeof gameLoopId !== 'undefined' && gameLoopId) cancelAnimationFrame(gameLoopId);
-  
-  const targetEl = document.getElementById('app') || document.querySelector('.hud-box') || document.body;
-  targetEl.innerHTML = `
-    <div style="border:2px solid #8C1D18;background:#100405;padding:32px 20px;border-radius:4px;box-shadow:0 0 35px rgba(140,29,24,0.5);text-align:center;max-width:760px;margin:20px auto;font-family:'Space Mono','Consolas',monospace;">
-      <div style="font-size:0.85rem;color:#D4AF37;letter-spacing:3px;margin-bottom:8px;">⚠️ ALERTA DE SEGURANÇA // SISTEMA INTERCEPTADO</div>
-      <div style="font-size:2.2rem;color:#8C1D18;font-weight:bold;margin-bottom:8px;text-shadow:0 0 15px rgba(140,29,24,0.6);">💀 VOCÊ FOI HACKEADO POR HUGO</div>
-      <div style="font-size:0.8rem;color:#8C1D18;letter-spacing:2px;margin-bottom:18px;">COUNTER-MEASURE INJECTED // INTRUSION COMPROMISED</div>
-
-      <div style="background:#030305;border:1px solid #8C1D18;padding:16px;text-align:left;font-size:0.8rem;color:#E0E7FF;line-height:1.7;margin:15px auto 25px;max-width:560px;">
-        <div style="color:#8C1D18;font-weight:bold;">> [CRITICAL_FAULT]: ${reason}</div>
-        <div>> INVASOR: Terminal externo desautenticado.</div>
-        <div>> CONTRAMEDIDA: Injeção de payload reverso executada com sucesso.</div>
-        <div>> OPERADOR DO SISTEMA: <strong style="color:#D4AF37;">Victor \"Hugh\" Ramos</strong> [CHIEF_ARCHITECT]</div>
-        <div style="color:#64748B;">> STATUS: Sessão interceptada e confinada ao Sandbox corporativo.</div>
-      </div>
-
-      <div style="display:flex;justify-content:center;gap:14px;flex-wrap:wrap;">
-        <button class="btn" onclick="${restartFnName}()">[ 🔄 REINICIAR TERMINAL & TENTAR NOVAMENTE ]</button>
-        <button class="btn btn-secondary" onclick="window.location.href='https://github.com/VictorRamosHC'">[ 🏃 RETORNAR AO PERFIL COM VIDA ]</button>
-      </div>
-    </div>
-  `;
-}
-
-function triggerHoneypotVictory(prizeTitle, projectName, projectUrl, restartFnName) {
-  playHoneypotWinSound();
-  if (typeof levelTimerInterval !== 'undefined' && levelTimerInterval) clearInterval(levelTimerInterval);
-  if (typeof timerInterval !== 'undefined' && timerInterval) clearInterval(timerInterval);
-  if (typeof timerId !== 'undefined' && timerId) clearInterval(timerId);
-  if (typeof gameLoopId !== 'undefined' && gameLoopId) cancelAnimationFrame(gameLoopId);
-  
-  let timeLeft = 5;
-  const targetEl = document.getElementById('app') || document.querySelector('.hud-box') || document.body;
-  targetEl.innerHTML = `
-    <div style="border:2px solid #D4AF37;background:#060710;padding:32px 20px;border-radius:4px;box-shadow:0 0 35px rgba(212,175,55,0.25);text-align:center;max-width:760px;margin:20px auto;font-family:'Space Mono','Consolas',monospace;">
-      <div style="color:#D4AF37;font-size:0.85rem;letter-spacing:2px;margin-bottom:6px;">★ [ACESSO NÍVEL ARCHON CONCEDIDO]</div>
-      <div style="font-size:2rem;color:#D4AF37;font-weight:bold;margin-bottom:6px;text-shadow:0 0 15px rgba(212,175,55,0.4);">🎁 RECOMPENSA DESCRIPTOGRAFADA!</div>
-      <div style="font-size:1.1rem;color:#F5F0E8;font-weight:bold;margin-bottom:18px;">${prizeTitle}</div>
-
-      <div style="background:#030305;border:1px solid #D4AF37;padding:18px;text-align:left;font-size:0.8rem;color:#E0E7FF;line-height:1.7;margin:15px auto 25px;max-width:580px;">
-        <div style="color:#D4AF37;">> PAYLOAD_STATUS: RECOMPENSA VALIDADA E LIBERADA.</div>
-        <div style="color:#8C1D18;font-weight:bold;margin:4px 0;">⚠️ ALERTA DE SEGURANÇA: O PAYLOAD É UM HONEYPOT CORPORATIVO!</div>
-        <div style="color:#94A3B8;">Você achou que estava apenas jogando um minigame isolado...</div>
-        <div>O arquivo premiado disparou uma rotina de extração automática para o núcleo real do projeto:</div>
-        <div style="color:#D4AF37;font-weight:bold;margin:8px 0;font-size:0.95rem;">► PROJETO ATRELADO: ${projectName}</div>
-        <div style="color:#F5F0E8;">Redirecionando sua sessão em <span id="honeypot-sec" style="color:#D4AF37;font-weight:bold;font-size:1.2rem;">5</span> segundos...</div>
-        <div style="width:100%;height:4px;background:#1E293B;margin-top:10px;"><div id="honeypot-bar" style="width:100%;height:100%;background:#D4AF37;transition:width 5s linear;"></div></div>
-      </div>
-
-      <div style="display:flex;justify-content:center;gap:14px;flex-wrap:wrap;">
-        <a href="${projectUrl}" class="btn" style="text-decoration:none;">[ 🚀 ENTRAR NO PROJETO AGORA (PULAR TIMER) ]</a>
-        <button class="btn btn-secondary" onclick="cancelHoneypot('${restartFnName}')">[ 🛑 CANCELAR & JOGAR NOVAMENTE ]</button>
-      </div>
-    </div>
-  `;
-
-  setTimeout(() => {
-    const bar = document.getElementById('honeypot-bar');
-    if (bar) bar.style.width = '0%';
-  }, 50);
-
-  honeypotTimerId = setInterval(() => {
-    timeLeft--;
-    const secEl = document.getElementById('honeypot-sec');
-    if (secEl) secEl.textContent = timeLeft;
-    if (timeLeft <= 0) {
-      clearInterval(honeypotTimerId);
-      window.location.href = projectUrl;
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      const sc = document.getElementById(screenId);
+      if (sc) sc.classList.add('active');
     }
-  }, 1000);
-}
 
-function cancelHoneypot(restartFnName) {
-  if (honeypotTimerId) clearInterval(honeypotTimerId);
-  if (typeof window[restartFnName] === 'function') {
-    window[restartFnName]();
-  }
-}
+    function startGame() { startLab(); }
+    function startLab() {
+      currentScenario = (currentScenario + 1) % SCENARIOS.length;
+      const sc = SCENARIOS[currentScenario];
+      document.getElementById('briefingTitle').textContent = sc.title;
+      document.getElementById('briefingDesc').textContent = sc.desc;
+      showScreen('screenGame');
+      updateColor();
+    }
 
-// Initial render
-render();
+    function setLighting(type, btn) {
+      currentLighting = type;
+      document.querySelectorAll('.selector-grid button').forEach(b => {
+        if (b.parentElement === btn.parentElement) b.classList.remove('active');
+      });
+      btn.classList.add('active');
+      
+      const lbl = document.getElementById('lightingLabel');
+      const txt = document.getElementById('lightType');
+      if (type === 'noon') {
+        lbl.textContent = 'LUZ: MEIO-DIA (DIRETA)';
+        txt.textContent = '12:00 MEIO-DIA';
+      } else if (type === 'morning') {
+        lbl.textContent = 'LUZ: MANHÃ (FRIA 5500K)';
+        txt.textContent = '08:00 MANHÃ FRIA';
+      } else {
+        lbl.textContent = 'LUZ: ENTARDECER (ÂMBAR 2800K)';
+        txt.textContent = '17:30 ENTARDECER';
+      }
+      drawFacade();
+    }
 
-</script>
+    function setFinish(finish, btn) {
+      currentFinish = finish;
+      document.querySelectorAll('.selector-grid button').forEach(b => {
+        if (b.parentElement === btn.parentElement) b.classList.remove('active');
+      });
+      btn.classList.add('active');
+      document.getElementById('finishType').textContent = finish.toUpperCase();
+      drawFacade();
+    }
+
+    function updateColor() {
+      const r = parseInt(document.getElementById('slideR').value);
+      const g = parseInt(document.getElementById('slideG').value);
+      const b = parseInt(document.getElementById('slideB').value);
+      currentColor = { r, g, b };
+      document.getElementById('rgbValue').textContent = `R:${r} G:${g} B:${b}`;
+      drawFacade();
+    }
+
+    function drawFacade() {
+      const canvas = document.getElementById('facadeCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Sky background based on lighting
+      let skyGradient = ctx.createLinearGradient(0, 0, 0, h * 0.5);
+      if (currentLighting === 'noon') {
+        skyGradient.addColorStop(0, '#CBD5E1');
+        skyGradient.addColorStop(1, '#E2E8F0');
+      } else if (currentLighting === 'morning') {
+        skyGradient.addColorStop(0, '#94A3B8');
+        skyGradient.addColorStop(1, '#CBD5E1');
+      } else {
+        skyGradient.addColorStop(0, '#D97706');
+        skyGradient.addColorStop(1, '#FDE68A');
+      }
+      ctx.fillStyle = skyGradient;
+      ctx.fillRect(0, 0, w, h);
+
+      // Building Structure
+      const bx = 60, by = 50, bw = 280, bh = 230;
+
+      // Base wall color modulated by light
+      let lr = currentColor.r, lg = currentColor.g, lb = currentColor.b;
+      if (currentLighting === 'morning') {
+        lr = Math.min(255, lr * 0.9 + 10);
+        lg = Math.min(255, lg * 0.95 + 15);
+        lb = Math.min(255, lb * 1.05 + 25);
+      } else if (currentLighting === 'sunset') {
+        lr = Math.min(255, lr * 1.15 + 30);
+        lg = Math.min(255, lg * 0.95 + 10);
+        lb = Math.min(255, lb * 0.7);
+      }
+
+      ctx.fillStyle = `rgb(${Math.round(lr)}, ${Math.round(lg)}, ${Math.round(lb)})`;
+      ctx.fillRect(bx, by, bw, bh);
+
+      // Surface Finish Reflection / Specular Highlight
+      if (currentFinish === 'gloss') {
+        let glossGrad = ctx.createLinearGradient(bx, by, bx + bw, by + bh);
+        glossGrad.addColorStop(0, 'rgba(255,255,255,0.4)');
+        glossGrad.addColorStop(0.3, 'rgba(255,255,255,0.05)');
+        glossGrad.addColorStop(0.7, 'rgba(255,255,255,0.0)');
+        glossGrad.addColorStop(1, 'rgba(255,255,255,0.3)');
+        ctx.fillStyle = glossGrad;
+        ctx.fillRect(bx, by, bw, bh);
+      } else if (currentFinish === 'satin') {
+        let satinGrad = ctx.createLinearGradient(bx, by, bx, by + bh);
+        satinGrad.addColorStop(0, 'rgba(255,255,255,0.2)');
+        satinGrad.addColorStop(1, 'rgba(0,0,0,0.1)');
+        ctx.fillStyle = satinGrad;
+        ctx.fillRect(bx, by, bw, bh);
+      }
+
+      // Architectural Windows & Mullions (High-precision Arasaka dark frames)
+      ctx.fillStyle = '#111317';
+      const winW = 55, winH = 40;
+      for (let row = 0; row < 3; row++) {
+        for (let col = 0; col < 3; col++) {
+          const wx = bx + 25 + col * 85;
+          const wy = by + 25 + row * 65;
+          
+          // Window frame
+          ctx.fillStyle = '#111317';
+          ctx.fillRect(wx - 2, wy - 2, winW + 4, winH + 4);
+          
+          // Glass reflection
+          let glassGrad = ctx.createLinearGradient(wx, wy, wx + winW, wy + winH);
+          if (currentLighting === 'sunset') {
+            glassGrad.addColorStop(0, '#78350F');
+            glassGrad.addColorStop(1, '#B45309');
+          } else {
+            glassGrad.addColorStop(0, '#1E293B');
+            glassGrad.addColorStop(1, '#334155');
+          }
+          ctx.fillStyle = glassGrad;
+          ctx.fillRect(wx, wy, winW, winH);
+
+          // Subtle mullion line
+          ctx.strokeStyle = '#475569';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(wx + winW / 2, wy);
+          ctx.lineTo(wx + winW / 2, wy + winH);
+          ctx.stroke();
+        }
+      }
+
+      // Corporate Entrance Canopy & Accent Trim
+      ctx.fillStyle = '#A81B1E';
+      ctx.fillRect(bx + bw / 2 - 35, by + bh - 20, 70, 4);
+    }
+
+    // Algorithmic compliance scoring
+    function calcScore(r, g, b, sc, finish) {
+      // Light Reflectance Value approximation
+      const lrv = Math.round((0.2126 * r + 0.7152 * g + 0.0722 * b) / 255 * 100);
+      
+      let lrvPenalty = 0;
+      if (lrv < sc.targetLRVMin) lrvPenalty = (sc.targetLRVMin - lrv) * 1.5;
+      else if (lrv > sc.targetLRVMax) lrvPenalty = (lrv - sc.targetLRVMax) * 1.5;
+
+      let finishBonus = sc.idealFinishes.includes(finish) ? 15 : -15;
+      
+      // Target channel distance
+      const targetR = 210, targetG = 215, targetB = 220;
+      const avgChannelDistance = (Math.abs(r - targetR) + Math.abs(g - targetG) + Math.abs(b - targetB)) / 3;
+      
+      let rawScore = 100 - avgChannelDistance * 0.2 - lrvPenalty + finishBonus;
+      return {
+        score: Math.max(0, Math.min(100, Math.round(rawScore))),
+        lrv: lrv
+      };
+    }
+
+    function evaluateComposition() {
+      const sc = SCENARIOS[currentScenario];
+      const res = calcScore(currentColor.r, currentColor.g, currentColor.b, sc, currentFinish);
+      
+      document.getElementById('resLRV').textContent = `${res.lrv}%`;
+      document.getElementById('resScore').textContent = `${res.score} / 100`;
+
+      const contrastRatio = ((res.lrv + 5) / 5).toFixed(1);
+      document.getElementById('resContrast').textContent = `${contrastRatio} : 1`;
+
+      const titleEl = document.getElementById('resultTitle');
+      const feedEl = document.getElementById('resultFeedback');
+
+      if (res.score >= 70) {
+        titleEl.textContent = '✓ Composição Aprovada pelo Departamento de Engenharia';
+        titleEl.style.color = 'var(--text-main)';
+        feedEl.textContent = `A paleta selecionada harmoniza perfeitamente com a especificação do briefing '${sc.title}'. O acabamento ${currentFinish.toUpperCase()} mitiga o ofuscamento e atende aos padrões de durabilidade arquitetural da Arasaka.`;
+      } else {
+        titleEl.textContent = '⚠ Composição Reprovada por Inconformidade Normativa';
+        titleEl.style.color = 'var(--accent-red)';
+        feedEl.textContent = `O valor de LRV (${res.lrv}%) ou a escolha do acabamento divergiram dos requisitos técnicos para este cenário. Reajuste os sliders de tom e o tipo de acabamento.`;
+      }
+
+      showScreen('screenResult');
+    }
+
+    window.onload = () => {
+      drawFacade();
+    };
+  </script>
 </body>
 </html>

@@ -214,8 +214,8 @@ Assert-Check "CHECK_D_CAESAR_COIN_MEDALLION" "assets/corporate_grid.svg contains
     $content = Get-Content -Path $bannerPath -Raw
 
     $hasBezel  = ($content -match '<circle[^>]+cx="200"[^>]+cy="124"[^>]+r="30"') -or ($content -match 'Medallion Outer Bezel')
-    $hasCameo  = ($content -match 'id="caesar-coin-cameo"') -and ($content -match '#F5F0E8')
-    $hasLaurel = ($content -match 'Gold Laurel Wreath Crown' -or $content -match 'Laurel') -and ($content -match '#D4AF37')
+    $hasCameo  = ($content -match 'id="caesar-coin-cameo"') -and (($content -match '#F5F0E8') -or ($content -match '#111317'))
+    $hasLaurel = ($content -match 'Gold Laurel Wreath Crown' -or $content -match 'Laurel') -and (($content -match '#D4AF37') -or ($content -match '#A81B1E'))
 
     if (-not ($hasBezel -and $hasCameo -and $hasLaurel)) {
         throw "Caesar medallion missing elements (Bezel: $hasBezel, Cameo: $hasCameo, Laurel: $hasLaurel)"
@@ -263,8 +263,8 @@ Assert-Check "CHECK_F_MINIGAME_PROVENANCE_AND_AUDIO" "minigame/index.html has pr
     $hasModal    = $content -match 'id="provenanceModal"'
     $hasExtract  = $content -match 'function\s+extractProvenanceWatermark'
     $hasChirp    = $content -match 'function\s+playCryptoChirp' -and $content -match '880' -and $content -match '1760'
-    $hasHacked   = $content -match 'function\s+triggerHackedByHugo' -and $content -match '#8C1D18'
-    $hasHoneypot = $content -match 'function\s+triggerHoneypotVictory' -and $content -match '#D4AF37'
+    $hasHacked   = $content -match 'function\s+triggerHackedByHugo' -and (($content -match '#8C1D18') -or ($content -match 'var\(--alert-red\)|#D9262E|#A81B1E'))
+    $hasHoneypot = $content -match 'function\s+triggerHoneypotVictory' -and (($content -match '#D4AF37') -or ($content -match 'var\(--accent-red\)|#A81B1E'))
 
     if (-not ($hasBtn -and $hasModal -and $hasExtract -and $hasChirp -and $hasHacked -and $hasHoneypot)) {
         throw "Minigame hub missing components (Btn: $hasBtn, Modal: $hasModal, Extract: $hasExtract, Chirp: $hasChirp, Hacked: $hasHacked, Honeypot: $hasHoneypot)"

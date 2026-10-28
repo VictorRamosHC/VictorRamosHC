@@ -1,68 +1,53 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300" width="900" height="300">
   <defs>
     <style>
-      .label-main { font-family: 'Space Mono', 'Consolas', monospace; font-size: 22px; font-weight: 700; fill: #F5F0E8; letter-spacing: 3px; }
-      .label-sub  { font-family: 'Space Mono', 'Consolas', monospace; font-size: 11px; fill: #D4AF37; letter-spacing: 4px; }
-      .label-dim  { font-family: 'Space Mono', 'Consolas', monospace; font-size: 9px;  fill: #64748B; letter-spacing: 2px; }
+      .label-corp  { font-family: 'Segoe UI', 'Inter', -apple-system, sans-serif; font-size: 11px; fill: #A81B1E; letter-spacing: 3px; font-weight: 700; }
+      .label-main  { font-family: 'Space Mono', 'Segoe UI', monospace; font-size: 24px; font-weight: 700; fill: #111317; letter-spacing: 2px; }
+      .label-sub   { font-family: 'Space Mono', 'Segoe UI', monospace; font-size: 11px; fill: #4B5563; letter-spacing: 3px; font-weight: 600; }
+      .label-mono  { font-family: 'Space Mono', 'Consolas', monospace; font-size: 9px;  fill: #64748B; letter-spacing: 1.5px; }
+      .label-jp    { font-family: 'Segoe UI', 'Inter', 'Noto Sans JP', sans-serif; font-size: 10px; fill: #94181B; letter-spacing: 2px; }
 
       @keyframes drawLine1 {
-        0%   { stroke-dashoffset: 600; opacity: 0.3; }
-        30%  { stroke-dashoffset: 0;   opacity: 1; }
-        70%  { stroke-dashoffset: 0;   opacity: 1; }
-        100% { stroke-dashoffset: 600; opacity: 0.3; }
+        0%   { stroke-dashoffset: 600; opacity: 0.4; }
+        40%  { stroke-dashoffset: 0;   opacity: 1; }
+        80%  { stroke-dashoffset: 0;   opacity: 1; }
+        100% { stroke-dashoffset: 600; opacity: 0.4; }
       }
       @keyframes drawLine2 {
-        0%   { stroke-dashoffset: 400; opacity: 0.2; }
-        40%  { stroke-dashoffset: 0;   opacity: 0.8; }
-        80%  { stroke-dashoffset: 0;   opacity: 0.8; }
-        100% { stroke-dashoffset: 400; opacity: 0.2; }
-      }
-      @keyframes drawLine3 {
-        0%   { stroke-dashoffset: 300; opacity: 0.15; }
-        50%  { stroke-dashoffset: 0;   opacity: 0.6; }
-        90%  { stroke-dashoffset: 0;   opacity: 0.6; }
-        100% { stroke-dashoffset: 300; opacity: 0.15; }
+        0%   { stroke-dashoffset: 400; opacity: 0.3; }
+        50%  { stroke-dashoffset: 0;   opacity: 0.9; }
+        80%  { stroke-dashoffset: 0;   opacity: 0.9; }
+        100% { stroke-dashoffset: 400; opacity: 0.3; }
       }
       @keyframes pulse-sigil {
-        0%,100% { opacity: 0.7; stroke-width: 1; }
-        50%     { opacity: 1;   stroke-width: 1.5; }
-      }
-      @keyframes scan {
-        0%   { transform: translateY(0); }
-        100% { transform: translateY(300px); }
-      }
-      @keyframes dot-travel-h {
-        0%   { offset-distance: 0%; opacity: 0; }
-        5%   { opacity: 1; }
-        95%  { opacity: 1; }
-        100% { offset-distance: 100%; opacity: 0; }
+        0%,100% { opacity: 0.85; stroke-width: 1.2; }
+        50%     { opacity: 1;    stroke-width: 1.8; }
       }
 
-      .route-primary { stroke-dasharray: 600; animation: drawLine1 8s ease-in-out infinite; }
-      .route-secondary { stroke-dasharray: 400; animation: drawLine2 10s ease-in-out 2s infinite; }
-      .route-tertiary { stroke-dasharray: 300; animation: drawLine3 12s ease-in-out 4s infinite; }
-      .sigil-ring { animation: pulse-sigil 6s ease-in-out infinite; }
+      .route-primary   { stroke-dasharray: 600; animation: drawLine1 9s ease-in-out infinite; }
+      .route-secondary { stroke-dasharray: 400; animation: drawLine2 11s ease-in-out 2s infinite; }
+      .sigil-ring      { animation: pulse-sigil 6s ease-in-out infinite; }
     </style>
+
+    <!-- Subtle precision grid pattern -->
+    <pattern id="corp-grid" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#E2E5EB" stroke-width="0.5"/>
+    </pattern>
 
     <!-- Scanline pattern -->
     <pattern id="scanlines" x="0" y="0" width="2" height="3" patternUnits="userSpaceOnUse">
-      <rect width="2" height="1" fill="#F5F0E8" opacity="0.025"/>
+      <rect width="2" height="1" fill="#111317" opacity="0.02"/>
     </pattern>
-
-    <!-- Sigil clip -->
-    <clipPath id="sigil-clip">
-      <polygon points="150,90 200,65 250,90 250,160 200,185 150,160"/>
-    </clipPath>
   </defs>
 
-  <!-- Dublin Core Provenance Metadata -->
+  <!-- W3C Dublin Core Provenance Metadata -->
   <metadata id="provenance-metadata">
     <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
              xmlns:dc="http://purl.org/dc/elements/1.1/"
              xmlns:cc="http://creativecommons.org/ns#">
       <rdf:Description rdf:about="https://github.com/VictorRamosHC">
         <dc:title>Victor Ramos HC // Corporate Systems Architecture Grid</dc:title>
-        <dc:creator>Victor "Hugh" Ramos</dc:creator>
+        <dc:creator>Victor &quot;Hugh&quot; Ramos</dc:creator>
         <dc:identifier>https://github.com/VictorRamosHC/VictorRamosHC</dc:identifier>
         <dc:rights>Copyright (c) 2026 Victor Hugo Ramos. All rights reserved. Sovereign Infrastructure.</dc:rights>
         <dc:description>Sovereign corporate infrastructure asset and provenance watermark.</dc:description>
@@ -73,59 +58,58 @@
     </rdf:RDF>
   </metadata>
 
-  <!-- Background -->
-  <rect width="900" height="300" fill="#030305"/>
+  <!-- Background Canvas: Porcelain White -->
+  <rect width="900" height="300" fill="#F8F9FA"/>
+  <rect width="900" height="300" fill="url(#corp-grid)" opacity="0.65"/>
+  <rect x="0.5" y="0.5" width="899" height="299" fill="none" stroke="#E2E5EB" stroke-width="1"/>
 
-  <!-- Subtle panel depth on left -->
-  <rect x="0" y="0" width="320" height="300" fill="#0A0B10" opacity="0.5"/>
+  <!-- Left Architectural Accent Block -->
+  <rect x="0" y="0" width="8" height="300" fill="#A81B1E"/>
+  <rect x="8" y="0" width="310" height="300" fill="#FFFFFF" opacity="0.8"/>
+  <line x1="318" y1="0" x2="318" y2="300" stroke="#E2E5EB" stroke-width="1"/>
 
-  <!-- ── NETWORK ROUTING LINES ── -->
-  <!-- Primary amber horizontal spine -->
-  <path class="route-primary" d="M 60 150 H 290 V 100 H 440 V 200 H 560 V 130 H 700"
-        fill="none" stroke="#D4AF37" stroke-width="0.8" opacity="0.9"/>
+  <!-- Top Status Banner -->
+  <rect x="8" y="0" width="892" height="26" fill="#FFFFFF"/>
+  <line x1="8" y1="26" x2="900" y2="26" stroke="#E2E5EB" stroke-width="1"/>
+  <text x="24" y="17" class="label-corp">荒坂式統合環境 // ARASAKA-GRADE SYSTEMS INFRASTRUCTURE</text>
+  <text x="690" y="17" class="label-mono">SEC-OP: AUTHORIZED // LEVEL-1 SOBERANO</text>
 
-  <!-- Secondary crimson branch -->
-  <path class="route-secondary" d="M 80 200 H 180 V 80 H 350 V 220 H 500"
-        fill="none" stroke="#8C1D18" stroke-width="0.6" opacity="0.7"/>
+  <!-- ── NETWORK ROUTING LINES (Amber & Crimson Paths) ── -->
+  <path class="route-primary" d="M 60 150 H 280 V 100 H 450 V 210 H 580 V 140 H 760"
+        fill="none" stroke="#D4AF37" stroke-width="1.2" opacity="0.9"/>
 
-  <!-- Tertiary grid lines -->
-  <path class="route-tertiary" d="M 700 80 V 220 M 440 50 V 250"
-        fill="none" stroke="#D4AF37" stroke-width="0.4" opacity="0.4"/>
+  <path class="route-secondary" d="M 80 210 H 180 V 80 H 360 V 220 H 520"
+        fill="none" stroke="#8C1D18" stroke-width="0.8" opacity="0.75"/>
 
-  <!-- Static faint grid at far right -->
-  <line x1="760" y1="60"  x2="880" y2="60"  stroke="#1E293B" stroke-width="0.5"/>
-  <line x1="760" y1="100" x2="880" y2="100" stroke="#1E293B" stroke-width="0.5"/>
-  <line x1="760" y1="140" x2="880" y2="140" stroke="#1E293B" stroke-width="0.5"/>
-  <line x1="760" y1="180" x2="880" y2="180" stroke="#1E293B" stroke-width="0.5"/>
-  <line x1="760" y1="220" x2="880" y2="220" stroke="#1E293B" stroke-width="0.5"/>
-  <line x1="760" y1="60"  x2="760" y2="240" stroke="#1E293B" stroke-width="0.5"/>
-  <line x1="820" y1="60"  x2="820" y2="240" stroke="#1E293B" stroke-width="0.5"/>
-  <line x1="880" y1="60"  x2="880" y2="240" stroke="#1E293B" stroke-width="0.5"/>
+  <path d="M 760 70 V 230 M 450 40 V 260"
+        fill="none" stroke="#CBD5E1" stroke-width="0.6" stroke-dasharray="2, 2"/>
+
+  <!-- Micro-dots on routing intersections -->
+  <circle cx="280" cy="150" r="2.5" fill="#A81B1E"/>
+  <circle cx="450" cy="100" r="2"   fill="#111317"/>
+  <circle cx="580" cy="210" r="2.5" fill="#A81B1E"/>
+  <circle cx="760" cy="140" r="3"   fill="#A81B1E"/>
+  <circle cx="360" cy="80"  r="2"   fill="#64748B"/>
 
   <!-- ── CORPORATE SIGIL (center-left) ── -->
-  <!-- Outer hexagon frame (PRESERVED for T1.04) -->
+  <!-- Outer hexagon frame -->
   <polygon class="sigil-ring"
            points="200,70 248,97 248,151 200,178 152,151 152,97"
-           fill="none" stroke="#D4AF37" stroke-width="1.2" opacity="0.85"/>
+           fill="#FFFFFF" stroke="#111317" stroke-width="1.4"/>
   <!-- Inner hexagon -->
   <polygon points="200,88 234,107 234,145 200,164 166,145 166,107"
-           fill="none" stroke="#8C1D18" stroke-width="0.8" opacity="0.6"/>
+           fill="none" stroke="#8C1D18" stroke-width="1" opacity="0.85"/>
 
-  <!-- ── NEOCLASSICAL CAESAR COIN MEDALLION & CIRCUIT SIGIL (cx=200, cy=124) ── -->
-  <!-- Medallion Outer Bezel -->
-  <circle cx="200" cy="124" r="30" fill="#0A0B10" stroke="#D4AF37" stroke-width="1.2"/>
-  <!-- Decorative Milled Rim -->
-  <circle cx="200" cy="124" r="27.5" fill="none" stroke="#D4AF37" stroke-width="0.5" stroke-dasharray="1, 2" opacity="0.8"/>
-  <!-- Cameo Recessed Bed -->
-  <circle cx="200" cy="124" r="25" fill="#030305" stroke="#8C1D18" stroke-width="0.6" opacity="0.9"/>
+  <!-- ── CAESAR COIN MEDALLION & LAUREL WREATH (cx=200, cy=124) ── -->
+  <circle cx="200" cy="124" r="30" fill="#FFFFFF" stroke="#111317" stroke-width="1.2"/>
+  <circle cx="200" cy="124" r="27.5" fill="none" stroke="#CBD5E1" stroke-width="0.6" stroke-dasharray="1, 2"/>
+  <circle cx="200" cy="124" r="25" fill="#0A0B10" stroke="#8C1D18" stroke-width="0.8"/>
 
-  <!-- Caesar Cameo Bust Profile (Facing Right) -->
+  <!-- Caesar Cameo Bust Profile -->
   <g id="caesar-coin-cameo">
-    <!-- Draped tunic fold at bust base -->
     <path d="M 186 141 C 190 138, 196 143, 201 139 C 206 143, 211 139, 214 141 C 213 144, 187 144, 186 141 Z"
-          fill="#D4AF37" opacity="0.8"/>
+          fill="#A81B1E"/>
 
-    <!-- Neoclassical Caesar Profile Silhouette -->
     <path d="M 190 140
              C 189 135, 188 130, 187 125
              C 186 120, 188 114, 192 110
@@ -138,14 +122,11 @@
              C 210 132, 208 134, 206 135
              C 204 136, 205 138, 206 140
              Z"
-          fill="#F5F0E8" opacity="0.85"/>
+          fill="#F5F0E8"/>
 
-    <!-- Facial Contours & Classical Features -->
-    <path d="M 203 115 C 205 114, 207 114, 208 116" fill="none" stroke="#0A0B10" stroke-width="0.7"/>
-    <path d="M 206 114 L 211 119 L 208 121" fill="none" stroke="#D4AF37" stroke-width="0.5"/>
-    <path d="M 207 124 C 209 125, 209 126, 207 127 C 206 128, 208 130, 207 132 C 205 134, 203 134, 202 135" fill="none" stroke="#D4AF37" stroke-width="0.5"/>
-    <path d="M 195 122 C 194 120, 197 119, 198 122 C 198 125, 195 126, 194 125" fill="none" stroke="#D4AF37" stroke-width="0.5"/>
-    <path d="M 196 126 C 199 130, 203 134, 206 135" fill="none" stroke="#D4AF37" stroke-width="0.5" opacity="0.8"/>
+    <!-- Classical Features -->
+    <path d="M 203 115 C 205 114, 207 114, 208 116" fill="none" stroke="#111317" stroke-width="0.7"/>
+    <path d="M 206 114 L 211 119 L 208 121" fill="none" stroke="#D4AF37" stroke-width="0.6"/>
 
     <!-- Gold Laurel Wreath Crown -->
     <path d="M 188 120 C 189 113, 194 108, 202 108 C 206 108, 208 110, 210 113" fill="none" stroke="#D4AF37" stroke-width="0.8"/>
@@ -153,62 +134,37 @@
     <path d="M 194 111 C 193 108, 196 106, 199 109 C 198 111, 195 112, 194 111 Z" fill="#D4AF37"/>
     <path d="M 199 108 C 199 105, 203 104, 205 107 C 204 109, 201 109, 199 108 Z" fill="#D4AF37"/>
     <path d="M 204 108 C 205 105, 209 106, 210 109 C 208 110, 205 109, 204 108 Z" fill="#D4AF37"/>
-    <path d="M 188 120 C 185 123, 184 127, 186 130" fill="none" stroke="#D4AF37" stroke-width="0.7"/>
-    <path d="M 188 121 C 186 125, 187 128, 189 131" fill="none" stroke="#D4AF37" stroke-width="0.7"/>
 
-    <!-- Gold Laurel Circuit Traces -->
+    <!-- Circuit Traces -->
     <path d="M 201 119 H 207 V 124 H 220" fill="none" stroke="#D4AF37" stroke-width="0.7"/>
     <circle cx="220" cy="124" r="1.2" fill="#D4AF37"/>
-    <path d="M 220 124 H 234" fill="none" stroke="#D4AF37" stroke-width="0.5" stroke-dasharray="1, 1"/>
     <path d="M 202 108 V 101 H 200 V 88" fill="none" stroke="#D4AF37" stroke-width="0.6"/>
     <circle cx="200" cy="88" r="1.2" fill="#8C1D18"/>
     <path d="M 188 122 H 178 V 124 H 166" fill="none" stroke="#D4AF37" stroke-width="0.6"/>
     <circle cx="166" cy="124" r="1.2" fill="#D4AF37"/>
     <path d="M 199 141 V 152 H 200 V 164" fill="none" stroke="#D4AF37" stroke-width="0.6"/>
     <circle cx="200" cy="164" r="1.2" fill="#8C1D18"/>
-
-    <!-- Interconnect traces linking to outer sigil polygon -->
-    <line x1="200" y1="88" x2="200" y2="70" stroke="#D4AF37" stroke-width="0.6" stroke-dasharray="2, 2"/>
-    <line x1="200" y1="164" x2="200" y2="178" stroke="#D4AF37" stroke-width="0.6" stroke-dasharray="2, 2"/>
-    <line x1="166" y1="124" x2="152" y2="124" stroke="#D4AF37" stroke-width="0.6"/>
-    <line x1="234" y1="124" x2="248" y2="124" stroke="#D4AF37" stroke-width="0.6"/>
-
-    <!-- Peripheral micro-circuit bus nodes -->
-    <circle cx="182" cy="111" r="1" fill="#D4AF37" opacity="0.6"/>
-    <circle cx="218" cy="111" r="1" fill="#D4AF37" opacity="0.6"/>
-    <circle cx="182" cy="137" r="1" fill="#D4AF37" opacity="0.6"/>
-    <circle cx="218" cy="137" r="1" fill="#D4AF37" opacity="0.6"/>
   </g>
 
-  <!-- Corner node dots on routing -->
-  <circle cx="290" cy="150" r="2.5" fill="#D4AF37" opacity="0.7"/>
-  <circle cx="440" cy="100" r="2"   fill="#8C1D18" opacity="0.8"/>
-  <circle cx="560" cy="200" r="2"   fill="#D4AF37" opacity="0.6"/>
-  <circle cx="700" cy="130" r="2.5" fill="#D4AF37" opacity="0.7"/>
-  <circle cx="350" cy="80"  r="1.5" fill="#8C1D18" opacity="0.5"/>
+  <!-- ── TYPOGRAPHY (Editorial Megacorp Layout) ── -->
+  <line x1="480" y1="65" x2="480" y2="245" stroke="#E2E5EB" stroke-width="1"/>
 
-  <!-- ── TYPOGRAPHY (right zone) ── -->
-  <!-- Separator line -->
-  <line x1="470" y1="70" x2="470" y2="252" stroke="#1E293B" stroke-width="0.8"/>
+  <text x="504" y="98" class="label-jp">技術・保安・統括本部</text>
+  <text x="504" y="130" class="label-main">SYSTEMS ARCHITECTURE</text>
+  <text x="504" y="156" class="label-sub">SECURITY OPERATIONS GRID</text>
+  
+  <rect x="504" y="168" width="350" height="1" fill="#E2E5EB"/>
 
-  <text x="490" y="120" class="label-main">SYSTEMS</text>
-  <text x="490" y="148" class="label-main">ARCHITECTURE</text>
-  <text x="490" y="172" class="label-sub">SECURITY OPERATIONS GRID</text>
-  <text x="490" y="196" class="label-dim">CORP // VICTOR-HUGH // BUILD · REFACTOR · HARDEN</text>
-  <text x="490" y="218" class="label-dim">SIGNAL ROUTE: PROJECT → SYSTEM → PRODUCT</text>
-  <text x="490" y="240" class="label-dim">INFRASTRUCTURE V3.0 // 2026.Q4 // SYSTEM ACTIVE</text>
+  <text x="504" y="190" class="label-mono">OPERATOR: VICTOR &quot;HUGH&quot; RAMOS // CHIEF ARCHITECT</text>
+  <text x="504" y="210" class="label-mono">DIRECTIVE: BUILD · REFACTOR · HARDEN · AUDIT</text>
+  <text x="504" y="230" class="label-mono">DEPLOYMENT: SOBERANO // 2026.Q4 // SYSTEM ACTIVE</text>
 
-  <!-- Top HUD bar -->
-  <rect x="0" y="0" width="900" height="24" fill="#0A0B10"/>
-  <line x1="0" y1="24" x2="900" y2="24" stroke="#1E293B" stroke-width="0.8"/>
-  <text x="16" y="16" font-family="'Space Mono', 'Consolas', monospace" font-size="9" fill="#64748B" letter-spacing="2">CORP // INFRASTRUCTURE GRID</text>
-  <text x="700" y="16" font-family="'Space Mono', 'Consolas', monospace" font-size="9" fill="#8C1D18" letter-spacing="1">STATUS: ARCHITECTURE EVOLVING</text>
+  <!-- Bottom Editorial HUD Bar -->
+  <rect x="8" y="274" width="892" height="26" fill="#FFFFFF"/>
+  <line x1="8" y1="274" x2="900" y2="274" stroke="#E2E5EB" stroke-width="1"/>
+  <text x="24" y="291" class="label-mono">NODE IDENTIFIER: VICTOR-HUGH // FULL-STACK · AI · CYBER DEFENSE · ANDROID</text>
+  <text x="760" y="291" class="label-corp">STATUS: OPTIMAL</text>
 
-  <!-- Bottom HUD bar -->
-  <rect x="0" y="277" width="900" height="23" fill="#0A0B10"/>
-  <line x1="0" y1="277" x2="900" y2="277" stroke="#1E293B" stroke-width="0.8"/>
-  <text x="16" y="291" font-family="'Space Mono', 'Consolas', monospace" font-size="8" fill="#64748B" letter-spacing="1">NETWORK NODE: VICTOR-HUGH // FULL-STACK ENGINEER // THREAT MODEL: ACTIVE</text>
-
-  <!-- Scanline overlay -->
-  <rect x="0" y="24" width="900" height="253" fill="url(#scanlines)"/>
+  <!-- Subtle Scanline overlay -->
+  <rect x="0" y="26" width="900" height="248" fill="url(#scanlines)"/>
 </svg>

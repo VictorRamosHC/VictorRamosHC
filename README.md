@@ -1,16 +1,16 @@
 <div align="center">
 
-<img src="assets/corporate_grid.svg" alt="Archivum Victoris // Corporate Systems Architecture Grid" width="100%" />
+<img src="assets/corporate_grid.svg" alt="Arasaka Infrastructure // Systems Architecture Grid" width="100%" />
 
 <br><br>
 
-<img src="https://readme-typing-svg.demolab.com?font=Space+Mono&size=20&duration=3000&pause=1000&color=D4AF37&center=true&vCenter=true&width=860&lines=ARCHIVUM+VICTORIS+%2F%2F+IMPERIAL+SYSTEMS+COMMAND;CHIEF+ARCHITECT%3A+VICTOR+%22HUGH%22+RAMOS;SECURITY+CLEARANCE%3A+SOVEREIGN+LEVEL-1;BUILD+%C2%B7+REFACTOR+%C2%B7+HARDEN;SIGNAL+ROUTE%3A+PROJECT+%E2%86%92+SYSTEM+%E2%86%92+PRODUCT" alt="Archivum Victoris Terminal" />
+<img src="https://readme-typing-svg.demolab.com?font=Space+Mono&size=19&duration=3000&pause=1000&color=A81B1E&center=true&vCenter=true&width=860&lines=%E8%8D%92%E5%9D%82%E5%BC%8F%E7%B5%B1%E5%90%88%E7%92%B0%E5%A2%83+%2F%2F+ARASAKA-GRADE+INFRASTRUCTURE;CHIEF+SYSTEMS+ARCHITECT%3A+VICTOR+%22HUGH%22+RAMOS;SECURITY+CLEARANCE%3A+SOVEREIGN+LEVEL-1;BUILD+%C2%B7+REFACTOR+%C2%B7+HARDEN+%C2%B7+AUDIT;SIGNAL+ROUTE%3A+PROJECT+%E2%86%92+SYSTEM+%E2%86%92+PRODUCT" alt="Arasaka Systems Terminal" />
 
 <p>
-  <a href="https://victorramoshc.github.io/VictorRamosHC/minigame/"><img src="https://img.shields.io/badge/WORKSTATION-HUGH--OS__v2.0-030305?style=for-the-badge&logoColor=D4AF37&logo=linux" alt="HUGH-OS"></a>
-  <a href="https://github.com/VictorRamosHC?tab=repositories"><img src="https://img.shields.io/badge/DATA__VAULT-REPOSITÓRIOS-030305?style=for-the-badge&logoColor=F5F0E8&logo=git" alt="Data Vault"></a>
-  <a href="https://github.com/VictorRamosHC/hugh-player/releases/latest"><img src="https://img.shields.io/badge/PAYLOAD-AETHER__v1.5.0-030305?style=for-the-badge&logoColor=D4AF37&logo=android" alt="Latest APK"></a>
-  <a href="#-08--digital-provenance-seal"><img src="https://img.shields.io/badge/PROVENANCE-VERIFIED__NODE-030305?style=for-the-badge&logoColor=D4AF37&logo=securityscorecard" alt="Provenance"></a>
+  <a href="https://victorramoshc.github.io/VictorRamosHC/minigame/"><img src="https://img.shields.io/badge/WORKSTATION-HUGH--OS__v3.0-111317?style=for-the-badge&logoColor=FFFFFF&logo=linux" alt="HUGH-OS"></a>
+  <a href="https://github.com/VictorRamosHC?tab=repositories"><img src="https://img.shields.io/badge/DATA__VAULT-REPOSIT%C3%93RIOS-111317?style=for-the-badge&logoColor=FFFFFF&logo=git" alt="Data Vault"></a>
+  <a href="https://github.com/VictorRamosHC/hugh-player/releases/latest"><img src="https://img.shields.io/badge/PAYLOAD-AETHER__v1.5.0-A81B1E?style=for-the-badge&logoColor=FFFFFF&logo=android" alt="Latest APK"></a>
+  <a href="#-08--digital-provenance-seal"><img src="https://img.shields.io/badge/PROVENANCE-VERIFIED__NODE-111317?style=for-the-badge&logoColor=A81B1E&logo=securityscorecard" alt="Provenance"></a>
 </p>
 
 </div>
@@ -38,11 +38,11 @@ If this profile, architectural layout, design tokens, corporate grid, minigame s
 <table border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td width="165" align="center" valign="middle" style="border:none;">
-      <img src="assets/profile_bust_caesar.png" width="145" alt="Victor 'Hugh' Ramos // Neoclassical Cyber Portrait" style="border: 2px solid #D4AF37; border-radius: 4px; box-shadow: 0 0 20px rgba(212,175,55,0.25);" />
+      <img src="assets/profile_bust_caesar.png" width="145" alt="Victor 'Hugh' Ramos // Neoclassical Cyber Portrait" style="border: 2px solid #A81B1E; border-radius: 4px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);" />
     </td>
     <td style="border:none; padding-left: 20px;" valign="middle">
-      <strong>Victor "Hugh" Ramos</strong> — <em>Chief Systems Architect & Full-Stack Engineer</em>.<br><br>
-      Construo software com mentalidade de infraestrutura soberana: resiliência distribuída, interfaces ergonômicas de alta fidelidade e integridade determinística de dados. Rejeito soluções frágeis de prateleira em prol de motores próprios (offline-first, zero-telemetry, zero dependências externas quando a criticidade exige). Minha engenharia une o rigor clássico da proporção à precisão militar da segurança de sistemas.
+      <strong>Victor "Hugh" Ramos</strong> — <em>Chief Systems Architect &amp; Full-Stack Engineer</em>.<br><br>
+      Engenharia de software com disciplina de megacorp: arquiteturas distribuídas com alta tolerância a falhas, precisão matemática e código soberano (offline-first, zero-telemetry externa). Minha filosofia une o rigor estético clássico à autoridade tecnológica e infraestrutural corporativa.
     </td>
   </tr>
 </table>
@@ -68,13 +68,13 @@ Any redistribution without this attribution is unauthorized.
 
 > Dossiê técnico detalhando os problemas reais de engenharia superados em cada iniciativa soberana.
 
-| Operação & Sistema | O Desafio Real de Engenharia | A Solução Arquitetural Implementada | Stack Soberano | Acesso |
+| Operação &amp; Sistema | O Desafio Real de Engenharia | A Solução Arquitetural Implementada | Stack Soberano | Acesso |
 | :--- | :--- | :--- | :--- | :---: |
-| [**Aether Vault**](https://github.com/VictorRamosHC/hugh-player)<br><sub>Op. Sovereign Audio</sub> | Player Android offline sem telemetria, processando DSP 5-bandas e letras sincronizadas (.LRC) sem engasgos de áudio. | Clean Architecture desacoplada, Kotlin Coroutines/Flow, SQLite Room atômico e pipeline DSP com AndroidX Media3 ExoPlayer. | `Kotlin 2.0`<br>`Jetpack Compose`<br>`Media3 ExoPlayer`<br>`Room SQLite` | [<img src="https://img.shields.io/badge/Download_APK-v1.5.0-030305?style=flat-square&logo=android&logoColor=D4AF37" alt="APK">](https://github.com/VictorRamosHC/hugh-player/releases/latest) |
-| [**Prisma House Painter**](https://github.com/VictorRamosHC/Prisma-House-painter)<br><sub>Op. Visual Protocol</sub> | Renderização de superfícies e fidelidade de cor sob luz natural sem estourar o orçamento de renderização do navegador. | Design System componentizado em Next.js com algoritmos de distância euclidiana no espaço tridimensional RGB. | `Next.js 14`<br>`React`<br>`TypeScript`<br>`Tailwind CSS` | [<img src="https://img.shields.io/badge/Deploy-Vercel-030305?style=flat-square&logo=vercel&logoColor=D4AF37" alt="Deploy">](https://prisma-house-painter.vercel.app) |
-| [**GlassTask**](https://github.com/VictorRamosHC/Gerenciador-de-tarefas)<br><sub>Op. Zero-Latency Task</sub> | Gerenciamento de backlog reativo com drag-and-drop e persistência imediata com zero dependências externas. | Motor de estado reativo nativo em Vanilla JS, manipulação direta de DOM com glassmorphism acelerado e serialização local. | `Vanilla JS`<br>`CSS Glass Tokens`<br>`LocalStorage Engine` | [<img src="https://img.shields.io/badge/Deploy-Vercel-030305?style=flat-square&logo=vercel&logoColor=D4AF37" alt="Deploy">](https://gerenciador-de-tarefas-one-gold.vercel.app) |
-| [**Cassino Reverso**](https://github.com/VictorRamosHC/cassino-reverso)<br><sub>Op. Probability Defense</sub> | Demonstração matemática interativa de Valor Esperado Negativo (EV-) para conscientização contra apostas predatórias. | Motor de probabilidade Monte Carlo em TypeScript calculando convergência assintótica em tempo real. | `Next.js`<br>`TypeScript`<br>`Simulação Estocástica`<br>`Tailwind CSS` | [<img src="https://img.shields.io/badge/Deploy-Vercel-030305?style=flat-square&logo=vercel&logoColor=D4AF37" alt="Deploy">](https://cassino-reverso.vercel.app) |
-| [**ProjetoViagem**](https://github.com/VictorRamosHC/ProjetoViagem)<br><sub>Op. Genesis Node</sub> | O marco zero da trajetória — estruturação semântica limpa, marcação acessível e nós de rota web. | Baseline semântico de hipermídia e marcação estrutural sem acoplamento de bibliotecas externas. | `HTML5 Semântico`<br>`CSS3 Grid/Flex`<br>`Web Fundamentals` | [<img src="https://img.shields.io/badge/Code-GitHub-030305?style=flat-square&logo=github&logoColor=D4AF37" alt="Repo">](https://github.com/VictorRamosHC/ProjetoViagem) |
+| [**Aether Vault**](https://github.com/VictorRamosHC/hugh-player)<br><sub>Op. Sovereign Audio</sub> | Player Android offline sem telemetria, processando DSP 5-bandas e letras sincronizadas (.LRC) sem engasgos de áudio. | Clean Architecture desacoplada, Kotlin Coroutines/Flow, SQLite Room atômico e pipeline DSP com AndroidX Media3 ExoPlayer. | `Kotlin 2.0`<br>`Jetpack Compose`<br>`Media3 ExoPlayer`<br>`Room SQLite` | [<img src="https://img.shields.io/badge/Download_APK-v1.5.0-111317?style=flat-square&logo=android&logoColor=A81B1E" alt="APK">](https://github.com/VictorRamosHC/hugh-player/releases/latest) |
+| [**Prisma House Painter**](https://github.com/VictorRamosHC/Prisma-House-painter)<br><sub>Op. Visual Protocol</sub> | Renderização de superfícies e fidelidade de cor sob luz natural sem estourar o orçamento de renderização do navegador. | Design System componentizado em Next.js com algoritmos de distância euclidiana no espaço tridimensional RGB. | `Next.js 14`<br>`React`<br>`TypeScript`<br>`Tailwind CSS` | [<img src="https://img.shields.io/badge/Deploy-Vercel-111317?style=flat-square&logo=vercel&logoColor=A81B1E" alt="Deploy">](https://prisma-house-painter.vercel.app) |
+| [**GlassTask**](https://github.com/VictorRamosHC/Gerenciador-de-tarefas)<br><sub>Op. Zero-Latency Task</sub> | Gerenciamento de backlog reativo com drag-and-drop e persistência imediata com zero dependências externas. | Motor de estado reativo nativo em Vanilla JS, manipulação direta de DOM com glassmorphism acelerado e serialização local. | `Vanilla JS`<br>`CSS Glass Tokens`<br>`LocalStorage Engine` | [<img src="https://img.shields.io/badge/Deploy-Vercel-111317?style=flat-square&logo=vercel&logoColor=A81B1E" alt="Deploy">](https://gerenciador-de-tarefas-one-gold.vercel.app) |
+| [**Cassino Reverso**](https://github.com/VictorRamosHC/cassino-reverso)<br><sub>Op. Probability Defense</sub> | Demonstração matemática interativa de Valor Esperado Negativo (EV-) para conscientização contra apostas predatórias. | Motor de probabilidade Monte Carlo em TypeScript calculando convergência assintótica em tempo real. | `Next.js`<br>`TypeScript`<br>`Simulação Estocástica`<br>`Tailwind CSS` | [<img src="https://img.shields.io/badge/Deploy-Vercel-111317?style=flat-square&logo=vercel&logoColor=A81B1E" alt="Deploy">](https://cassino-reverso.vercel.app) |
+| [**ProjetoViagem**](https://github.com/VictorRamosHC/ProjetoViagem)<br><sub>Op. Genesis Node</sub> | O marco zero da trajetória — estruturação semântica limpa, marcação acessível e nós de rota web. | Baseline semântico de hipermídia e marcação estrutural sem acoplamento de bibliotecas externas. | `HTML5 Semântico`<br>`CSS3 Grid/Flex`<br>`Web Fundamentals` | [<img src="https://img.shields.io/badge/Code-GitHub-111317?style=flat-square&logo=github&logoColor=A81B1E" alt="Repo">](https://github.com/VictorRamosHC/ProjetoViagem) |
 
 ---
 
@@ -93,31 +93,31 @@ Simulation modules and verification terminals created by Victor "Hugh" Ramos (ht
 
 ## ◼ [ 05 // INTERACTIVE SYSTEMS & WORKSTATION ]
 
-> Cada simulação interativa está conectada a um sistema real da infraestrutura. Você pode executá-las individualmente ou acessar o console unificado **HUGH-OS v2.0** no navegador.
-> ⚠️ **Defesa Ativa:** Erros de invasão ativam o contra-ataque **"HACKED BY HUGO"**. Vitórias disparam um **honeypot** corporativo com extração direta para o projeto!
+> Quatro laboratórios interativos conectados à proposta real de cada projeto. Código client-side, determinístico e executável no navegador ou via **HUGH-OS v3.0**.
+> ⚠️ **Contramedida de Defesa:** Violações disparam a rotina de segurança **"HACKED BY HUGO"**. Vitórias disparam um **honeypot corporativo** com redirecionamento ao repositório!
 
 <div align="center">
-  <a href="https://victorramoshc.github.io/VictorRamosHC/minigame/"><img src="https://img.shields.io/badge/ACESSAR_CONSOLE_UNIFICADO-HUGH--OS__v2.0-030305?style=for-the-badge&logo=gnometerminal&logoColor=D4AF37" alt="Abrir HUGH-OS"></a>
+  <a href="https://victorramoshc.github.io/VictorRamosHC/minigame/"><img src="https://img.shields.io/badge/ACESSAR_WORKSTATION-HUGH--OS__v3.0-111317?style=for-the-badge&logo=gnometerminal&logoColor=A81B1E" alt="Abrir HUGH-OS"></a>
 </div>
 
 <br>
 
-| Módulo Interativo | Projeto Vinculado | Simulação Operacional | Acesso Direto |
+| Laboratório Interativo | Projeto Vinculado | Proposta &amp; Mecânica de Engenharia | Acesso Direto |
 | :--- | :--- | :--- | :---: |
-| **Signal Route** | **ProjetoViagem** | Roteamento de malha planar sem colisão de rotas. | [<img src="https://img.shields.io/badge/PLAY_ONLINE-030305?style=flat-square&logo=target&logoColor=D4AF37" alt="Play">](https://victorramoshc.github.io/VictorRamosHC/minigame/signal-route/)<br>[<sub style="color:#64748B;">código fonte</sub>](./minigame/signal-route/index.html) |
-| **Task Triage** | **GlassTask** | Triagem de backlog sob latência crítica operacional. | [<img src="https://img.shields.io/badge/OPEN_CONTROL_ROOM-030305?style=flat-square&logo=target&logoColor=D4AF37" alt="Open">](https://victorramoshc.github.io/VictorRamosHC/minigame/task-triage/)<br>[<sub style="color:#64748B;">código fonte</sub>](./minigame/task-triage/index.html) |
-| **Color Protocol** | **Prisma House Painter** | Reconstituição cromática em espaço euclidiano RGB. | [<img src="https://img.shields.io/badge/ENTER_PRISMA_GRID-030305?style=flat-square&logo=target&logoColor=D4AF37" alt="Enter">](https://victorramoshc.github.io/VictorRamosHC/minigame/color-protocol/)<br>[<sub style="color:#64748B;">código fonte</sub>](./minigame/color-protocol/index.html) |
-| **Audio Breach** | **Aether Vault** | Síntese harmônica e sincronia via Web Audio API. | [<img src="https://img.shields.io/badge/ACCESS_AETHER_VAULT-030305?style=flat-square&logo=target&logoColor=D4AF37" alt="Access">](https://victorramoshc.github.io/VictorRamosHC/minigame/audio-breach/)<br>[<sub style="color:#64748B;">código fonte</sub>](./minigame/audio-breach/index.html) |
+| **Facade Lab** (Color Protocol) | **Prisma House Painter** | Calibração de cor e acabamento de fachada sob luz solar simulada. | [<img src="https://img.shields.io/badge/OPEN_LAB-111317?style=flat-square&logo=target&logoColor=A81B1E" alt="Open">](https://victorramoshc.github.io/VictorRamosHC/minigame/color-protocol/)<br>[<sub style="color:#64748B;">código fonte</sub>](./minigame/color-protocol/index.html) |
+| **Signal Tuner** (Audio Breach) | **Aether Vault** | Calibração espectral de DSP de 5 bandas via Web Audio API. | [<img src="https://img.shields.io/badge/OPEN_TUNER-111317?style=flat-square&logo=target&logoColor=A81B1E" alt="Open">](https://victorramoshc.github.io/VictorRamosHC/minigame/audio-breach/)<br>[<sub style="color:#64748B;">código fonte</sub>](./minigame/audio-breach/index.html) |
+| **Critical Queue** (Task Triage) | **GlassTask** | Priorização de backlog com capacidade limitada e dependências bloqueantes. | [<img src="https://img.shields.io/badge/OPEN_QUEUE-111317?style=flat-square&logo=target&logoColor=A81B1E" alt="Open">](https://victorramoshc.github.io/VictorRamosHC/minigame/task-triage/)<br>[<sub style="color:#64748B;">código fonte</sub>](./minigame/task-triage/index.html) |
+| **Expedition Planner** (Signal Route) | **ProjetoViagem** | Roteamento logístico sob limites de orçamento, fadiga e contingências. | [<img src="https://img.shields.io/badge/OPEN_PLANNER-111317?style=flat-square&logo=target&logoColor=A81B1E" alt="Open">](https://victorramoshc.github.io/VictorRamosHC/minigame/signal-route/)<br>[<sub style="color:#64748B;">código fonte</sub>](./minigame/signal-route/index.html) |
 
 ---
 
 ## 🛠️ [ 06 // TECHNICAL ARSENAL & SYSTEMS MATRIX ]
 
-> Matriz técnica de arquitetura estruturada por domínios de especialidade — sem paredes de ícones genéricos.
+> Matriz técnica de arquitetura estruturada por domínios de especialidade — hierarquia editorial precisa.
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────────────────────────┐
-│ 🏛️ ARSENAL TÉCNICO // MATRIZ ARQUITETURAL SOBERANA                                         │
+│ 荒坂式統合環境 // ARASAKA-GRADE SYSTEMS MATRIX                                              │
 ├─────────────────────────┬───────────────────────────────────────────────────────────────────┤
 │ CORE MOBILE & DSP       │ Kotlin 2.0 · Jetpack Compose · AndroidX Media3 ExoPlayer · Room   │
 │ ENGENHARIA FULL-STACK   │ Next.js 14+ · React · TypeScript · Node.js · RESTful / WebSockets │
@@ -131,7 +131,7 @@ Simulation modules and verification terminals created by Victor "Hugh" Ramos (ht
 
 ## 📊 [ 07 // SYSTEM TELEMETRY & NODE METRICS ]
 
-> Painel de telemetria arquitetural customizado em SVG — métricas determinísticas e nós operacionais ativos.
+> Console de infraestrutura executiva em porcelana e grafite — métricas determinísticas e nós operacionais.
 
 <div align="center">
   <img src="assets/telemetry_console.svg" alt="System Telemetry & Architectural Console" width="100%" />
@@ -158,7 +158,7 @@ Sovereign Systems Infrastructure: https://github.com/VictorRamosHC/VictorRamosHC
 ========================================================================================
 ```
 
-<a href="https://github.com/VictorRamosHC"><img src="https://img.shields.io/badge/SOVEREIGN_NODE-VICTOR__HUGO-030305?style=for-the-badge&logoColor=D4AF37&logo=shield" alt="Sovereign Node"></a>
-<a href="https://victorramoshc.github.io/VictorRamosHC/minigame/"><img src="https://img.shields.io/badge/VERIFY_PROVENANCE-ONLINE_TERMINAL-030305?style=for-the-badge&logoColor=D4AF37&logo=keybase" alt="Verify Provenance"></a>
+<a href="https://github.com/VictorRamosHC"><img src="https://img.shields.io/badge/SOVEREIGN_NODE-VICTOR__HUGO-111317?style=for-the-badge&logoColor=FFFFFF&logo=shield" alt="Sovereign Node"></a>
+<a href="https://victorramoshc.github.io/VictorRamosHC/minigame/"><img src="https://img.shields.io/badge/VERIFY_PROVENANCE-ONLINE_TERMINAL-111317?style=for-the-badge&logoColor=A81B1E&logo=keybase" alt="Verify Provenance"></a>
 
 </div>

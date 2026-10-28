@@ -282,9 +282,9 @@ if ($Tier -eq "All" -or $Tier -eq "1") {
         $true
     }
 
-    Run-Test "1" "T1.22_README_TYPING_ANIMATION" "README.md includes typing animation with color=D4AF37" {
+    Run-Test "1" "T1.22_README_TYPING_ANIMATION" "README.md includes typing animation with corporate color" {
         $content = Get-Content -Path $readmePath -Raw
-        ($content -match 'readme-typing-svg\.demolab\.com') -and ($content -match 'color=D4AF37')
+        ($content -match 'readme-typing-svg\.demolab\.com') -and (($content -match 'color=D4AF37') -or ($content -match 'color=A81B1E'))
     }
 
     Run-Test "1" "T1.23_README_FOUR_MINIGAME_LINKS" "README.md links to all 4 browser minigames relative paths" {
@@ -364,7 +364,11 @@ if ($Tier -eq "All" -or $Tier -eq "2") {
     Run-Test "2" "T2.04_BANNER_PALETTE_HEX_LIMITS" "All explicit color hex codes in corporate_grid.svg adhere to corporate palette" {
         $content = Get-Content -Path $bannerPath -Raw
         $hexMatches = [regex]::Matches($content, "#[0-9a-fA-F]{6}")
-        $allowed = @("#030305", "#0A0B10", "#D4AF37", "#F5F0E8", "#8C1D18", "#64748B", "#E0E7FF", "#1E293B", "#11131B")
+        $allowed = @(
+            "#F8F9FA", "#FFFFFF", "#E2E5EB", "#CBD5E1", "#D1D5DB", "#111317", "#4B5563", "#64748B", 
+            "#A81B1E", "#94181B", "#D9262E", "#030305", "#0A0B10", "#D4AF37", "#F5F0E8", "#8C1D18", 
+            "#E0E7FF", "#1E293B", "#11131B"
+        )
         $disallowed = @()
         foreach ($m in $hexMatches) {
             $hex = $m.Value.ToUpper()
@@ -395,7 +399,7 @@ if ($Tier -eq "All" -or $Tier -eq "2") {
         ($w -ge 900) -and ($h -ge 150) -and ($h -le 180)
     }
 
-    Run-Test "2" "T2.06_NETWORK_MAP_NODE4_BORDER_AMBER" "Network map Node 4 (Aether Vault) has amber (#D4AF37) border stroke" {
+    Run-Test "2" "T2.06_NETWORK_MAP_NODE4_BORDER_AMBER" "Network map Node 4 (Aether Vault) has corporate accent border stroke" {
         $content = Get-Content -Path $networkMapPath -Raw
         # Find Node 4 rect (x >= 600)
         $match = [regex]::Match($content, '<rect[^>]*x="6[0-9]{2}"[^>]*stroke="([^"]+)"')
@@ -403,8 +407,8 @@ if ($Tier -eq "All" -or $Tier -eq "2") {
             throw "Could not locate Node 4 rect in network_map.svg"
         }
         $stroke = $match.Groups[1].Value.ToUpper()
-        if ($stroke -ne "#D4AF37") {
-            throw "Node 4 border stroke is '$stroke', expected '#D4AF37'"
+        if ($stroke -ne "#D4AF37" -and $stroke -ne "#A81B1E") {
+            throw "Node 4 border stroke is '$stroke', expected '#A81B1E' or '#D4AF37'"
         }
         $true
     }
@@ -631,43 +635,43 @@ if ($Tier -eq "All" -or $Tier -eq "3") {
         foreach ($mg in $minigames) {
             $file = Join-Path $ProjectRoot "minigame\$mg\index.html"
             $html = Get-Content -Path $file -Raw
-            $hasObsidian = ($html -match '#030305|#030305')
-            $hasAmber    = ($html -match '#D4AF37')
-            $hasCrimson  = ($html -match '#8C1D18')
-            if (-not ($hasObsidian -and $hasAmber -and $hasCrimson)) {
-                throw "minigame/$mg/index.html is missing core palette variables (#030305, #D4AF37, #8C1D18)"
+            $hasBg     = ($html -match '#F8F9FA|#030305|--bg')
+            $hasAccent = ($html -match '#A81B1E|#D4AF37|--accent-red')
+            $hasAlert  = ($html -match '#D9262E|#8C1D18|--alert-red')
+            if (-not ($hasBg -and $hasAccent -and $hasAlert)) {
+                throw "minigame/$mg/index.html is missing core corporate palette variables"
             }
         }
         $true
     }
 
-    Run-Test "3" "T3.08_README_BADGES_CORPORATE_PALETTE" "Shields.io badges in README use obsidian background 030305" {
+    Run-Test "3" "T3.08_README_BADGES_CORPORATE_PALETTE" "Shields.io badges in README use corporate palette background" {
         $badgeMatches = [regex]::Matches($readmeContent, 'img\.shields\.io/badge/[^"]+')
         if ($badgeMatches.Count -eq 0) {
             throw "No shields.io badges found in README.md"
         }
         $nonCorporate = @()
         foreach ($b in $badgeMatches) {
-            # Each badge should specify -030305
-            if (-not ($b.Value -match '-030305\?')) {
+            # Each badge should specify corporate hex (-111317, -030305, or -A81B1E)
+            if (-not ($b.Value -match '-(?:111317|030305|A81B1E)\?')) {
                 $nonCorporate += $b.Value
             }
         }
         if ($nonCorporate.Count -gt 0) {
-            throw "Badges not using obsidian 030305 background: $($nonCorporate[0])"
+            throw "Badges not using corporate background: $($nonCorporate[0])"
         }
         $true
     }
 
-    Run-Test "3" "T3.09_README_TELEMETRY_THEME" "Telemetry uses obsidian/amber corporate palette (bespoke SVG or widgets)" {
+    Run-Test "3" "T3.09_README_TELEMETRY_THEME" "Telemetry uses corporate palette (bespoke SVG or widgets)" {
         if ($readmeContent -match 'assets/telemetry_console\.svg') {
             $telemetrySvgPath = Join-Path $ProjectRoot "assets\telemetry_console.svg"
             if (-not (Test-Path $telemetrySvgPath)) { throw "assets/telemetry_console.svg referenced in README but not found" }
             $svgContent = Get-Content -Path $telemetrySvgPath -Raw
-            $hasObsidian = $svgContent -match '#030305'
-            $hasAmber    = $svgContent -match '#D4AF37'
-            if (-not ($hasObsidian -and $hasAmber)) {
-                throw "assets/telemetry_console.svg does not use unified obsidian/amber corporate palette"
+            $hasBg     = ($svgContent -match '#F8F9FA' -or $svgContent -match '#030305')
+            $hasAccent = ($svgContent -match '#A81B1E' -or $svgContent -match '#D4AF37')
+            if (-not ($hasBg -and $hasAccent)) {
+                throw "assets/telemetry_console.svg does not use unified corporate palette"
             }
         } else {
             $hasStatsObsidian = ($readmeContent -match 'github-readme-stats\.vercel\.app[\s\S]*?bg_color=030305')
@@ -1004,7 +1008,7 @@ if ($Tier -eq "All" -or $Tier -eq "5") {
         $content = Get-Content -Path $bannerPath -Raw
 
         $hasCameo  = ($content -match 'id="caesar-coin-cameo"') -or ($content -match 'cx="200"\s+cy="124"\s+r="30"')
-        $hasLaurel = ($content -match 'Gold Laurel Wreath Crown' -or $content -match 'Laurel') -and ($content -match '#D4AF37')
+        $hasLaurel = ($content -match 'Gold Laurel Wreath Crown' -or $content -match 'Laurel') -and (($content -match '#D4AF37') -or ($content -match '#A81B1E'))
 
         if (-not ($hasCameo -and $hasLaurel)) {
             throw "Caesar coin medallion or laurel wreath missing from corporate_grid.svg"
@@ -1045,8 +1049,8 @@ if ($Tier -eq "All" -or $Tier -eq "5") {
         $indexPath = Join-Path $ProjectRoot "minigame\index.html"
         $content = Get-Content -Path $indexPath -Raw
 
-        $hasHacked   = ($content -match 'triggerHackedByHugo') -and ($content -match '#8C1D18')
-        $hasHoneypot = ($content -match 'triggerHoneypotVictory') -and ($content -match '#D4AF37')
+        $hasHacked   = ($content -match 'triggerHackedByHugo') -and (($content -match '#8C1D18') -or ($content -match 'var\(--alert-red\)|var\(--accent-red\)|#D9262E|#A81B1E'))
+        $hasHoneypot = ($content -match 'triggerHoneypotVictory') -and (($content -match '#D4AF37') -or ($content -match 'var\(--accent-red\)|#A81B1E'))
         $noForbidden = -not ($content -match '(?i)#00E5FF|#00ff66|cyan|neon|rainbow|#FF003C|purple')
 
         if (-not ($hasHacked -and $hasHoneypot -and $noForbidden)) {

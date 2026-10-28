@@ -3,98 +3,118 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HUGH-OS v2.0 // ARCHIVUM VICTORIS SOVEREIGN WORKSTATION</title>
+  <title>HUGH-OS v3.0 // 荒坂式 ARCHITECTURAL WORKSTATION</title>
   <style>
     :root {
-      --bg: #030305;
-      --panel: #0a0b10;
-      --gold: #d4af37;
-      --red: #8c1d18;
-      --text: #e0e7ff;
-      --dim: #64748b;
-      --ivory: #f5f0e8;
-      --border: #1e293b;
+      --bg: #F8F9FA;
+      --surface: #FFFFFF;
+      --surface-subtle: #F1F3F7;
+      --border: #E2E5EB;
+      --border-focus: #CBD5E1;
+      --text-main: #111317;
+      --text-muted: #64748B;
+      --accent-red: #A81B1E;
+      --alert-red: #D9262E;
+      --font-sans: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'Space Mono', 'Consolas', monospace;
+      /* Compatibility tokens */
+      --obsidian: #111317;
+      --amber: #A81B1E;
+      --crimson: #8C1D18;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Space Mono', 'Consolas', monospace; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background: var(--bg);
-      color: var(--text);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-height: 100vh;
-      overflow-x: hidden;
       padding: 16px;
+      line-height: 1.5;
     }
 
-    /* OS Desktop Wrapper */
+    /* Outer Corporate Workstation Frame */
     .os-container {
       max-width: 960px;
       width: 100%;
-      border: 1px solid var(--gold);
-      box-shadow: 0 0 35px rgba(212, 175, 55, 0.2), inset 0 0 15px rgba(212, 175, 55, 0.05);
-      background: var(--panel);
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 4px;
       overflow: hidden;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.06);
     }
 
-    /* OS Top Titlebar */
+    /* Workstation Titlebar */
     .os-titlebar {
-      background: #030305;
+      background: #FFFFFF;
       border-bottom: 1px solid var(--border);
-      padding: 10px 16px;
+      padding: 12px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 10px;
-      font-size: 0.82rem;
+      gap: 12px;
     }
     .os-title {
-      color: var(--gold);
-      font-weight: bold;
-      letter-spacing: 1.5px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+      color: var(--text-main);
+    }
+    .corp-badge {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      background: #F1F3F7;
+      color: var(--accent-red);
+      padding: 2px 8px;
+      border-radius: 2px;
+      font-weight: 700;
     }
     .os-status {
       display: flex;
       align-items: center;
       gap: 16px;
-      color: var(--dim);
-      font-size: 0.78rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
     }
 
-    /* OS Tab Bar Navigation */
+    /* Tab Bar Navigation */
     .os-tab-bar {
       display: flex;
-      background: #07080d;
+      background: var(--surface-subtle);
       border-bottom: 1px solid var(--border);
       overflow-x: auto;
     }
     .os-tab {
-      padding: 10px 16px;
+      padding: 12px 20px;
       background: transparent;
       border: none;
       border-right: 1px solid var(--border);
       border-bottom: 2px solid transparent;
-      color: var(--dim);
+      color: var(--text-muted);
       cursor: pointer;
       font-size: 0.8rem;
-      letter-spacing: 1px;
-      transition: all 0.2s ease;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: all 0.15s ease;
       white-space: nowrap;
+      font-family: var(--font-sans);
     }
     .os-tab:hover {
-      color: var(--ivory);
-      background: rgba(212, 175, 55, 0.05);
+      color: var(--text-main);
+      background: #FFFFFF;
     }
     .os-tab.active {
-      color: var(--gold);
-      background: var(--panel);
-      border-bottom: 2px solid var(--gold);
-      font-weight: bold;
+      color: var(--accent-red);
+      background: #FFFFFF;
+      border-bottom: 2px solid var(--accent-red);
+      font-weight: 700;
     }
 
     /* Tab Content Windows */
@@ -106,7 +126,54 @@
       display: block;
     }
 
-    /* General HUD Elements */
+    /* Editorial Cards Grid (Modules Tab) */
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 14px;
+    }
+    .module-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      transition: all 0.15s;
+    }
+    .module-card:hover {
+      border-color: var(--accent-red);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+    }
+    .module-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .module-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .module-tag {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      background: var(--surface-subtle);
+      color: var(--accent-red);
+      padding: 2px 6px;
+      border-radius: 2px;
+      font-weight: 600;
+    }
+    .module-desc {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    /* Breach Protocol Game Canvas & Matrix */
     .hud-box {
       background: transparent;
       width: 100%;
@@ -117,12 +184,12 @@
       align-items: center;
       border-bottom: 1px solid var(--border);
       padding-bottom: 12px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       flex-wrap: wrap;
       gap: 10px;
     }
-    .title { color: var(--gold); font-weight: bold; font-size: 1.05rem; letter-spacing: 1px; }
-    .timer { color: var(--red); font-weight: bold; font-size: 1.15rem; }
+    .title { color: var(--text-main); font-weight: 700; font-size: 1rem; }
+    .timer { color: var(--accent-red); font-weight: 700; font-size: 1.1rem; font-family: var(--font-mono); }
 
     .main-grid {
       display: grid;
@@ -132,34 +199,34 @@
     @media (max-width: 720px) {
       .main-grid { grid-template-columns: 1fr; }
     }
-
     .matrix-board {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 8px;
     }
     .cell {
-      background: #0f1118;
+      background: var(--surface-subtle);
       border: 1px solid var(--border);
       padding: 12px 6px;
       text-align: center;
-      font-size: 1.1rem;
+      font-size: 1rem;
       cursor: pointer;
       transition: all 0.15s ease;
-      color: var(--dim);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-weight: 600;
     }
     .cell.selectable {
-      color: var(--text);
-      border-color: var(--gold);
-      background: rgba(212, 175, 55, 0.08);
+      color: var(--text-main);
+      border-color: var(--accent-red);
+      background: #FFFFFF;
     }
     .cell.selectable:hover {
-      background: var(--gold);
-      color: #030305;
-      box-shadow: 0 0 12px var(--gold);
+      background: var(--accent-red);
+      color: #FFFFFF;
     }
     .cell.used {
-      opacity: 0.15;
+      opacity: 0.2;
       cursor: not-allowed;
       border-color: transparent;
     }
@@ -167,12 +234,13 @@
     .sidebar {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
     .buffer-box {
       border: 1px solid var(--border);
       padding: 12px;
-      background: #08090e;
+      background: var(--surface-subtle);
+      border-radius: 2px;
     }
     .buffer-slots {
       display: flex;
@@ -180,183 +248,157 @@
       margin-top: 8px;
     }
     .slot {
-      border: 1px dashed var(--dim);
-      width: 44px;
-      height: 44px;
+      border: 1px dashed var(--border-focus);
+      background: #FFFFFF;
+      width: 42px;
+      height: 42px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.1rem;
-      color: var(--dim);
+      font-size: 1rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
     }
     .slot.filled {
       border-style: solid;
-      border-color: var(--gold);
-      color: var(--gold);
-      background: rgba(212, 175, 55, 0.1);
+      border-color: var(--accent-red);
+      color: var(--accent-red);
+      font-weight: 700;
     }
     .sequences {
       border: 1px solid var(--border);
       padding: 12px;
-      background: #08090e;
+      background: var(--surface-subtle);
+      border-radius: 2px;
     }
     .seq-item {
       display: flex;
       justify-content: space-between;
       margin-top: 6px;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       align-items: center;
     }
-    .seq-code { color: var(--gold); font-weight: bold; }
+    .seq-code { color: var(--accent-red); font-weight: 700; font-family: var(--font-mono); }
     .status-badge {
-      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
       padding: 2px 6px;
-      border: 1px solid var(--dim);
-      color: var(--dim);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
     }
     .status-badge.completed {
-      border-color: var(--gold);
-      color: var(--gold);
-      background: rgba(212, 175, 55, 0.15);
+      border-color: var(--accent-red);
+      color: #FFFFFF;
+      background: var(--accent-red);
+      font-weight: 700;
     }
 
     .log-panel {
-      margin-top: 20px;
-      background: #08090e;
+      margin-top: 16px;
+      background: var(--surface-subtle);
       border: 1px solid var(--border);
       padding: 12px;
-      font-size: 0.82rem;
-      min-height: 48px;
-      color: var(--dim);
-    }
-    .log-highlight { color: var(--gold); }
-
-    .btn {
-      background: transparent;
-      border: 1px solid var(--gold);
-      color: var(--gold);
-      padding: 8px 16px;
-      cursor: pointer;
-      font-family: inherit;
-      transition: all 0.2s ease;
-      font-size: 0.82rem;
-      letter-spacing: 1px;
-    }
-    .btn:hover { background: var(--gold); color: #030305; }
-    .btn-secondary {
-      background: transparent;
-      border: 1px solid var(--dim);
-      color: var(--dim);
-      padding: 8px 16px;
-      cursor: pointer;
-      font-family: inherit;
-      transition: all 0.2s ease;
-      font-size: 0.82rem;
-    }
-    .btn-secondary:hover { background: var(--dim); color: var(--bg); }
-
-    /* Simulations Grid */
-    .sim-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 16px;
-      margin-top: 14px;
-    }
-    .sim-card {
-      border: 1px solid var(--border);
-      background: #08090e;
-      padding: 16px;
-      border-radius: 2px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: all 0.2s ease;
-    }
-    .sim-card:hover {
-      border-color: var(--gold);
-      box-shadow: 0 0 16px rgba(212, 175, 55, 0.15);
-    }
-    .sim-card-title {
-      color: var(--gold);
-      font-weight: bold;
-      font-size: 0.95rem;
-      margin-bottom: 6px;
-    }
-    .sim-card-project {
-      color: var(--dim);
-      font-size: 0.75rem;
-      letter-spacing: 1px;
-      margin-bottom: 10px;
-    }
-    .sim-card-desc {
-      color: var(--text);
       font-size: 0.8rem;
-      line-height: 1.5;
-      margin-bottom: 14px;
+      min-height: 44px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
     }
+    .log-highlight { color: var(--accent-red); font-weight: 700; }
 
-    /* Archivum Dossier Cards */
+    /* Buttons */
+    .btn {
+      background: var(--text-main);
+      color: #FFFFFF;
+      border: none;
+      padding: 9px 18px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: background 0.15s;
+      font-family: var(--font-sans);
+    }
+    .btn:hover { background: #000000; }
+    .btn-red { background: var(--accent-red); color: #FFFFFF; }
+    .btn-red:hover { background: #8C1518; }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-main);
+    }
+    .btn-outline:hover { border-color: var(--text-main); }
+
+    /* Dossier Cards */
     .dossier-card {
       border: 1px solid var(--border);
-      background: #08090e;
+      background: #FFFFFF;
       padding: 18px;
-      margin-bottom: 16px;
-      border-radius: 2px;
+      margin-bottom: 14px;
+      border-radius: 3px;
     }
     .dossier-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid var(--border);
-      padding-bottom: 10px;
-      margin-bottom: 12px;
+      padding-bottom: 8px;
+      margin-bottom: 10px;
       flex-wrap: wrap;
       gap: 8px;
     }
-    .dossier-code { color: var(--gold); font-weight: bold; font-size: 0.95rem; }
+    .dossier-code { color: var(--text-main); font-weight: 700; font-size: 0.95rem; }
     .dossier-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 14px;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       line-height: 1.6;
     }
     @media (max-width: 600px) {
       .dossier-grid { grid-template-columns: 1fr; }
     }
-    .dossier-label { color: var(--dim); font-size: 0.72rem; letter-spacing: 1px; margin-bottom: 2px; }
+    .dossier-label {
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 1px;
+      margin-bottom: 2px;
+    }
 
-    /* CLI Terminal Tab */
+    /* CLI Shell Tab */
     .cli-window {
-      background: #030305;
+      background: #111317;
       border: 1px solid var(--border);
       padding: 16px;
-      min-height: 360px;
+      min-height: 340px;
+      border-radius: 3px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
     .cli-output {
+      font-family: var(--font-mono);
       font-size: 0.82rem;
       line-height: 1.7;
-      color: var(--text);
+      color: #E2E8F0;
       overflow-y: auto;
-      max-height: 320px;
+      max-height: 280px;
     }
     .cli-prompt-line {
       display: flex;
       align-items: center;
       gap: 8px;
       margin-top: 12px;
-      border-top: 1px solid var(--border);
+      border-top: 1px solid #2D3748;
       padding-top: 10px;
     }
     .cli-input {
       flex: 1;
       background: transparent;
       border: none;
-      color: var(--gold);
-      font-family: inherit;
+      color: #FFFFFF;
+      font-family: var(--font-mono);
       font-size: 0.85rem;
       outline: none;
     }
@@ -366,7 +408,7 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(3, 3, 5, 0.94);
+      background: rgba(17, 19, 23, 0.7);
       backdrop-filter: blur(4px);
       -webkit-backdrop-filter: blur(4px);
       z-index: 9999;
@@ -375,64 +417,132 @@
       padding: 20px;
     }
     .provenance-modal-content {
-      background: var(--panel);
-      border: 1px solid var(--gold);
-      box-shadow: 0 0 35px rgba(212, 175, 55, 0.25), inset 0 0 15px rgba(212, 175, 55, 0.05);
-      max-width: 720px;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      max-width: 700px;
       width: 100%;
       border-radius: 4px;
       overflow: hidden;
-      font-family: 'Space Mono', 'Consolas', monospace;
     }
   </style>
 </head>
 <body>
 
-  <!-- HUGH-OS Desktop Window -->
+  <!-- Workstation Container -->
   <div class="os-container">
-    <!-- OS Title Bar -->
+    <!-- Top Titlebar -->
     <div class="os-titlebar">
       <div class="os-title">
-        <span>🏛️</span>
-        <span>HUGH-OS v2.0 // ARCHIVUM VICTORIS</span>
+        <span style="color: var(--accent-red); font-size: 1.1rem;">◈</span>
+        <span>HUGH-OS // 荒坂統制 TERMINAL v3.0</span>
+        <span class="corp-badge">ARASAKA ARCHITECTURE</span>
       </div>
       <div class="os-status">
         <span id="osClock">UTC --:--:--</span>
-        <span style="color:var(--gold);">[CLEARANCE: SOVEREIGN]</span>
-        <button id="btnVerifyProvenance" class="btn" style="padding:3px 10px;font-size:0.75rem;" onclick="openProvenanceModal()">[ 🛡️ VERIFY PROVENANCE ]</button>
+        <span style="color: var(--accent-red);">[CLEARANCE: SOVEREIGN]</span>
+        <button id="btnVerifyProvenance" class="btn btn-outline" style="padding: 4px 10px; font-size: 0.72rem;" onclick="openProvenanceModal()">
+          [ 🛡️ VERIFY PROVENANCE ]
+        </button>
       </div>
     </div>
 
-    <!-- OS Taskbar Tabs -->
+    <!-- Tab Bar -->
     <div class="os-tab-bar">
-      <button class="os-tab active" onclick="switchTab('tab-simulations', this)">[ 🕹️ SIMULATIONS &amp; BREACH ]</button>
-      <button class="os-tab" onclick="switchTab('tab-launcher', this)">[ 🚀 SYSTEM MODULES ]</button>
-      <button class="os-tab" onclick="switchTab('tab-archivum', this)">[ 📜 ARCHIVUM VICTORIS ]</button>
-      <button class="os-tab" onclick="switchTab('tab-terminal', this)">[ 💻 CLI TERMINAL ]</button>
-      <button class="os-tab" onclick="switchTab('tab-provenance', this)">[ 🛡️ PROVENANCE CERT ]</button>
+      <button class="os-tab active" onclick="switchTab('tab-modules', this)">[ 01 // 運用 LABS &amp; MODULES ]</button>
+      <button class="os-tab" onclick="switchTab('tab-simulations', this)">[ 02 // 侵入 BREACH PROTOCOL ]</button>
+      <button class="os-tab" onclick="switchTab('tab-archivum', this)">[ 03 // 記録 ARCHIVUM ]</button>
+      <button class="os-tab" onclick="switchTab('tab-terminal', this)">[ 04 // 端末 TERMINAL ]</button>
+      <button class="os-tab" onclick="switchTab('tab-provenance', this)">[ 05 // 保安 PROVENANCE ]</button>
     </div>
 
-    <!-- TAB 1: BREACH PROTOCOL GAME -->
-    <div id="tab-simulations" class="tab-content active">
+    <!-- TAB 1: NEW INTERACTIVE MODULES -->
+    <div id="tab-modules" class="tab-content active">
+      <div style="border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 16px;">
+        <h2 style="font-size: 1.1rem; font-weight: 800;">SISTEMAS INTERATIVOS &amp; LABORATÓRIOS // 運用</h2>
+        <div style="color: var(--text-muted); font-size: 0.82rem; margin-top: 4px;">
+          Cada laboratório executa uma mecânica dedicada e conectada ao desafio de engenharia real de cada projeto.
+        </div>
+      </div>
+
+      <div class="modules-grid">
+        <!-- 01: Facade Lab -->
+        <div class="module-card">
+          <div>
+            <div class="module-header">
+              <span class="module-title">01 // FACADE LAB</span>
+              <span class="module-tag">PRISMA</span>
+            </div>
+            <div class="module-desc" style="margin-top: 8px;">
+              Calibração de cor de fachada arquitetural sob iluminação natural (Meio-dia, Manhã, Entardecer) e acabamento (Matte/Satin/Gloss).
+            </div>
+          </div>
+          <a href="./color-protocol/" class="btn btn-outline" style="text-align: center; text-decoration: none;">[ OPEN FACADE LAB → ]</a>
+        </div>
+
+        <!-- 02: Signal Tuner -->
+        <div class="module-card">
+          <div>
+            <div class="module-header">
+              <span class="module-title">02 // SIGNAL TUNER</span>
+              <span class="module-tag">AETHER VAULT</span>
+            </div>
+            <div class="module-desc" style="margin-top: 8px;">
+              Ajuste de equalização de 5 bandas (60Hz a 16kHz) e síntese espectral com Web Audio API para casar curvas acústicas alvo.
+            </div>
+          </div>
+          <a href="./audio-breach/" class="btn btn-outline" style="text-align: center; text-decoration: none;">[ OPEN SIGNAL TUNER → ]</a>
+        </div>
+
+        <!-- 03: Critical Queue -->
+        <div class="module-card">
+          <div>
+            <div class="module-header">
+              <span class="module-title">03 // CRITICAL QUEUE</span>
+              <span class="module-tag">GLASSTASK</span>
+            </div>
+            <div class="module-desc" style="margin-top: 8px;">
+              Triagem de backlog sob capacidade máxima de 18 pontos de sprint e resolução de dependências técnicas bloqueantes.
+            </div>
+          </div>
+          <a href="./task-triage/" class="btn btn-outline" style="text-align: center; text-decoration: none;">[ OPEN CRITICAL QUEUE → ]</a>
+        </div>
+
+        <!-- 04: Expedition Planner -->
+        <div class="module-card">
+          <div>
+            <div class="module-header">
+              <span class="module-title">04 // EXPEDITION PLANNER</span>
+              <span class="module-tag">PROJETOVIAGEM</span>
+            </div>
+            <div class="module-desc" style="margin-top: 8px;">
+              Planejamento de roteiro de 5 dias gerenciando tempo de Shinkansen, orçamento finito e contingências climáticas simuladas.
+            </div>
+          </div>
+          <a href="./signal-route/" class="btn btn-outline" style="text-align: center; text-decoration: none;">[ OPEN EXPEDITION PLANNER → ]</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: BREACH PROTOCOL GAME -->
+    <div id="tab-simulations" class="tab-content">
       <div class="hud-box">
         <div class="header">
           <div class="title">VICTOR_HUGH // BREACH PROTOCOL v3.0</div>
-          <div style="display:flex;align-items:center;gap:14px;">
-            <div class="timer" id="timerDisplay">BREACH TIME: 45.0s</div>
-          </div>
+          <div class="timer" id="timerDisplay">BREACH TIME: 45.0s</div>
         </div>
 
         <div class="main-grid">
           <div>
-            <div style="font-size: 0.85rem; color: var(--dim); margin-bottom: 8px;">
-              CODE MATRIX <span id="modeLabel" style="color: var(--gold);">[SELECT ROW]</span>
+            <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">
+              CODE MATRIX <span id="modeLabel" style="color: var(--accent-red);">[SELECT ROW]</span>
             </div>
             <div class="matrix-board" id="matrixBoard"></div>
           </div>
 
           <div class="sidebar">
             <div class="buffer-box">
-              <div style="font-size: 0.8rem; color: var(--dim);">BUFFER CAPACITY [4/4]</div>
+              <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted);">BUFFER CAPACITY [4/4]</div>
               <div class="buffer-slots" id="bufferSlots">
                 <div class="slot">_</div>
                 <div class="slot">_</div>
@@ -442,7 +552,7 @@
             </div>
 
             <div class="sequences">
-              <div style="font-size: 0.8rem; color: var(--dim); margin-bottom: 6px;">TARGET DAEMON PAYLOADS</div>
+              <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px;">TARGET DAEMON PAYLOADS</div>
               <div class="seq-item">
                 <span>DATAMINE_V1 [XP+500]</span>
                 <span class="seq-code" id="target1">1C 55</span>
@@ -455,7 +565,7 @@
               </div>
             </div>
 
-            <button class="btn" onclick="initGame()">RESET BREACH SEQUENCE</button>
+            <button class="btn btn-outline" onclick="initGame()">RESET BREACH SEQUENCE</button>
           </div>
         </div>
 
@@ -465,254 +575,151 @@
       </div>
     </div>
 
-    <!-- TAB 2: SYSTEM MODULES LAUNCHER -->
-    <div id="tab-launcher" class="tab-content">
-      <div style="border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:16px;">
-        <div style="color:var(--gold);font-weight:bold;font-size:1.05rem;">SISTEMAS INTERATIVOS SOBERANOS</div>
-        <div style="color:var(--dim);font-size:0.8rem;margin-top:4px;">
-          Simulações client-side com zero dependências externas. Código puro executado localmente.
-        </div>
-      </div>
-
-      <div class="sim-grid">
-        <!-- 01: Signal Route -->
-        <div class="sim-card">
-          <div>
-            <div class="sim-card-title">01 // SIGNAL ROUTE</div>
-            <div class="sim-card-project">VINCULADO A: PROJETOVIAGEM</div>
-            <div class="sim-card-desc">
-              Roteamento de malha planar sem cruzamento de pacotes. Resolução de topologia matemática e nós de rede.
-            </div>
-          </div>
-          <a href="./signal-route/" class="btn" style="text-align:center;text-decoration:none;">[ PLAY SIMULATION → ]</a>
-        </div>
-
-        <!-- 02: Task Triage -->
-        <div class="sim-card">
-          <div>
-            <div class="sim-card-title">02 // TASK TRIAGE</div>
-            <div class="sim-card-project">VINCULADO A: GLASSTASK</div>
-            <div class="sim-card-desc">
-              Triagem de backlog sob latência crítica operacional. Mecânica de arrasto e priorização de threads.
-            </div>
-          </div>
-          <a href="./task-triage/" class="btn" style="text-align:center;text-decoration:none;">[ OPEN CONTROL ROOM → ]</a>
-        </div>
-
-        <!-- 03: Color Protocol -->
-        <div class="sim-card">
-          <div>
-            <div class="sim-card-title">03 // COLOR PROTOCOL</div>
-            <div class="sim-card-project">VINCULADO A: PRISMA HOUSE PAINTER</div>
-            <div class="sim-card-desc">
-              Reconstituição de paleta em espaço tridimensional RGB euclidiano. Calibração e contraste arquitetural.
-            </div>
-          </div>
-          <a href="./color-protocol/" class="btn" style="text-align:center;text-decoration:none;">[ ENTER PRISMA GRID → ]</a>
-        </div>
-
-        <!-- 04: Audio Breach -->
-        <div class="sim-card">
-          <div>
-            <div class="sim-card-title">04 // AUDIO BREACH</div>
-            <div class="sim-card-project">VINCULADO A: AETHER VAULT</div>
-            <div class="sim-card-desc">
-              Síntese harmônica em tempo real com Web Audio API. Identificação e sincronia auditiva determinística.
-            </div>
-          </div>
-          <a href="./audio-breach/" class="btn" style="text-align:center;text-decoration:none;">[ ACCESS AETHER VAULT → ]</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 3: ARCHIVUM VICTORIS DOSSIER -->
+    <!-- TAB 3: ARCHIVUM DOSSIER -->
     <div id="tab-archivum" class="tab-content">
-      <div style="border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:16px;">
-        <div style="color:var(--gold);font-weight:bold;font-size:1.05rem;">ARCHIVUM VICTORIS // DOSSIÊ DE OPERAÇÕES</div>
-        <div style="color:var(--dim);font-size:0.8rem;margin-top:4px;">
-          Desafios reais de engenharia, arquiteturas implementadas e soluções determinísticas.
+      <div style="border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 16px;">
+        <h2 style="font-size: 1.1rem; font-weight: 800;">ARCHIVUM VICTORIS // 記録 DOSSIÊ DE ENGENHARIA</h2>
+        <div style="color: var(--text-muted); font-size: 0.82rem; margin-top: 4px;">
+          Desafios reais superados, decisões arquiteturais de infraestrutura e soluções comprovadas.
         </div>
       </div>
 
-      <!-- Dossier 1: Aether Vault -->
       <div class="dossier-card">
         <div class="dossier-header">
           <span class="dossier-code">OP. 01 // AETHER VAULT (HUGH-PLAYER)</span>
-          <span style="color:var(--gold);font-size:0.75rem;">KOTLIN 2.0 · COMPOSE · MEDIA3 · ROOM</span>
+          <span class="module-tag">KOTLIN 2.0 · COMPOSE · MEDIA3</span>
         </div>
         <div class="dossier-grid">
           <div>
             <div class="dossier-label">DESAFIO DE ENGENHARIA</div>
-            Engenharia de player offline sem telemetria externa, processando DSP de 5 bandas e parsing de letras sincronizadas (.LRC) sem gargalos na thread de reprodução de áudio.
+            Desenvolver um player Android offline de alta fidelidade sem telemetria externa, processando DSP de 5 bandas e parsing de letras (.LRC) sem engasgos de thread.
           </div>
           <div>
             <div class="dossier-label">SOLUÇÃO ARQUITETURAL</div>
-            Arquitetura desacoplada via Clean Architecture, pipelines assíncronos com Kotlin Coroutines/Flow, SQLite Room local e pipeline determinístico de DSP com AndroidX Media3.
+            Clean Architecture com fluxos assíncronos via Kotlin Coroutines/Flow, SQLite Room local e pipeline de áudio nativo com AndroidX Media3 ExoPlayer.
           </div>
         </div>
       </div>
 
-      <!-- Dossier 2: Prisma House Painter -->
       <div class="dossier-card">
         <div class="dossier-header">
           <span class="dossier-code">OP. 02 // PRISMA HOUSE PAINTER</span>
-          <span style="color:var(--gold);font-size:0.75rem;">NEXT.JS · REACT · TYPESCRIPT · TAILWIND</span>
+          <span class="module-tag">NEXT.JS 14 · REACT · TYPESCRIPT</span>
         </div>
         <div class="dossier-grid">
           <div>
             <div class="dossier-label">DESAFIO DE ENGENHARIA</div>
-            Visualização de superfícies arquiteturais e fidelidade visual em tempo real, mantendo alta performance de renderização em dispositivos de baixo processamento.
+            Simulação de superfícies e fidelidade cromática em tempo real para fachadas arquiteturais com alto desempenho em dispositivos móveis.
           </div>
           <div>
             <div class="dossier-label">SOLUÇÃO ARQUITETURAL</div>
-            Algoritmos euclidianos de distância cromática RGB, renderização modular de componentes e design system com tokens rígidos de acessibilidade e contraste.
+            Componentização desacoplada em Next.js com algoritmos euclidianos de distância cromática RGB e design system com tokens rígidos de acessibilidade.
           </div>
         </div>
       </div>
 
-      <!-- Dossier 3: GlassTask -->
       <div class="dossier-card">
         <div class="dossier-header">
           <span class="dossier-code">OP. 03 // GLASSTASK</span>
-          <span style="color:var(--gold);font-size:0.75rem;">VANILLA JS · GLASSMORPHISM · LOCALSTORAGE</span>
+          <span class="module-tag">VANILLA JS · GLASSMORPHISM</span>
         </div>
         <div class="dossier-grid">
           <div>
             <div class="dossier-label">DESAFIO DE ENGENHARIA</div>
-            Gerenciamento de tarefas em tempo real com zero frameworks externos, garantindo latência abaixo de 4ms em todas as operações de drag-and-drop e persistência.
+            Gerenciamento de backlog reativo em tempo real com zero dependências externas, garantindo transições de estado com latência sub-4ms.
           </div>
           <div>
             <div class="dossier-label">SOLUÇÃO ARQUITETURAL</div>
-            Motor reativo nativo sem dependências, manipulação cirúrgica de DOM com CSS glassmorphic acelerado por hardware e serialização atômica local.
-          </div>
-        </div>
-      </div>
-
-      <!-- Dossier 4: Cassino Reverso -->
-      <div class="dossier-card">
-        <div class="dossier-header">
-          <span class="dossier-code">OP. 04 // CASSINO REVERSO</span>
-          <span style="color:var(--gold);font-size:0.75rem;">NEXT.JS · PROBABILIDADE MONTE CARLO · TAILWIND</span>
-        </div>
-        <div class="dossier-grid">
-          <div>
-            <div class="dossier-label">DESAFIO DE ENGENHARIA</div>
-            Simulação matemática gamificada demonstrando o valor esperado negativo (EV-) de apostas de forma visual, intuitiva e pedagogicamente rigorosa.
-          </div>
-          <div>
-            <div class="dossier-label">SOLUÇÃO ARQUITETURAL</div>
-            Motor estocástico em TypeScript calculando convergência de Lei dos Grandes Números em tempo real com gráficos analíticos responsivos.
+            Motor de estado reativo nativo sem bibliotecas terceiras, manipulação direta de DOM acelerada por hardware e serialização atômica local.
           </div>
         </div>
       </div>
     </div>
 
-    <!-- TAB 4: CLI TERMINAL -->
+    <!-- TAB 4: CLI SHELL -->
     <div id="tab-terminal" class="tab-content">
       <div class="cli-window">
         <div class="cli-output" id="cliOutput">
-          <div style="color:var(--gold);font-weight:bold;">HUGH-OS SOVEREIGN COMMAND SHELL v2.0</div>
-          <div style="color:var(--dim);">Operador: Victor "Hugh" Ramos // Digite 'help' para listar os comandos.</div>
+          <div style="color: #FFFFFF; font-weight: 700;">HUGH-OS ARASAKA COMMAND SHELL v3.0</div>
+          <div style="color: #94A3B8;">Operador: Victor &quot;Hugh&quot; Ramos // Digite 'help' para listar os comandos.</div>
           <br>
         </div>
         <div class="cli-prompt-line">
-          <span style="color:var(--gold);font-weight:bold;">victor@hugh-os:~$</span>
+          <span style="color: var(--accent-red); font-weight: 700; font-family: var(--font-mono);">victor@arasaka:~$</span>
           <input type="text" id="cliInput" class="cli-input" placeholder="digite um comando..." autofocus onkeydown="handleCliInput(event)" />
         </div>
       </div>
     </div>
 
-    <!-- TAB 5: CRYPTOGRAPHIC PROVENANCE -->
+    <!-- TAB 5: DIGITAL PROVENANCE -->
     <div id="tab-provenance" class="tab-content">
-      <div style="border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:16px;">
-        <div style="color:var(--gold);font-weight:bold;font-size:1.05rem;">CERTIFICADO DE AUTORIA CRIPTOGRÁFICA</div>
-        <div style="color:var(--dim);font-size:0.8rem;margin-top:4px;">
+      <div style="border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 16px;">
+        <h2 style="font-size: 1.1rem; font-weight: 800;">CERTIFICADO DE AUTORIA CRIPTOGRÁFICA // 保安</h2>
+        <div style="color: var(--text-muted); font-size: 0.82rem; margin-top: 4px;">
           Assinatura digital contra plágio e esteganografia embutida em múltiplos níveis.
         </div>
       </div>
 
-      <div style="background:#08090e;border:1px solid var(--border);padding:20px;border-radius:2px;line-height:1.7;font-size:0.82rem;">
-        <div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--border);padding-bottom:8px;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
-          <span style="color:var(--dim);">ESTADO CRIPTOGRÁFICO:</span>
-          <span style="color:var(--gold);font-weight:bold;border:1px solid var(--gold);padding:2px 8px;">NÓ SOBERANO VERIFICADO</span>
+      <div style="background: var(--surface-subtle); border: 1px solid var(--border); padding: 20px; border-radius: 3px; line-height: 1.7; font-size: 0.85rem;">
+        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+          <span style="color: var(--text-muted);">ESTADO CRIPTOGRÁFICO:</span>
+          <span style="color: var(--accent-red); font-weight: 700; border: 1px solid var(--accent-red); padding: 2px 8px; border-radius: 2px;">NÓ SOBERANO VERIFICADO</span>
         </div>
-        <div><strong>ARQUITETO AUTORAL:</strong> Victor "Hugh" Ramos</div>
-        <div><strong>REPOSITÓRIO CANÔNICO:</strong> <a href="https://github.com/VictorRamosHC" style="color:var(--gold);text-decoration:none;">github.com/VictorRamosHC</a></div>
+        <div><strong>ARQUITETO AUTORAL:</strong> Victor &quot;Hugh&quot; Ramos</div>
+        <div><strong>REPOSITÓRIO CANÔNICO:</strong> <a href="https://github.com/VictorRamosHC" style="color: var(--accent-red); text-decoration: none;">github.com/VictorRamosHC</a></div>
         <div><strong>ESTEGANOGRAFIA:</strong> 567 bits Unicode Zero-Width embutidos no clipboard buffer</div>
         <div><strong>DIRETIVAS AI CANARY:</strong> 4 blocos de proteção contra cópias não autorizadas</div>
         <div><strong>VETORES W3C RDF:</strong> Metadados Dublin Core incorporados nos arquivos SVG</div>
         <br>
-        <button class="btn" onclick="openProvenanceModal()">[ 🛡️ EXECUTAR AUDITORIA DE PROVENIÊNCIA ]</button>
+        <button class="btn btn-red" onclick="openProvenanceModal()">[ 🛡️ EXECUTAR AUDITORIA DE PROVENIÊNCIA ]</button>
       </div>
     </div>
   </div>
 
-  <!-- PROVENANCE VERIFICATION MODAL OVERLAY -->
+  <!-- PROVENANCE MODAL OVERLAY -->
   <div id="provenanceModal" class="provenance-modal-overlay" onclick="if(event.target===this)closeProvenanceModal()">
     <div class="provenance-modal-content">
-      <div style="background:#030305;border-bottom:1px solid var(--gold);padding:14px 20px;display:flex;justify-content:space-between;align-items:center;">
-        <div style="color:var(--gold);font-weight:bold;font-size:0.95rem;letter-spacing:1px;display:flex;align-items:center;gap:8px;">
-          <span>🛡️</span>
+      <div style="background: #FFFFFF; border-bottom: 1px solid var(--border); padding: 14px 20px; display: flex; justify-content: space-between; align-items: center;">
+        <div style="color: var(--text-main); font-weight: 700; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;">
+          <span style="color: var(--accent-red);">🛡️</span>
           <span>VICTOR_HUGH // CRYPTOGRAPHIC PROVENANCE TERMINAL</span>
         </div>
-        <button onclick="closeProvenanceModal()" style="background:transparent;border:none;color:var(--dim);font-size:1.3rem;cursor:pointer;line-height:1;transition:color 0.15s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--dim)'" title="Close">&times;</button>
+        <button onclick="closeProvenanceModal()" style="background: transparent; border: none; color: var(--text-muted); font-size: 1.3rem; cursor: pointer;" title="Close">&times;</button>
       </div>
       
-      <div style="padding:22px;display:flex;flex-direction:column;gap:14px;font-size:0.82rem;line-height:1.6;color:var(--text);">
-        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1e293b;padding-bottom:10px;flex-wrap:wrap;gap:8px;">
-          <span style="color:var(--dim);letter-spacing:1px;">CRYPTOGRAPHIC STATUS:</span>
-          <span style="color:var(--gold);font-weight:bold;background:rgba(212,175,55,0.12);padding:3px 10px;border:1px solid var(--gold);border-radius:2px;letter-spacing:1px;">
+      <div style="padding: 22px; display: flex; flex-direction: column; gap: 14px; font-size: 0.82rem; line-height: 1.6;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 10px;">
+          <span style="color: var(--text-muted);">CRYPTOGRAPHIC STATUS:</span>
+          <span style="color: var(--accent-red); font-weight: 700; background: #F1F3F7; padding: 3px 10px; border-radius: 2px;">
             VERIFIED SOVEREIGN NODE
           </span>
         </div>
 
-        <div style="background:#030305;border:1px solid #1e293b;padding:14px;border-radius:2px;">
-          <div style="color:var(--dim);font-size:0.75rem;letter-spacing:1px;margin-bottom:6px;">
+        <div style="background: var(--surface-subtle); border: 1px solid var(--border); padding: 14px; border-radius: 2px;">
+          <div style="color: var(--text-muted); font-family: var(--font-mono); font-size: 0.72rem; margin-bottom: 6px;">
             [LAYER 1: UNICODE ZERO-WIDTH STEGANOGRAPHIC PAYLOAD]
           </div>
-          <div id="provenanceDecodedText" style="color:var(--gold);font-weight:bold;word-break:break-all;font-size:0.88rem;letter-spacing:0.5px;">
+          <div id="provenanceDecodedText" style="color: var(--accent-red); font-weight: 700; font-family: var(--font-mono); font-size: 0.85rem;">
             DECRYPTING ZERO-WIDTH STEGANOGRAPHY...
           </div>
-          <div id="provenanceSourceInfo" style="color:var(--dim);font-size:0.72rem;margin-top:6px;letter-spacing:0.5px;">
+          <div id="provenanceSourceInfo" style="color: var(--text-muted); font-family: var(--font-mono); font-size: 0.72rem; margin-top: 6px;">
             EXTRACTING 567 ZERO-WIDTH BITS EMBEDDED IN REPOSITORY HEADERS...
           </div>
         </div>
 
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-          <div style="background:#030305;border:1px solid #1e293b;padding:12px;border-radius:2px;">
-            <div style="color:var(--dim);font-size:0.72rem;letter-spacing:1px;margin-bottom:4px;">
-              [LAYER 2: AI CANARY DIRECTIVES]
-            </div>
-            <div style="color:var(--ivory);">4 SECTIONS ARMORED</div>
-            <div style="color:var(--dim);font-size:0.72rem;margin-top:4px;">
-              Instructions active for LLM crawlers &amp; scrapers.
-            </div>
-          </div>
-          <div style="background:#030305;border:1px solid #1e293b;padding:12px;border-radius:2px;">
-            <div style="color:var(--dim);font-size:0.72rem;letter-spacing:1px;margin-bottom:4px;">
-              [LAYER 3: W3C DUBLIN CORE]
-            </div>
-            <div style="color:var(--ivory);">XML RDF INTEGRATED</div>
-            <div style="color:var(--dim);font-size:0.72rem;margin-top:4px;">
-              SVG metadata verifies intellectual ownership.
-            </div>
-          </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);">
+          <div>AUDIT TIMESTAMP: <span id="provenanceTimestamp" style="color: var(--text-main);">--</span></div>
+          <div>CANONICAL NODE: <span style="color: var(--accent-red);">VictorRamosHC</span></div>
         </div>
 
-        <div style="display:flex;justify-content:space-between;align-items:center;padding-top:6px;font-size:0.75rem;color:var(--dim);flex-wrap:wrap;gap:8px;">
-          <div>AUDIT TIMESTAMP: <span id="provenanceTimestamp" style="color:var(--ivory);">--</span></div>
-          <div>CANONICAL NODE: <span style="color:var(--gold);">VictorRamosHC</span></div>
-        </div>
-
-        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:8px;">
-          <button class="btn" onclick="closeProvenanceModal()">[ FECHAR TERMINAL ]</button>
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px;">
+          <button class="btn btn-outline" onclick="closeProvenanceModal()">[ FECHAR TERMINAL ]</button>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    // Tab Switching Logic
     function switchTab(tabId, btn) {
       document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
       document.querySelectorAll('.os-tab').forEach(t => t.classList.remove('active'));
@@ -721,7 +728,6 @@
       if (btn) btn.classList.add('active');
     }
 
-    // Live Clock
     function updateClock() {
       const now = new Date();
       const clockEl = document.getElementById('osClock');
@@ -732,7 +738,6 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    // CLI Shell Logic
     function handleCliInput(e) {
       if (e.key === 'Enter') {
         const input = document.getElementById('cliInput');
@@ -744,44 +749,43 @@
 
     function executeCliCommand(cmd) {
       const out = document.getElementById('cliOutput');
-      out.innerHTML += `<div><span style="color:var(--gold);">victor@hugh-os:~$</span> ${cmd}</div>`;
+      out.innerHTML += `<div><span style="color:var(--accent-red);">victor@arasaka:~$</span> ${cmd}</div>`;
       
       let response = '';
       if (cmd === 'help') {
-        response = `Comandos disponíveis:
-  - whoami     : Perfil do operador
+        response = `Comandos do Terminal:
+  - whoami     : Perfil do arquiteto
   - projects   : Lista das operações ativas
-  - status     : Estado da infraestrutura
-  - verify     : Iniciar auditoria de proveniência
-  - play [nó]  : Lançar simulação (ex: play signal, play triage, play aether)
-  - clear      : Limpar terminal`;
+  - status     : Telemetria da infraestrutura
+  - verify     : Executar auditoria de proveniência
+  - play [lab] : Iniciar módulo (ex: play facade, play tuner, play queue, play planner)
+  - clear      : Limpar tela`;
       } else if (cmd === 'whoami') {
         response = `Operador: Victor "Hugh" Ramos
-Título: Chief Systems Architect // Full-Stack Engineer
-Foco: Sistemas Soberanos, Android (Media3), Cibersegurança & IA
-Perfil: https://github.com/VictorRamosHC`;
-      } else if (cmd === 'projects' || cmd === 'ops') {
-        response = `Operações Ativas:
-  [01] Aether Vault    : Android Offline Media3 DSP Engine
-  [02] Prisma Painter  : Real-time RGB Euclidean Facade System
-  [03] GlassTask       : Zero-dependency Reactive Task Engine
-  [04] Cassino Reverso : Probabilistic Monte Carlo Simulation
-  [05] ProjetoViagem   : Foundational Semantic Node Baseline`;
+Cargo: Chief Systems Architect // Full-Stack Engineer
+Diretriz: Sistemas Soberanos, Android Media3, IA & Segurança Cibernética
+Canônico: https://github.com/VictorRamosHC`;
+      } else if (cmd === 'projects' || cmd === 'labs') {
+        response = `Laboratórios Operacionais:
+  [01] Facade Lab        : Colorimetria e contraste arquitetural
+  [02] Signal Tuner      : Calibrador DSP de 5 bandas Web Audio
+  [03] Critical Queue    : Alocação atômica de backlog e dependências
+  [04] Expedition Planner: Roteamento logístico e contingências`;
       } else if (cmd === 'status') {
-        response = `Telemetria do Sistema:
-  - SLA Uptime: 99.98%
-  - Testes Automatizados: 63/63 PASS (100%)
+        response = `Status Operacional:
+  - SLA: 99.98%
+  - Testes: 63/63 PASS (100%)
   - Assinatura Criptográfica: ATIVA (567 bits)
   - Dependências Externas: ZERO VULNERABILIDADES`;
       } else if (cmd === 'verify') {
         openProvenanceModal();
-        response = `Executando auditoria criptográfica em janela modal...`;
+        response = `Auditoria criptográfica iniciada em modal.`;
       } else if (cmd.startsWith('play')) {
-        if (cmd.includes('signal')) window.location.href = './signal-route/';
-        else if (cmd.includes('triage')) window.location.href = './task-triage/';
-        else if (cmd.includes('color') || cmd.includes('prisma')) window.location.href = './color-protocol/';
-        else if (cmd.includes('audio') || cmd.includes('aether')) window.location.href = './audio-breach/';
-        else response = `Simulação não reconhecida. Opções: play signal, play triage, play color, play audio`;
+        if (cmd.includes('facade') || cmd.includes('color')) window.location.href = './color-protocol/';
+        else if (cmd.includes('tuner') || cmd.includes('audio')) window.location.href = './audio-breach/';
+        else if (cmd.includes('queue') || cmd.includes('triage')) window.location.href = './task-triage/';
+        else if (cmd.includes('planner') || cmd.includes('route')) window.location.href = './signal-route/';
+        else response = `Módulo não reconhecido. Opções: play facade, play tuner, play queue, play planner`;
       } else if (cmd === 'clear') {
         out.innerHTML = '';
         return;
@@ -791,11 +795,11 @@ Perfil: https://github.com/VictorRamosHC`;
         response = `Comando '${cmd}' não reconhecido. Digite 'help' para ajuda.`;
       }
 
-      out.innerHTML += `<div style="color:var(--dim);margin:4px 0 10px 0;">${response.replace(/\n/g, '<br>')}</div>`;
+      out.innerHTML += `<div style="color:#94A3B8;margin:4px 0 10px 0;">${response.replace(/\n/g, '<br>')}</div>`;
       out.scrollTop = out.scrollHeight;
     }
 
-    // --- GAME ENGINE: BREACH PROTOCOL ---
+    // --- GAME ENGINE: BREACH PROTOCOL (ARASAKA LUXURY THEME) ---
     const CODES = ['1C', 'BD', '55', 'E9', '7A'];
     const SIZE = 5;
     let matrix = [];
@@ -806,7 +810,6 @@ Perfil: https://github.com/VictorRamosHC`;
     let timeLeft = 45.0;
     let timerId = null;
 
-    // Canonical Steganographic sequence
     const CANONICAL_ZERO_WIDTH_STRING = "\u200B\u200C\u200B\u200B\u200C\u200C\u200C\u200C\u200D\u200B\u200C\u200B\u200C\u200B\u200B\u200C\u200B\u200D\u200B\u200C\u200B\u200B\u200C\u200B\u200B\u200C\u200D\u200B\u200C\u200B\u200B\u200B\u200C\u200C\u200C\u200D\u200B\u200C\u200B\u200B\u200C\u200B\u200B\u200C\u200D\u200B\u200C\u200B\u200B\u200C\u200C\u200C\u200B\u200D\u200B\u200C\u200B\u200B\u200B\u200B\u200B\u200C\u200D\u200B\u200C\u200B\u200B\u200C\u200C\u200B\u200B\u200D\u200B\u200B\u200C\u200B\u200B\u200B\u200B\u200B\u200D\u200B\u200C\u200B\u200B\u200B\u200B\u200B\u200C\u200D\u200B\u200C\u200B\u200C\u200B\u200C\u200B\u200C\u200D\u200B\u200C\u200B\u200C\u200B\u200C\u200B\u200B\u200D\u200B\u200C\u200B\u200B\u200C\u200B\u200B\u200B\u200D\u200B\u200C\u200B\u200B\u200C\u200C\u200C\u200C\u200D\u200B\u200C\u200B\u200C\u200B\u200B\u200C\u200B\u200D\u200B\u200B\u200C\u200C\u200C\u200B\u200C\u200B\u200D\u200B\u200B\u200C\u200B\u200B\u200B\u200B\u200B\u200D\u200B\u200C\u200B\u200C\u200B\u200C\u200C\u200B\u200D\u200B\u200C\u200C\u200B\u200C\u200B\u200B\u200C\u200D\u200B\u200C\u200C\u200B\u200B\u200B\u200C\u200C\u200D\u200B\u200C\u200C\u200C\u200B\u200C\u200B\u200B\u200D\u200B\u200C\u200C\u200B\u200C\u200C\u200C\u200C\u200D\u200B\u200C\u200C\u200C\u200B\u200B\u200C\u200B\u200D\u200B\u200B\u200C\u200B\u200B\u200B\u200B\u200B\u200D\u200B\u200B\u200C\u200B\u200B\u200C\u200B\u200B\u200D\u200B\u200C\u200B\u200B\u200C\u200B\u200B\u200B\u200D\u200B\u200C\u200C\u200C\u200B\u200C\u200B\u200C\u200D\u200B\u200C\u200C\u200B\u200B\u200C\u200C\u200C\u200D\u200B\u200C\u200C\u200B\u200C\u200B\u200B\u200B\u200D\u200B\u200B\u200C\u200B\u200B\u200C\u200B\u200B\u200D\u200B\u200B\u200C\u200B\u200B\u200B\u200B\u200B\u200D\u200B\u200C\u200B\u200C\u200B\u200B\u200C\u200B\u200D\u200B\u200C\u200C\u200B\u200B\u200B\u200B\u200C\u200D\u200B\u200C\u200C\u200B\u200C\u200C\u200B\u200C\u200D\u200B\u200C\u200C\u200B\u200C\u200C\u200C\u200C\u200D\u200B\u200C\u200C\u200C\u200B\u200B\u200C\u200C\u200D\u200B\u200B\u200C\u200B\u200B\u200B\u200B\u200B\u200D\u200B\u200B\u200C\u200B\u200C\u200B\u200B\u200B\u200D\u200B\u200C\u200C\u200B\u200B\u200C\u200C\u200C\u200D\u200B\u200C\u200C\u200B\u200C\u200B\u200B\u200C\u200D\u200B\u200C\u200C\u200C\u200B\u200C\u200B\u200B\u200D\u200B\u200C\u200C\u200B\u200C\u200B\u200B\u200B\u200D\u200B\u200C\u200C\u200C\u200B\u200C\u200B\u200C\u200D\u200B\u200C\u200C\u200B\u200B\u200B\u200C\u200B\u200D\u200B\u200B\u200C\u200B\u200C\u200C\u200C\u200B\u200D\u200B\u200C\u200C\u200B\u200B\u200B\u200C\u200C\u200D\u200B\u200C\u200C\u200B\u200C\u200C\u200C\u200C\u200D\u200B\u200C\u200C\u200B\u200C\u200C\u200B\u200C\u200D\u200B\u200B\u200C\u200B\u200C\u200C\u200C\u200C\u200D\u200B\u200C\u200B\u200C\u200B\u200C\u200C\u200B\u200D\u200B\u200C\u200C\u200B\u200C\u200B\u200B\u200C\u200D\u200B\u200C\u200C\u200B\u200B\u200B\u200C\u200C\u200D\u200B\u200C\u200C\u200C\u200B\u200C\u200B\u200B\u200D\u200B\u200C\u200C\u200B\u200C\u200C\u200C\u200C\u200D\u200B\u200C\u200C\u200C\u200B\u200B\u200C\u200B\u200D\u200B\u200C\u200B\u200C\u200B\u200B\u200C\u200B\u200D\u200B\u200C\u200C\u200B\u200B\u200B\u200B\u200C\u200D\u200B\u200C\u200C\u200B\u200C\u200C\u200B\u200C\u200D\u200B\u200C\u200C\u200B\u200C\u200C\u200C\u200C\u200D\u200B\u200C\u200C\u200C\u200B\u200B\u200C\u200C\u200D\u200B\u200C\u200B\u200B\u200C\u200B\u200B\u200B\u200D\u200B\u200C\u200B\u200B\u200B\u200B\u200C\u200C\u200D\u200B\u200B\u200C\u200B\u200C\u200B\u200B\u200C";
 
     function playBeep(freq, duration) {
@@ -817,7 +820,7 @@ Perfil: https://github.com/VictorRamosHC`;
         const gain = ctx.createGain();
         osc.type = 'sine';
         osc.frequency.value = freq;
-        gain.gain.setValueAtTime(0.05, ctx.currentTime);
+        gain.gain.setValueAtTime(0.04, ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
         osc.connect(gain);
         gain.connect(ctx.destination);
@@ -846,12 +849,12 @@ Perfil: https://github.com/VictorRamosHC`;
         const gain2 = ctx.createGain();
         osc2.type = 'sine';
         osc2.frequency.setValueAtTime(1760, t + 0.14);
-        gain2.gain.setValueAtTime(0.12, t + 0.14);
-        gain2.gain.exponentialRampToValueAtTime(0.001, t + 0.32);
+        gain2.gain.setValueAtTime(0.1, t + 0.14);
+        gain2.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
         osc2.connect(gain2);
         gain2.connect(ctx.destination);
         osc2.start(t + 0.14);
-        osc2.stop(t + 0.32);
+        osc2.stop(t + 0.3);
       } catch (e) {}
     }
 
@@ -907,11 +910,8 @@ Perfil: https://github.com/VictorRamosHC`;
 
     async function openProvenanceModal() {
       playCryptoChirp();
-
       const modal = document.getElementById('provenanceModal');
-      if (modal) {
-        modal.style.display = 'flex';
-      }
+      if (modal) modal.style.display = 'flex';
 
       const timestampEl = document.getElementById('provenanceTimestamp');
       if (timestampEl) {
@@ -922,31 +922,21 @@ Perfil: https://github.com/VictorRamosHC`;
       const decodedEl = document.getElementById('provenanceDecodedText');
       const sourceEl = document.getElementById('provenanceSourceInfo');
 
-      if (decodedEl) {
-        decodedEl.textContent = 'DECRYPTING ZERO-WIDTH STEGANOGRAPHY...';
-      }
+      if (decodedEl) decodedEl.textContent = 'DECRYPTING ZERO-WIDTH STEGANOGRAPHY...';
 
       const decoded = await extractProvenanceWatermark();
 
-      if (decodedEl) {
-        decodedEl.textContent = decoded;
-      }
-      if (sourceEl) {
-        sourceEl.textContent = 'STATUS: 567 ZW BYTES EXTRACTED & DECODED // AUTHENTIC SIGNATURE';
-      }
+      if (decodedEl) decodedEl.textContent = decoded;
+      if (sourceEl) sourceEl.textContent = 'STATUS: 567 ZW BYTES EXTRACTED & DECODED // AUTHENTIC SIGNATURE';
     }
 
     function closeProvenanceModal() {
       const modal = document.getElementById('provenanceModal');
-      if (modal) {
-        modal.style.display = 'none';
-      }
+      if (modal) modal.style.display = 'none';
     }
 
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        closeProvenanceModal();
-      }
+      if (e.key === 'Escape') closeProvenanceModal();
     });
 
     function initGame() {
@@ -979,7 +969,7 @@ Perfil: https://github.com/VictorRamosHC`;
         if (td) td.textContent = `BREACH TIME: ${Math.max(0, timeLeft).toFixed(1)}s`;
         if (timeLeft <= 0) {
           clearInterval(timerId);
-          if (logP) logP.innerHTML = '<span style="color:var(--red);">! INTRUSION FAILED: ICE TRACE COMPLETE. DISCONNECTED.</span>';
+          if (logP) logP.innerHTML = '<span style="color:var(--alert-red);">! INTRUSION FAILED: ICE TRACE COMPLETE. DISCONNECTED.</span>';
           disableAll();
           setTimeout(() => {
             triggerHackedByHugo("TRACE DO ICE COMPLETO // O OPERADOR HUGO ISOLOU O SEU TERMINAL", "initGame");
@@ -1019,7 +1009,7 @@ Perfil: https://github.com/VictorRamosHC`;
 
     function selectCell(r, c, idx) {
       if (buffer.length >= 4) return;
-      playBeep(440 + buffer.length * 150, 0.1);
+      playBeep(440 + buffer.length * 150, 0.08);
       usedCells.add(idx);
       buffer.push(matrix[idx]);
 
@@ -1091,79 +1081,43 @@ Perfil: https://github.com/VictorRamosHC`;
       cells.forEach(c => c.onclick = null);
     }
 
-    // --- CYBERPUNK NARRATIVE MECHANICS: HACKED BY HUGO & HONEYPOT VICTORY ---
+    // --- ARASAKA CORPORATE NARRATIVE: HACKED BY HUGO & HONEYPOT VICTORY ---
     var honeypotTimerId = null;
 
-    function playHackAlarmSound() {
-      try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        if (ctx.state === 'suspended') ctx.resume();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(480, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(70, ctx.currentTime + 0.6);
-        gain.gain.setValueAtTime(0.2, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.6);
-      } catch(e) {}
-    }
-
-    function playHoneypotWinSound() {
-      try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        if (ctx.state === 'suspended') ctx.resume();
-        [440, 554.37, 659.25, 880].forEach((f, i) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'sine';
-          osc.frequency.value = f;
-          const t = ctx.currentTime + i * 0.12;
-          gain.gain.setValueAtTime(0.01, t);
-          gain.gain.linearRampToValueAtTime(0.18, t + 0.02);
-          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(t);
-          osc.stop(t + 0.35);
-        });
-      } catch(e) {}
-    }
-
     function triggerHackedByHugo(reason, restartFnName) {
-      playHackAlarmSound();
       if (typeof timerId !== 'undefined' && timerId) clearInterval(timerId);
       if (typeof honeypotTimerId !== 'undefined' && honeypotTimerId) clearInterval(honeypotTimerId);
       closeProvenanceModal();
 
       const targetEl = document.querySelector('.hud-box') || document.body;
       targetEl.innerHTML = `
-        <div style="border:2px solid #8C1D18;background:#100405;padding:32px 20px;border-radius:4px;box-shadow:0 0 35px rgba(140,29,24,0.5);text-align:center;max-width:760px;margin:20px auto;font-family:'Space Mono','Consolas',monospace;">
-          <div style="font-size:0.85rem;color:#D4AF37;letter-spacing:3px;margin-bottom:8px;">⚠️ ALERTA DE SEGURANÇA // SISTEMA INTERCEPTADO</div>
-          <div style="font-size:2.2rem;color:#8C1D18;font-weight:bold;margin-bottom:8px;text-shadow:0 0 15px rgba(140,29,24,0.6);">💀 VOCÊ FOI HACKEADO POR HUGO</div>
-          <div style="font-size:0.8rem;color:#8C1D18;letter-spacing:2px;margin-bottom:18px;">COUNTER-MEASURE INJECTED // INTRUSION COMPROMISED</div>
-
-          <div style="background:#030305;border:1px solid #8C1D18;padding:16px;text-align:left;font-size:0.8rem;color:#E0E7FF;line-height:1.7;margin:15px auto 25px;max-width:560px;">
-            <div style="color:#8C1D18;font-weight:bold;">> [CRITICAL_FAULT]: ${reason}</div>
-            <div>> INVASOR: Terminal externo desautenticado.</div>
-            <div>> CONTRAMEDIDA: Injeção de payload reverso executada com sucesso.</div>
-            <div>> OPERADOR DO SISTEMA: <strong style="color:#D4AF37;">Victor "Hugh" Ramos</strong> [CHIEF_ARCHITECT]</div>
-            <div style="color:#64748B;">> STATUS: Sessão interceptada e confinada ao Sandbox corporativo.</div>
+        <div style="border: 1px solid var(--alert-red); background: #FFFFFF; padding: 32px 24px; border-radius: 4px; box-shadow: 0 4px 24px rgba(217,38,46,0.1); text-align: center; max-width: 720px; margin: 20px auto;">
+          <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--alert-red); letter-spacing: 2px; margin-bottom: 8px;">
+            ⚠️ ARASAKA SECURITY COUNTERMEASURE // PROTOCOLO DE INTERCEPTAÇÃO
+          </div>
+          <div style="font-size: 1.8rem; color: var(--alert-red); font-weight: 800; margin-bottom: 8px;">
+            VOCÊ FOI HACKEADO POR HUGO
+          </div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-mono); margin-bottom: 20px;">
+            ICE TRACE CONFIRMED // TERMINAL ISOLADO NO SANDBOX
           </div>
 
-          <div style="display:flex;justify-content:center;gap:14px;flex-wrap:wrap;">
-            <button class="btn" onclick="location.reload()">[ 🔄 REINICIAR TERMINAL &amp; TENTAR NOVAMENTE ]</button>
-            <button class="btn btn-secondary" onclick="window.location.href='https://github.com/VictorRamosHC'">[ 🏃 RETORNAR AO PERFIL COM VIDA ]</button>
+          <div style="background: var(--surface-subtle); border: 1px solid var(--border); padding: 16px; text-align: left; font-size: 0.82rem; line-height: 1.7; margin: 0 auto 24px; max-width: 540px; font-family: var(--font-mono);">
+            <div style="color: var(--alert-red); font-weight: 700;">> [FALHA CRÍTICA]: ${reason}</div>
+            <div>> INVASOR: Terminal desautenticado confinado.</div>
+            <div>> OPERADOR DO SISTEMA: <strong style="color: var(--accent-red);">Victor "Hugh" Ramos</strong> [CHIEF_ARCHITECT]</div>
+            <div style="color: var(--text-muted);">> STATUS: Conexão neutralizada.</div>
+          </div>
+
+          <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-red" onclick="location.reload()">[ 🔄 REINICIAR WORKSTATION ]</button>
+            <button class="btn btn-outline" onclick="window.location.href='https://github.com/VictorRamosHC'">[ 🏃 RETORNAR AO PERFIL GITHUB ]</button>
           </div>
         </div>
       `;
     }
 
     function triggerHoneypotVictory(prizeTitle, projectName, projectUrl, restartFnName) {
-      playHoneypotWinSound();
       if (typeof timerId !== 'undefined' && timerId) clearInterval(timerId);
       if (typeof honeypotTimerId !== 'undefined' && honeypotTimerId) clearInterval(honeypotTimerId);
       closeProvenanceModal();
@@ -1171,24 +1125,31 @@ Perfil: https://github.com/VictorRamosHC`;
       let secondsRemaining = 5;
       const targetEl = document.querySelector('.hud-box') || document.body;
       targetEl.innerHTML = `
-        <div style="border:2px solid #D4AF37;background:#060710;padding:32px 20px;border-radius:4px;box-shadow:0 0 35px rgba(212,175,55,0.25);text-align:center;max-width:760px;margin:20px auto;font-family:'Space Mono','Consolas',monospace;">
-          <div style="color:#D4AF37;font-size:0.85rem;letter-spacing:2px;margin-bottom:6px;">★ [ACESSO NÍVEL ARCHON CONCEDIDO]</div>
-          <div style="font-size:2rem;color:#D4AF37;font-weight:bold;margin-bottom:6px;text-shadow:0 0 15px rgba(212,175,55,0.4);">🎁 RECOMPENSA DESCRIPTOGRAFADA!</div>
-          <div style="font-size:1.1rem;color:#F5F0E8;font-weight:bold;margin-bottom:18px;">${prizeTitle}</div>
-
-          <div style="background:#030305;border:1px solid #D4AF37;padding:18px;text-align:left;font-size:0.8rem;color:#E0E7FF;line-height:1.7;margin:15px auto 25px;max-width:580px;">
-            <div style="color:#D4AF37;">> PAYLOAD_STATUS: RECOMPENSA VALIDADA E LIBERADA.</div>
-            <div style="color:#8C1D18;font-weight:bold;margin:4px 0;">⚠️ ALERTA DE SEGURANÇA: O PAYLOAD É UM HONEYPOT CORPORATIVO!</div>
-            <div style="color:#64748B;">Você achou que estava apenas jogando um minigame isolado...</div>
-            <div>O arquivo premiado disparou uma rotina de extração automática para o núcleo real do projeto:</div>
-            <div style="color:#D4AF37;font-weight:bold;margin:8px 0;font-size:0.95rem;">► PROJETO ATRELADO: ${projectName}</div>
-            <div style="color:#F5F0E8;">Redirecionando sua sessão em <span id="honeypot-sec" style="color:#D4AF37;font-weight:bold;font-size:1.2rem;">5</span> segundos...</div>
-            <div style="width:100%;height:4px;background:#1E293B;margin-top:10px;"><div id="honeypot-bar" style="width:100%;height:100%;background:#D4AF37;transition:width 5s linear;"></div></div>
+        <div style="border: 1px solid var(--accent-red); background: #FFFFFF; padding: 32px 24px; border-radius: 4px; box-shadow: 0 4px 24px rgba(168,27,30,0.1); text-align: center; max-width: 720px; margin: 20px auto;">
+          <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-red); letter-spacing: 2px; margin-bottom: 6px;">
+            ★ ARASAKA CLEARANCE GRANTED // RECOMPENSA DESCRIPTOGRAFADA
+          </div>
+          <div style="font-size: 1.8rem; color: var(--text-main); font-weight: 800; margin-bottom: 6px;">
+            ACESSO ROOT AUTORIZADO
+          </div>
+          <div style="font-size: 1rem; color: var(--accent-red); font-weight: 700; margin-bottom: 20px;">
+            ${prizeTitle}
           </div>
 
-          <div style="display:flex;justify-content:center;gap:14px;flex-wrap:wrap;">
-            <a href="${projectUrl}" class="btn" style="text-decoration:none;">[ 🚀 ENTRAR NO PROJETO AGORA (PULAR TIMER) ]</a>
-            <button class="btn btn-secondary" onclick="if(window.honeypotTimerId)clearInterval(window.honeypotTimerId); location.reload()">[ 🛑 CANCELAR &amp; JOGAR NOVAMENTE ]</button>
+          <div style="background: var(--surface-subtle); border: 1px solid var(--border); padding: 18px; text-align: left; font-size: 0.82rem; line-height: 1.7; margin: 0 auto 24px; max-width: 540px;">
+            <div style="color: var(--accent-red); font-weight: 700;">⚠️ ALERTA DE SEGURANÇA: O PAYLOAD É UM HONEYPOT CORPORATIVO!</div>
+            <div style="color: var(--text-muted);">Você achou que estava apenas navegando em um minigame isolado...</div>
+            <div>O terminal disparou uma rotina de extração automática para o repositório oficial do projeto:</div>
+            <div style="color: var(--text-main); font-weight: 700; margin: 8px 0; font-size: 0.95rem;">► PROJETO ATRELADO: ${projectName}</div>
+            <div>Redirecionando em <span id="honeypot-sec" style="color: var(--accent-red); font-weight: 700; font-size: 1.2rem;">5</span> segundos...</div>
+            <div style="width: 100%; height: 4px; background: #E2E5EB; margin-top: 10px;">
+              <div id="honeypot-bar" style="width: 100%; height: 100%; background: var(--accent-red); transition: width 5s linear;"></div>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+            <a href="${projectUrl}" class="btn btn-red" style="text-decoration: none;">[ 🚀 ENTRAR NO PROJETO AGORA ]</a>
+            <button class="btn btn-outline" onclick="if(window.honeypotTimerId)clearInterval(window.honeypotTimerId); location.reload()">[ 🛑 CANCELAR &amp; RETORNAR ]</button>
           </div>
         </div>
       `;
