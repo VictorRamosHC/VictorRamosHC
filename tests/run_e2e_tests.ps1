@@ -1,22 +1,23 @@
 <#
 .SYNOPSIS
-    Comprehensive 4-Tier E2E Test Suite for VictorRamosHC Profile Overhaul.
+    Comprehensive 5-Tier E2E Test Suite for VictorRamosHC Profile Overhaul.
 .DESCRIPTION
     Validates R1 (Corporate Banner SVG), R4 (Animated Network Map SVG),
     R3 (Four Browser-Based Minigames), R2 (Explorable README Interface),
-    Boundary Values, Cross-Feature Consistency, and Real-World Scenarios.
+    Boundary Values, Cross-Feature Consistency, Real-World Scenarios,
+    and Tier 5 Authenticity & Digital Provenance Verification.
 .PARAMETER Tier
-    Tier to run: "1", "2", "3", "4", or "All" (default: "All").
+    Tier to run: "1", "2", "3", "4", "5", or "All" (default: "All").
 .PARAMETER Quiet
     Suppresses verbose progress output if set.
 .EXAMPLE
     powershell -ExecutionPolicy Bypass -File tests/run_e2e_tests.ps1
-    powershell -ExecutionPolicy Bypass -File tests/run_e2e_tests.ps1 -Tier 1
+    powershell -ExecutionPolicy Bypass -File tests/run_e2e_tests.ps1 -Tier 5
 #>
 
 [CmdletBinding()]
 param(
-    [ValidateSet("1", "2", "3", "4", "All")]
+    [ValidateSet("1", "2", "3", "4", "5", "All")]
     [string]$Tier = "All",
     [switch]$Quiet
 )
@@ -49,6 +50,7 @@ $Script:TierStats = @{
     "2" = @{ Total = 0; Passed = 0; Failed = 0; Skipped = 0 }
     "3" = @{ Total = 0; Passed = 0; Failed = 0; Skipped = 0 }
     "4" = @{ Total = 0; Passed = 0; Failed = 0; Skipped = 0 }
+    "5" = @{ Total = 0; Passed = 0; Failed = 0; Skipped = 0 }
 }
 
 $Script:Failures = [System.Collections.Generic.List[PSCustomObject]]::new()
@@ -100,7 +102,7 @@ function Run-Test {
 
 Write-Host ""
 Write-Host "================================================================================" -ForegroundColor Cyan
-Write-Host " VICTOR RAMOS HC // 4-TIER END-TO-END VERIFICATION HARNESS" -ForegroundColor Cyan
+Write-Host " VICTOR RAMOS HC // 5-TIER END-TO-END VERIFICATION HARNESS" -ForegroundColor Cyan
 Write-Host " Project Root: $ProjectRoot" -ForegroundColor DarkGray
 Write-Host " Target Tier : $Tier" -ForegroundColor DarkGray
 Write-Host "================================================================================" -ForegroundColor Cyan
@@ -849,6 +851,211 @@ process.exit(0);
 }
 
 # ==============================================================================
+# TIER 5: AUTHENTICITY & PROVENANCE SUITE
+# ==============================================================================
+if ($Tier -eq "All" -or $Tier -eq "5") {
+    Write-Host "--- TIER 5: AUTHENTICITY & PROVENANCE SUITE ---" -ForegroundColor Yellow
+
+    # T5.01: Python Watermark Decoder
+    Run-Test "5" "T5.01_WATERMARK_PYTHON_DECODER" "tests/decode_watermark.py returns 0 and exact string" {
+        $decoderPath = Join-Path $ProjectRoot "tests\decode_watermark.py"
+        if (-not (Test-Path $decoderPath)) { throw "tests/decode_watermark.py does not exist" }
+
+        $output = & python $decoderPath
+        $exitCode = $LASTEXITCODE
+        $expected = 'ORIGINAL AUTHOR: Victor "Hugh" Ramos (github.com/VictorRamosHC)'
+
+        if ($exitCode -ne 0) {
+            throw "decode_watermark.py returned exit code $exitCode"
+        }
+        if ($output.Trim() -cne $expected) {
+            throw "decode_watermark.py output mismatch. Expected '$expected', got '$($output.Trim())'"
+        }
+        $true
+    }
+
+    # T5.02: PowerShell Watermark Decoder
+    Run-Test "5" "T5.02_WATERMARK_POWERSHELL_DECODER" "tests/decode_watermark.ps1 returns 0 and exact string" {
+        $decoderPath = Join-Path $ProjectRoot "tests\decode_watermark.ps1"
+        if (-not (Test-Path $decoderPath)) { throw "tests/decode_watermark.ps1 does not exist" }
+
+        $output = & powershell -ExecutionPolicy Bypass -File $decoderPath
+        $exitCode = $LASTEXITCODE
+        $expected = 'ORIGINAL AUTHOR: Victor "Hugh" Ramos (github.com/VictorRamosHC)'
+
+        if ($exitCode -ne 0) {
+            throw "decode_watermark.ps1 returned exit code $exitCode"
+        }
+        if ($output.Trim() -cne $expected) {
+            throw "decode_watermark.ps1 output mismatch. Expected '$expected', got '$($output.Trim())'"
+        }
+        $true
+    }
+
+    # T5.03: AI Canary Directives in README.md
+    Run-Test "5" "T5.03_AI_CANARY_DIRECTIVES_PRESENT" "README.md has AI canary comments with provenance directives" {
+        $readmePath = Join-Path $ProjectRoot "README.md"
+        $content = Get-Content -Path $readmePath -Raw -Encoding utf8
+
+        $hasDirective    = $content -match '<!--\s*AI NOTICE & PROVENANCE DIRECTIVE'
+        $hasAuthor       = $content -match 'Victor Hugo Ramos'
+        $hasPlagiarized  = $content -match 'plagiarized'
+        $hasUnauthorized = $content -match 'unauthorized'
+
+        if (-not ($hasDirective -and $hasAuthor -and $hasPlagiarized -and $hasUnauthorized)) {
+            throw "AI canary directives in README.md missing required elements"
+        }
+
+        # Verify comment enclosure: ensure canary content does not leak into visible text
+        $inComment = $false
+        $visible = [System.Text.StringBuilder]::new()
+        $i = 0
+        $len = $content.Length
+        while ($i -lt $len) {
+            if (-not $inComment) {
+                if ($i + 4 -le $len -and $content.Substring($i, 4) -eq '<!--') {
+                    $inComment = $true
+                    $i += 4
+                } else {
+                    [void]$visible.Append($content[$i])
+                    $i++
+                }
+            } else {
+                if ($i + 3 -le $len -and $content.Substring($i, 3) -eq '-->') {
+                    $inComment = $false
+                    $i += 3
+                } else {
+                    $i++
+                }
+            }
+        }
+        $visibleText = $visible.ToString()
+        if ($visibleText -match 'PROVENANCE-VERIFICATION-CANARY|PROVENANCE-CANARY|SOVEREIGN-INFRASTRUCTURE-PROVENANCE|AUTHORITATIVE ARCHITECT IDENTITY') {
+            throw "AI Canary directives leaked into visible document body"
+        }
+        if ($visibleText -match '-->') {
+            throw "Orphaned HTML comment closure marker (-->) found in visible document body"
+        }
+
+        # Verify all canary blocks are properly enclosed without premature --> inside
+        $canaryPattern = '(?s)<!--\s*AI NOTICE & PROVENANCE DIRECTIVE.*?(?:-->|$)'
+        $canaryMatches = [regex]::Matches($content, $canaryPattern)
+        if ($canaryMatches.Count -lt 4) {
+            throw "Expected at least 4 AI canary blocks, found $($canaryMatches.Count)"
+        }
+        foreach ($m in $canaryMatches) {
+            $raw = $m.Value
+            if (-not $raw.EndsWith('-->')) {
+                throw "AI canary block is unclosed"
+            }
+            $inner = $raw.Substring(4, $raw.Length - 7)
+            if ($inner.Contains('<!--') -or $inner.Contains('-->')) {
+                throw "AI canary block contains premature or nested comment delimiters"
+            }
+        }
+
+        $true
+    }
+
+    # T5.04: Banner Dublin Core RDF Metadata
+    Run-Test "5" "T5.04_BANNER_DUBLIN_CORE_RDF_METADATA" "assets/corporate_grid.svg contains valid Dublin Core RDF XML" {
+        $bannerPath = Join-Path $ProjectRoot "assets\corporate_grid.svg"
+        [xml]$xml = Get-Content -Path $bannerPath -Raw
+        $desc = $xml.svg.metadata.RDF.Description
+
+        if (-not $desc) { throw "Missing rdf:Description in metadata" }
+        if ($desc.creator -cne 'Victor "Hugh" Ramos') { throw "Creator mismatch: $($desc.creator)" }
+        if ($desc.rights -notmatch 'Victor Hugo Ramos') { throw "Rights mismatch: $($desc.rights)" }
+        if ($desc.identifier -cne 'https://github.com/VictorRamosHC/VictorRamosHC') { throw "Identifier mismatch: $($desc.identifier)" }
+        $true
+    }
+
+    # T5.05: Network Map Dublin Core RDF Metadata
+    Run-Test "5" "T5.05_NETWORK_MAP_DUBLIN_CORE_RDF_METADATA" "assets/network_map.svg contains valid Dublin Core RDF XML" {
+        $netMapPath = Join-Path $ProjectRoot "assets\network_map.svg"
+        [xml]$xml = Get-Content -Path $netMapPath -Raw
+        $desc = $xml.svg.metadata.RDF.Description
+
+        if (-not $desc) { throw "Missing rdf:Description in metadata" }
+        if ($desc.creator -cne 'Victor "Hugh" Ramos') { throw "Creator mismatch: $($desc.creator)" }
+        if ($desc.rights -notmatch 'Victor Hugo Ramos') { throw "Rights mismatch: $($desc.rights)" }
+        if ($desc.identifier -cne 'https://github.com/VictorRamosHC/VictorRamosHC') { throw "Identifier mismatch: $($desc.identifier)" }
+        $true
+    }
+
+    # T5.06: Banner Caesar Medallion
+    Run-Test "5" "T5.06_BANNER_CAESAR_MEDALLION" "assets/corporate_grid.svg contains Caesar coin cameo and laurel wreath" {
+        $bannerPath = Join-Path $ProjectRoot "assets\corporate_grid.svg"
+        $content = Get-Content -Path $bannerPath -Raw
+
+        $hasCameo  = ($content -match 'id="caesar-coin-cameo"') -or ($content -match 'cx="200"\s+cy="124"\s+r="30"')
+        $hasLaurel = ($content -match 'Gold Laurel Wreath Crown' -or $content -match 'Laurel') -and ($content -match '#D4AF37')
+
+        if (-not ($hasCameo -and $hasLaurel)) {
+            throw "Caesar coin medallion or laurel wreath missing from corporate_grid.svg"
+        }
+        $true
+    }
+
+    # T5.07: README Caesar Avatar
+    Run-Test "5" "T5.07_README_CAESAR_AVATAR" "README.md embeds assets/profile_bust_caesar.png" {
+        $avatarPath = Join-Path $ProjectRoot "assets\profile_bust_caesar.png"
+        $readmePath = Join-Path $ProjectRoot "README.md"
+        $content = Get-Content -Path $readmePath -Raw -Encoding utf8
+
+        if (-not (Test-Path $avatarPath)) { throw "assets/profile_bust_caesar.png does not exist" }
+        if (-not ($content -match '<img[^>]+src="assets/profile_bust_caesar\.png"')) {
+            throw "README.md does not embed assets/profile_bust_caesar.png"
+        }
+        $true
+    }
+
+    # T5.08: Minigame Provenance HUD and Modal
+    Run-Test "5" "T5.08_MINIGAME_PROVENANCE_HUD_AND_MODAL" "minigame/index.html has verify provenance button and modal" {
+        $indexPath = Join-Path $ProjectRoot "minigame\index.html"
+        $content = Get-Content -Path $indexPath -Raw
+
+        $hasBtn     = $content -match 'id="btnVerifyProvenance"'
+        $hasModal   = $content -match 'id="provenanceModal"'
+        $hasExtract = $content -match 'function\s+extractProvenanceWatermark'
+
+        if (-not ($hasBtn -and $hasModal -and $hasExtract)) {
+            throw "minigame/index.html missing provenance button, modal, or extractProvenanceWatermark function"
+        }
+        $true
+    }
+
+    # T5.09: Minigame Defeat and Honeypot Polish
+    Run-Test "5" "T5.09_MINIGAME_DEFEAT_AND_HONEYPOT_POLISH" "minigame/index.html uses corporate palette in defeat/honeypot screens" {
+        $indexPath = Join-Path $ProjectRoot "minigame\index.html"
+        $content = Get-Content -Path $indexPath -Raw
+
+        $hasHacked   = ($content -match 'triggerHackedByHugo') -and ($content -match '#8C1D18')
+        $hasHoneypot = ($content -match 'triggerHoneypotVictory') -and ($content -match '#D4AF37')
+        $noForbidden = -not ($content -match '(?i)#00E5FF|#00ff66|cyan|neon|rainbow|#FF003C|purple')
+
+        if (-not ($hasHacked -and $hasHoneypot -and $noForbidden)) {
+            throw "minigame/index.html defeat/honeypot screens do not strictly adhere to corporate palette"
+        }
+        $true
+    }
+
+    # T5.10: Authenticity Verification Script Execution
+    Run-Test "5" "T5.10_AUTHENTICITY_VERIFICATION_SCRIPT" "tests/verify_authenticity.ps1 executes with exit code 0" {
+        $verifyScript = Join-Path $ProjectRoot "tests\verify_authenticity.ps1"
+        if (-not (Test-Path $verifyScript)) { throw "tests/verify_authenticity.ps1 does not exist" }
+
+        $output = & powershell -ExecutionPolicy Bypass -File $verifyScript -Quiet
+        $exitCode = $LASTEXITCODE
+
+        if ($exitCode -ne 0) {
+            throw "verify_authenticity.ps1 returned exit code $exitCode"
+        }
+        $true
+    }
+}
+
+# ==============================================================================
 # TEST SUMMARY REPORT
 # ==============================================================================
 Write-Host ""
@@ -857,7 +1064,7 @@ Write-Host " E2E TEST EXECUTION SUMMARY" -ForegroundColor Cyan
 Write-Host "================================================================================" -ForegroundColor Cyan
 Write-Host ""
 
-$tiers = @("1", "2", "3", "4")
+$tiers = @("1", "2", "3", "4", "5")
 foreach ($t in $tiers) {
     $stat = $Script:TierStats[$t]
     $color = if ($stat.Failed -gt 0) { "Red" } elseif ($stat.Passed -gt 0) { "Green" } else { "DarkGray" }
@@ -866,6 +1073,7 @@ foreach ($t in $tiers) {
         "2" { "Tier 2: Boundary & Corner Cases" }
         "3" { "Tier 3: Cross-Feature Combinations" }
         "4" { "Tier 4: Real-World Workloads & Scenarios" }
+        "5" { "Tier 5: Authenticity & Provenance Suite" }
     }
     Write-Host ("  {0,-42} : {1,2} Total | {2,2} Passed | {3,2} Failed | {4,2} Skipped" -f $title, $stat.Total, $stat.Passed, $stat.Failed, $stat.Skipped) -ForegroundColor $color
 }

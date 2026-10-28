@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -787,11 +787,11 @@ function triggerHackedByHugo(reason, restartFnName) {
   targetEl.innerHTML = `
     <div style="border:2px solid #8C1D18;background:#100405;padding:32px 20px;border-radius:4px;box-shadow:0 0 35px rgba(140,29,24,0.5);text-align:center;max-width:760px;margin:20px auto;font-family:'Space Mono','Consolas',monospace;">
       <div style="font-size:0.85rem;color:#D4AF37;letter-spacing:3px;margin-bottom:8px;">⚠️ ALERTA DE SEGURANÇA // SISTEMA INTERCEPTADO</div>
-      <div style="font-size:2.2rem;color:#FF003C;font-weight:bold;margin-bottom:8px;text-shadow:0 0 15px rgba(255,0,60,0.6);">💀 VOCÊ FOI HACKEADO POR HUGO</div>
+      <div style="font-size:2.2rem;color:#8C1D18;font-weight:bold;margin-bottom:8px;text-shadow:0 0 15px rgba(140,29,24,0.6);">💀 VOCÊ FOI HACKEADO POR HUGO</div>
       <div style="font-size:0.8rem;color:#8C1D18;letter-spacing:2px;margin-bottom:18px;">COUNTER-MEASURE INJECTED // INTRUSION COMPROMISED</div>
 
       <div style="background:#030305;border:1px solid #8C1D18;padding:16px;text-align:left;font-size:0.8rem;color:#E0E7FF;line-height:1.7;margin:15px auto 25px;max-width:560px;">
-        <div style="color:#FF003C;font-weight:bold;">> [CRITICAL_FAULT]: ${reason}</div>
+        <div style="color:#8C1D18;font-weight:bold;">> [CRITICAL_FAULT]: ${reason}</div>
         <div>> INVASOR: Terminal externo desautenticado.</div>
         <div>> CONTRAMEDIDA: Injeção de payload reverso executada com sucesso.</div>
         <div>> OPERADOR DO SISTEMA: <strong style="color:#D4AF37;">Victor \"Hugh\" Ramos</strong> [CHIEF_ARCHITECT]</div>
@@ -817,17 +817,17 @@ function triggerHoneypotVictory(prizeTitle, projectName, projectUrl, restartFnNa
   const targetEl = document.getElementById('app') || document.querySelector('.hud-box') || document.body;
   targetEl.innerHTML = `
     <div style="border:2px solid #D4AF37;background:#060710;padding:32px 20px;border-radius:4px;box-shadow:0 0 35px rgba(212,175,55,0.25);text-align:center;max-width:760px;margin:20px auto;font-family:'Space Mono','Consolas',monospace;">
-      <div style="color:#00FF66;font-size:0.85rem;letter-spacing:2px;margin-bottom:6px;">★ [ACESSO NÍVEL ARCHON CONCEDIDO]</div>
+      <div style="color:#D4AF37;font-size:0.85rem;letter-spacing:2px;margin-bottom:6px;">★ [ACESSO NÍVEL ARCHON CONCEDIDO]</div>
       <div style="font-size:2rem;color:#D4AF37;font-weight:bold;margin-bottom:6px;text-shadow:0 0 15px rgba(212,175,55,0.4);">🎁 RECOMPENSA DESCRIPTOGRAFADA!</div>
       <div style="font-size:1.1rem;color:#F5F0E8;font-weight:bold;margin-bottom:18px;">${prizeTitle}</div>
 
       <div style="background:#030305;border:1px solid #D4AF37;padding:18px;text-align:left;font-size:0.8rem;color:#E0E7FF;line-height:1.7;margin:15px auto 25px;max-width:580px;">
-        <div style="color:#00FF66;">> PAYLOAD_STATUS: RECOMPENSA VALIDADA E LIBERADA.</div>
-        <div style="color:#FF003C;font-weight:bold;margin:4px 0;">⚠️ ALERTA DE SEGURANÇA: O PAYLOAD É UM HONEYPOT CORPORATIVO!</div>
+        <div style="color:#D4AF37;">> PAYLOAD_STATUS: RECOMPENSA VALIDADA E LIBERADA.</div>
+        <div style="color:#8C1D18;font-weight:bold;margin:4px 0;">⚠️ ALERTA DE SEGURANÇA: O PAYLOAD É UM HONEYPOT CORPORATIVO!</div>
         <div style="color:#94A3B8;">Você achou que estava apenas jogando um minigame isolado...</div>
         <div>O arquivo premiado disparou uma rotina de extração automática para o núcleo real do projeto:</div>
         <div style="color:#D4AF37;font-weight:bold;margin:8px 0;font-size:0.95rem;">► PROJETO ATRELADO: ${projectName}</div>
-        <div style="color:#F5F0E8;">Redirecionando sua sessão em <span id="honeypot-sec" style="color:#00FF66;font-weight:bold;font-size:1.2rem;">5</span> segundos...</div>
+        <div style="color:#F5F0E8;">Redirecionando sua sessão em <span id="honeypot-sec" style="color:#D4AF37;font-weight:bold;font-size:1.2rem;">5</span> segundos...</div>
         <div style="width:100%;height:4px;background:#1E293B;margin-top:10px;"><div id="honeypot-bar" style="width:100%;height:100%;background:#D4AF37;transition:width 5s linear;"></div></div>
       </div>
 
