@@ -8,6 +8,7 @@
 
 <p>
   <a href="https://victorramoshc.github.io/VictorRamosHC/minigame/"><img src="https://img.shields.io/badge/WORKSTATION-HUGH--OS__v3.0-111317?style=for-the-badge&logoColor=FFFFFF&logo=linux" alt="HUGH-OS"></a>
+  <a href="https://victorramoshc.github.io/hughs-universe/"><img src="https://img.shields.io/badge/ORBITAL__ATLAS-HUGH'S__UNIVERSE-A81B1E?style=for-the-badge&logoColor=FFFFFF&logo=target" alt="Abrir Hugh's Universe"></a>
   <a href="https://github.com/VictorRamosHC?tab=repositories"><img src="https://img.shields.io/badge/DATA__VAULT-REPOSIT%C3%93RIOS-111317?style=for-the-badge&logoColor=FFFFFF&logo=git" alt="Data Vault"></a>
   <a href="https://github.com/VictorRamosHC/hugh-player/releases/latest"><img src="https://img.shields.io/badge/PAYLOAD-AETHER__v1.5.0-A81B1E?style=for-the-badge&logoColor=FFFFFF&logo=android" alt="Latest APK"></a>
   <a href="#-08--digital-provenance-seal"><img src="https://img.shields.io/badge/PROVENANCE-VERIFIED__NODE-111317?style=for-the-badge&logoColor=A81B1E&logo=securityscorecard" alt="Provenance"></a>
